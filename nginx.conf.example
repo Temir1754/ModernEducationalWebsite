@@ -1,0 +1,45 @@
+worker_processes 1;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+    sendfile        on;
+    keepalive_timeout  65;
+
+    server {
+        listen       80;
+        server_name  localhost;
+
+        # 1. Main Application (React)
+        # Point this to your 'dist' folder after running 'npm run build'
+        location / {
+            root   "C:/Users/FGS-4/Desktop/FGSSchool/dist";
+            index  index.html index.htm;
+            
+            # Important for React functionality (Single Page App)
+            try_files $uri $uri/ /index.html;
+        }
+
+        # 2. Uploaded Files (Documents, Images, etc.)
+        # This tells Nginx: when someone asks for /uploads/..., go look in the uploads folder
+        location /uploads/ {
+            alias "C:/Users/FGS-4/Desktop/FGSSchool/uploads/";
+            autoindex off; # Optional: set to on if you want to see list of files
+        }
+
+        # 3. API Proxy (Optional)
+        # If your Node/Express server is running on port 5000, un-comment this:
+        # location /api/ {
+        #    proxy_pass http://localhost:5000;
+        #    proxy_http_version 1.1;
+        #    proxy_set_header Upgrade $http_upgrade;
+        #    proxy_set_header Connection 'upgrade';
+        #    proxy_set_header Host $host;
+        #    proxy_cache_bypass $http_upgrade;
+        # }
+    }
+}

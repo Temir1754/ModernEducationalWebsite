@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <!-- Home Page -->
+  <url>
+    <loc>https://fgs.kz/</loc>
+    <lastmod>2025-10-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="kk" href="https://fgs.kz/?lang=kz" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://fgs.kz/?lang=ru" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fgs.kz/" />
+  </url>
+
+  <!-- About School -->
+  <url>
+    <loc>https://fgs.kz/about-school</loc>
+    <lastmod>2025-10-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="kk" href="https://fgs.kz/about-school?lang=kz" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://fgs.kz/about-school?lang=ru" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fgs.kz/about-school" />
+  </url>
+
+  <!-- Administration -->
+  <url>
+    <loc>https://fgs.kz/administration</loc>
+    <lastmod>2025-10-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="kk" href="https://fgs.kz/administration?lang=kz" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://fgs.kz/administration?lang=ru" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fgs.kz/administration" />
+  </url>
+
+  <!-- Primary Teachers -->
+  <url>
+    <loc>https://fgs.kz/primary-teachers</loc>
+    <lastmod>2025-10-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="kk" href="https://fgs.kz/primary-teachers?lang=kz" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://fgs.kz/primary-teachers?lang=ru" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fgs.kz/primary-teachers" />
+  </url>
+
+  <!-- Subject Teachers -->
+  <url>
+    <loc>https://fgs.kz/subject-teachers</loc>
+    <lastmod>2025-10-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="kk" href="https://fgs.kz/subject-teachers?lang=kz" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://fgs.kz/subject-teachers?lang=ru" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fgs.kz/subject-teachers" />
+  </url>
+
+  <!-- Curators -->
+  <url>
+    <loc>https://fgs.kz/curators</loc>
+    <lastmod>2025-10-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="kk" href="https://fgs.kz/curators?lang=kz" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://fgs.kz/curators?lang=ru" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fgs.kz/curators" />
+  </url>
+
+  <!-- Students -->
+  <url>
+    <loc>https://fgs.kz/students</loc>
+    <lastmod>2025-10-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="kk" href="https://fgs.kz/students?lang=kz" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://fgs.kz/students?lang=ru" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fgs.kz/students" />
+  </url>
+
+  <!-- Gallery -->
+  <url>
+    <loc>https://fgs.kz/gallery</loc>
+    <lastmod>2025-10-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="kk" href="https://fgs.kz/gallery?lang=kz" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://fgs.kz/gallery?lang=ru" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fgs.kz/gallery" />
+  </url>
+
+  <!-- School Documents -->
+  <url>
+    <loc>https://fgs.kz/school-documents</loc>
+    <lastmod>2025-10-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="kk" href="https://fgs.kz/school-documents?lang=kz" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://fgs.kz/school-documents?lang=ru" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fgs.kz/school-documents" />
+  </url>
+
+  <!-- Upbringing Work -->
+  <url>
+    <loc>https://fgs.kz/upbringing-work</loc>
+    <lastmod>2025-10-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="kk" href="https://fgs.kz/upbringing-work?lang=kz" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://fgs.kz/upbringing-work?lang=ru" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fgs.kz/upbringing-work" />
+  </url>
+
+  <!-- Education Process -->
+  <url>
+    <loc>https://fgs.kz/education-process</loc>
+    <lastmod>2025-10-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="kk" href="https://fgs.kz/education-process?lang=kz" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://fgs.kz/education-process?lang=ru" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fgs.kz/education-process" />
+  </url>
+
+  <!-- Schedule -->
+  <url>
+    <loc>https://fgs.kz/schedule</loc>
+    <lastmod>2025-10-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="kk" href="https://fgs.kz/schedule?lang=kz" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://fgs.kz/schedule?lang=ru" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fgs.kz/schedule" />
+  </url>
+
+  <!-- Contact -->
+  <url>
+    <loc>https://fgs.kz/contact</loc>
+    <lastmod>2025-10-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="kk" href="https://fgs.kz/contact?lang=kz" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://fgs.kz/contact?lang=ru" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fgs.kz/contact" />
+  </url>
+
+  <!-- Kruzhki -->
+  <url>
+    <loc>https://fgs.kz/kruzhki</loc>
+    <lastmod>2025-10-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="kk" href="https://fgs.kz/kruzhki?lang=kz" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://fgs.kz/kruzhki?lang=ru" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fgs.kz/kruzhki" />
+  </url>
+
+  <!-- Canteen -->
+  <url>
+    <loc>https://fgs.kz/canteen</loc>
+    <lastmod>2025-10-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="kk" href="https://fgs.kz/canteen?lang=kz" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://fgs.kz/canteen?lang=ru" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fgs.kz/canteen" />
+  </url>
+
+  <!-- State Attestation -->
+  <url>
+    <loc>https://fgs.kz/state-attestation</loc>
+    <lastmod>2025-10-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="kk" href="https://fgs.kz/state-attestation?lang=kz" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://fgs.kz/state-attestation?lang=ru" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://fgs.kz/state-attestation" />
+  </url>
+
+</urlset>
