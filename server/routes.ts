@@ -73,7 +73,8 @@ const requireAdmin = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  // Trust reverse proxy (nginx) so secure cookies work over HTTPS
+  app.set("trust proxy", 1);
 
   app.use(
     session({
@@ -82,7 +83,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       resave: false,
       saveUninitialized: false,
       cookie: {
-        secure: process.env.NODE_ENV === "production",
+        secure: process.env.NODE_ENV === "production" ? "auto" : false,
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000,
         sameSite: "lax",
