@@ -16,6 +16,9 @@ uploads/
 *.pdf
 *.svg
 
+# Исключение: attached_assets папкасындағы файлдарды git-ке қосу
+!attached_assets/**
+
 # Скриншоттар мен тест файлдар (тек корень папкасындағы)
 /public/gallery/
 /public/docs/
