@@ -17,7 +17,6 @@ uploads/
 *.svg
 
 # Скриншоттар мен тест файлдар (тек корень папкасындағы)
-/attached_assets/
 /public/gallery/
 /public/docs/
 /client/public/gallery/
