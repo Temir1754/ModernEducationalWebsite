@@ -29,7 +29,7 @@ import MobileDevelopmentCarousel from "@/components/mobile-development-carousel"
 import MobileSchoolFactsSlides from "@/components/mobile-school-facts-slides";
 import MobileNewsSlides from "@/components/mobile-news-slides";
 
-import WhatsApp_Image_2025_08_15_at_18_02_15 from "@assets/WhatsApp Image 2025-08-15 at 18.02.15.jpeg";
+import WhatsApp_Image_2025_08_15_at_18_02_15 from "@assets/WhatsApp Image 2025-08-15 at 18.02.15_1755264555912.jpeg";
 import sportsPhoto from "@assets/9E3A2784_1760360997075.jpg";
 import creativePhoto from "@assets/9E3A6284_1760361922943.jpg";
 import intellectualPhoto from "@assets/9E3A8933_1760362017762.jpg";
