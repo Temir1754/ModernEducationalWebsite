@@ -40,9 +40,9 @@ const CATEGORIES: CategoryDef[] = [
     label: "Құрылтайшылық құжаттар",
     type: "grouped",
     subfolders: [
-      { id: "founding-2023", label: "2023-2024" },
       { id: "founding-2024", label: "2024-2025" },
       { id: "founding-2025", label: "2025-2026" },
+      { id: "founding-2026", label: "2026-2027" },
     ],
   },
   {
@@ -50,9 +50,9 @@ const CATEGORIES: CategoryDef[] = [
     label: "Кадр құрамының сапасы",
     type: "grouped",
     subfolders: [
-      { id: "staff-2023", label: "2023-2024" },
       { id: "staff-2024", label: "2024-2025" },
       { id: "staff-2025", label: "2025-2026" },
+      { id: "staff-2026", label: "2026-2027" },
     ],
   },
   {
@@ -60,9 +60,9 @@ const CATEGORIES: CategoryDef[] = [
     label: "Білім алушылардың контингенті",
     type: "grouped",
     subfolders: [
-      { id: "contingent-2023", label: "2023-2024" },
       { id: "contingent-2024", label: "2024-2025" },
       { id: "contingent-2025", label: "2025-2026" },
+      { id: "contingent-2026", label: "2026-2027" },
     ],
   },
   {
@@ -70,9 +70,9 @@ const CATEGORIES: CategoryDef[] = [
     label: "Оқу жоспары",
     type: "grouped",
     subfolders: [
-      { id: "curriculum-2023", label: "2023-2024" },
       { id: "curriculum-2024", label: "2024-2025" },
       { id: "curriculum-2025", label: "2025-2026" },
+      { id: "curriculum-2026", label: "2026-2027" },
     ],
   },
   {
@@ -80,9 +80,9 @@ const CATEGORIES: CategoryDef[] = [
     label: "Мектеп тынысы",
     type: "grouped",
     subfolders: [
-      { id: "upbringing-2023", label: "2023-2024" },
       { id: "upbringing-2024", label: "2024-2025" },
       { id: "upbringing-2025", label: "2025-2026" },
+      { id: "upbringing-2026", label: "2026-2027" },
     ],
   },
   {
@@ -90,9 +90,9 @@ const CATEGORIES: CategoryDef[] = [
     label: "Оқу-материалдық активтер",
     type: "grouped",
     subfolders: [
-      { id: "assets-2023", label: "2023-2024" },
       { id: "assets-2024", label: "2024-2025" },
       { id: "assets-2025", label: "2025-2026" },
+      { id: "assets-2026", label: "2026-2027" },
     ],
   },
   {
@@ -100,9 +100,9 @@ const CATEGORIES: CategoryDef[] = [
     label: "Білім алушылардың қауіпсіздігі",
     type: "grouped",
     subfolders: [
-      { id: "safety-2023", label: "2023-2024" },
       { id: "safety-2024", label: "2024-2025" },
       { id: "safety-2025", label: "2025-2026" },
+      { id: "safety-2026", label: "2026-2027" },
     ],
   },
   {
@@ -110,9 +110,9 @@ const CATEGORIES: CategoryDef[] = [
     label: "Мектепшілік бақылау",
     type: "grouped",
     subfolders: [
-      { id: "control-2023", label: "2023-2024" },
       { id: "control-2024", label: "2024-2025" },
       { id: "control-2025", label: "2025-2026" },
+      { id: "control-2026", label: "2026-2027" },
     ],
   },
 ];
