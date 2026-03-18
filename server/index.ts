@@ -1,5 +1,6 @@
 import "dotenv/config";
 import express, { type Request, Response, NextFunction } from "express";
+import path from "path";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
@@ -38,10 +39,10 @@ app.use((req, res, next) => {
 });
 
 // Serve static files from attached_assets directory
-app.use('/attached_assets', express.static('attached_assets'));
+app.use('/attached_assets', express.static(path.resolve(import.meta.dirname, '..', 'attached_assets')));
 
-// Serve static files from public directory (schedules, etc.)
-app.use(express.static('public'));
+// Serve static files from client/public directory (logo, favicons, etc.)
+app.use(express.static(path.resolve(import.meta.dirname, '..', 'client', 'public')));
 
 (async () => {
   const server = await registerRoutes(app);
