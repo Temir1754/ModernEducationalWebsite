@@ -447,13 +447,15 @@ export default function SchoolDocumentsPage() {
   const { user } = useAuth();
   const { toast } = useToast();
 
+  const defaultSection = ALL_SECTIONS[0]?.id || "";
+
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [editingDocId, setEditingDocId] = useState<string | null>(null);
   const [uploadFile, setUploadFile] = useState<File | null>(null);
   const [newDoc, setNewDoc] = useState({
     title: "",
     description: "",
-    section: "founding",
+    section: defaultSection,
   });
 
   // Fetch ALL documents in one request
@@ -496,7 +498,7 @@ export default function SchoolDocumentsPage() {
       queryClient.invalidateQueries({ queryKey: ["/api/documents"] });
       toast({ title: "Құжат сәтті жүктелді" });
       setIsUploadOpen(false);
-      setNewDoc({ title: "", description: "", section: "founding" });
+      setNewDoc({ title: "", description: "", section: defaultSection });
       setUploadFile(null);
     },
     onError: (err: Error) =>
@@ -517,7 +519,7 @@ export default function SchoolDocumentsPage() {
       queryClient.invalidateQueries({ queryKey: ["/api/documents"] });
       setIsUploadOpen(false);
       setEditingDocId(null);
-      setNewDoc({ title: "", description: "", section: "founding" });
+      setNewDoc({ title: "", description: "", section: defaultSection });
       toast({ title: "Құжат жаңартылды" });
     },
   });
@@ -562,7 +564,7 @@ export default function SchoolDocumentsPage() {
                     setIsUploadOpen(open);
                     if (!open) {
                       setEditingDocId(null);
-                      setNewDoc({ title: "", description: "", section: "founding" });
+                      setNewDoc({ title: "", description: "", section: defaultSection });
                     }
                   }}
                 >
