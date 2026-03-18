@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link } from "wouter";
-import { 
-  Menu, 
-  X, 
+import {
+  Menu,
+  X,
   ChevronDown,
   Home,
   School,
@@ -108,7 +108,7 @@ export default function Sidebar() {
     },
     {
       id: "upbringing",
-      title: "Тәрбие жұмысы",
+      title: "Мектеп тынысы",
       icon: <Heart className="w-5 h-5" />,
       href: "/upbringing-work",
       items: []
@@ -195,9 +195,8 @@ export default function Sidebar() {
                       <span className="text-sm font-medium">{item.title}</span>
                     </div>
                     <ChevronDown
-                      className={`w-4 h-4 transition-transform duration-200 ${
-                        openDropdown === item.id ? "rotate-180" : ""
-                      }`}
+                      className={`w-4 h-4 transition-transform duration-200 ${openDropdown === item.id ? "rotate-180" : ""
+                        }`}
                     />
                   </button>
                   {openDropdown === item.id && (
@@ -265,7 +264,7 @@ export default function Sidebar() {
       {/* Mobile Sidebar Overlay */}
       {isMobileOpen && (
         <div className="md:hidden fixed inset-0 z-60">
-          <div 
+          <div
             className="absolute inset-0 bg-black bg-opacity-50"
             onClick={() => setIsMobileOpen(false)}
             data-testid="mobile-sidebar-overlay"

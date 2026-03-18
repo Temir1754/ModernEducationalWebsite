@@ -115,7 +115,7 @@ export default function Footer() {
               </li>
               <li>
                 <a href="#" className="hover:text-white">
-                  Тәрбие жұмысы
+                  Мектеп тынысы
                 </a>
               </li>
               <li>
@@ -134,14 +134,14 @@ export default function Footer() {
           <div>
             <h4 className="text-lg font-semibold mb-4">Байланыс</h4>
             <div className="space-y-2 text-gray-300">
-              <button 
+              <button
                 onClick={() => window.open('https://go.2gis.com/DoFle', '_blank')}
                 className="flex items-center hover:text-white transition-colors duration-200 text-left"
               >
                 <i className="fas fa-map-marker-alt mr-2"></i>
                 Өтегенов 43А, Шымкент
               </button>
-              <button 
+              <button
                 onClick={() => window.location.href = 'tel:+77757906363'}
                 className="flex items-center hover:text-white transition-colors duration-200 text-left"
               >

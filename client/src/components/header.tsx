@@ -60,7 +60,7 @@ export default function Header() {
       title: "Қызметтер",
       items: [
         { title: "Оқу үдерісі", href: "#" },
-        { title: "Тәрбие жұмысы", href: "#" },
+        { title: "Мектеп тынысы", href: "#" },
         { title: "Мұғалімдер үшін", href: "#" },
         { title: "Ата-аналар үшін", href: "#" },
         { title: "Оқушылар үшін", href: "#" },
@@ -133,7 +133,7 @@ export default function Header() {
         <div className="border-b border-gray-200 py-2">
           <div className="flex flex-wrap justify-between items-center text-sm text-gray-600">
             <div className="flex items-center space-x-4">
-              <button 
+              <button
                 className="flex items-center text-gray-600 hover:text-primary transition-colors duration-200 hover:bg-gray-50 px-2 py-1 rounded"
                 onClick={() => {
                   // Initiate phone call
@@ -147,7 +147,7 @@ export default function Header() {
                 <Clock className="w-4 h-4 text-primary mr-1" />
                 08:00 - 18:00
               </span>
-              <button 
+              <button
                 className="hidden sm:flex items-center text-gray-600 hover:text-primary transition-colors duration-200 hover:bg-gray-50 px-2 py-1 rounded"
                 onClick={() => {
                   // Open in 2GIS
@@ -157,7 +157,7 @@ export default function Header() {
                 <MapPin className="w-4 h-4 text-primary mr-1" />
                 Шымкент, Өтегенова 43А
               </button>
-              
+
               {/* Prominent Social Media buttons */}
               <div className="hidden md:flex items-center space-x-2 ml-6 border-l border-gray-300 pl-4">
                 <button
@@ -174,7 +174,7 @@ export default function Header() {
                   <Instagram className="w-4 h-4 mr-1" />
                   Instagram
                 </button>
-                
+
                 <button
                   onClick={(e) => {
                     e.preventDefault();
@@ -194,7 +194,7 @@ export default function Header() {
                   <Send className="w-4 h-4 mr-1" />
                   Telegram
                 </button>
-                
+
                 <button
                   onClick={(e) => {
                     e.preventDefault();
@@ -211,7 +211,7 @@ export default function Header() {
                 </button>
               </div>
             </div>
-            
+
             {/* Mobile Social Media Icons */}
             <div className="flex md:hidden items-center space-x-2">
               <button
@@ -226,7 +226,7 @@ export default function Header() {
               >
                 <Instagram className="w-4 h-4" />
               </button>
-              
+
               <button
                 onClick={(e) => {
                   e.preventDefault();
@@ -243,7 +243,7 @@ export default function Header() {
               >
                 <Send className="w-4 h-4" />
               </button>
-              
+
               <button
                 onClick={(e) => {
                   e.preventDefault();
@@ -257,7 +257,7 @@ export default function Header() {
                 <MessageCircle className="w-4 h-4" />
               </button>
             </div>
-            
+
             {/* Desktop Social Media Icons (old) - keeping for backward compatibility */}
             <div className="hidden items-center space-x-3">
               {socialLinks.map((link, index) => (

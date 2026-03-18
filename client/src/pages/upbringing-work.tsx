@@ -300,6 +300,13 @@ export default function UpbringingWorkPage() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState<any>(null);
   const [isEventEditDialogOpen, setIsEventEditDialogOpen] = useState(false);
+  const [newEvent, setNewEvent] = useState({
+    title: "",
+    dateText: "",
+    month: "Тамыз",
+    description: ""
+  });
+  const [isAddEventDialogOpen, setIsAddEventDialogOpen] = useState(false);
 
   // --- Queries ---
   const { data: galleryItems = [], isLoading: galleryLoading } = useQuery<Media[]>({
@@ -403,6 +410,23 @@ export default function UpbringingWorkPage() {
     }
   });
 
+  const eventCreateMutation = useMutation({
+    mutationFn: async (data: any) => {
+      const res = await fetch("/api/events", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error("Event creation failed");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/events"] });
+      setIsAddEventDialogOpen(false);
+      setNewEvent({ title: "", dateText: "", month: "Тамыз", description: "" });
+    }
+  });
+
   const eventDeleteMutation = useMutation({
     mutationFn: async (id: string) => {
       const res = await fetch(`/api/events/${id}`, { method: "DELETE" });
@@ -473,59 +497,101 @@ export default function UpbringingWorkPage() {
     "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан", "Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр"
   ];
 
+  const expandedEvents = [
+    {
+      month: "Тамыз",
+      events: [
+        {
+          id: "tamyz-1",
+          title: "FGS IV олимпиадасы",
+          date: "20 тамыз",
+          description: "FGS IV олимпиадасы өтті, олимпиадаға қаланың барлық мектептерінен оқушылар қатысты. Олар өз білімдерін байқап шыңдай білді.",
+          photos: [] as string[]
+        },
+        {
+          id: "tamyz-2",
+          title: "Ашық есік күні «Білім мен мүмкіндіктер әлемі»",
+          date: "25 тамыз",
+          description: "Ашық есік күні барысында мектептің әкімшілігі мен педагогикалық ұжым ата-аналар мен оқушыларды қарсы алып, жаңа оқу жылындағы жоспарлар мен жаңалықтар таныстырылды.",
+          photos: [] as string[]
+        }
+      ]
+    },
+    {
+      month: "Қыркүйек",
+      events: [
+        { id: "qyr-1", title: "Білім күні мерекесі", date: "1 қыркүйек", description: "Жаңа оқу жылын ашу салтанаты", photos: [] as string[] },
+        { id: "qyr-2", title: "Адаптация аптасы", date: "5-9 қыркүйек", description: "Жаңа оқушыларды бейімдеу", photos: [] as string[] }
+      ]
+    },
+    {
+      month: "Қазан",
+      events: [
+        { id: "qaz-1", title: "Ұстаздар күні", date: "7 қазан", description: "Мұғалімдерді құрметтеу шарасы", photos: [] as string[] },
+        { id: "qaz-2", title: "Күз мерекесі", date: "15 қазан", description: "Шығармашылық көрме-конкурс", photos: [] as string[] }
+      ]
+    },
+    {
+      month: "Қараша",
+      events: [
+        { id: "qar-1", title: "Тәуелсіздік күні қарсаңындағы шаралар", date: "Қараша", description: "Патриоттық тәрбие шаралары", photos: [] as string[] }
+      ]
+    },
+    {
+      month: "Желтоқсан",
+      events: [
+        { id: "zhel-1", title: "Тәуелсіздік күні", date: "16 желтоқсан", description: "Мерекелік іс-шара", photos: [] as string[] },
+        { id: "zhel-2", title: "Жаңа жыл мерекесі", date: "Желтоқсан", description: "Мерекелік ертеңгілік", photos: [] as string[] }
+      ]
+    },
+    {
+      month: "Қаңтар",
+      events: [
+        { id: "qan-1", title: "Қысқы мектеп", date: "Қаңтар", description: "Оқушылардың білімін толықтыру", photos: [] as string[] }
+      ]
+    },
+    {
+      month: "Ақпан",
+      events: [
+        { id: "aqp-1", title: "Ғылым апталығы", date: "Ақпан", description: "Жас зерттеушілер көрмесі", photos: [] as string[] }
+      ]
+    },
+    {
+      month: "Наурыз",
+      events: [
+        { id: "nau-1", title: "Наурыз мейрамы", date: "22 наурыз", description: "Ұлттық мерекені тойлау", photos: [] as string[] }
+      ]
+    },
+    {
+      month: "Сәуір",
+      events: [
+        { id: "sau-1", title: "Бенефис шоу", date: "Сәуір", description: "Шығармашылық есеп беру кеші", photos: [] as string[] }
+      ]
+    },
+    {
+      month: "Мамыр",
+      events: [
+        { id: "mam-1", title: "Жеңіс күні", date: "9 мамыр", description: "Патриоттық шара", photos: [] as string[] },
+        { id: "mam-2", title: "Сыңғырла, соңғы қоңырау!", date: "25 мамыр", description: "Оқу жылын қорытындылау", photos: [] as string[] }
+      ]
+    }
+  ];
+
   const groupedEvents = useMemo(() => {
     const grouped: Record<string, any[]> = {};
     monthNames.forEach(m => grouped[m] = []);
 
     allEvents.forEach(evt => {
-      // Find which month this event belongs to.
-      // In a real app, you'd use a date object, but here we'll match by name if provided or default to 'Тамыз'
-      const match = monthNames.find(m => evt.date?.toLowerCase().includes(m.toLowerCase()));
-      const targetMonth = match || (evt.month) || monthNames[0];
+      const targetMonth = evt.month || monthNames.find(m => evt.dateText?.toLowerCase().includes(m.toLowerCase())) || monthNames[0];
       if (!grouped[targetMonth]) grouped[targetMonth] = [];
-      grouped[targetMonth].push(evt);
+      grouped[targetMonth].push({
+        ...evt,
+        date: evt.dateText // Map dateText to date for UI consistency if needed, though better to fix UI
+      });
     });
 
-    // If query returned nothing, fall back to hardcoded data for demonstration if needed, 
-    // but the prompt implies we should use the fetched events.
-    // I will include the hardcoded ones as a base if the database is empty.
     if (allEvents.length === 0) {
-      return [
-        {
-          month: "Тамыз",
-          events: [
-            {
-              id: "tamyz-1",
-              title: "FGS IV олимпиадасы",
-              date: "20 тамыз",
-              description: "FGS IV олимпиадасы өтті, олимпиадаға қаланың барлық мектептерінен оқушылар қатысты. Олар өз білімдерін байқап шыңдай білді.",
-              photos: []
-            },
-            {
-              id: "tamyz-2",
-              title: "Ашық есік күні «Білім мен мүмкіндіктер әлемі»",
-              date: "25 тамыз",
-              description: "Ашық есік күні барысында мектептің әкімшілігі мен педагогикалық ұжым ата-аналар мен оқушыларды қарсы алып, жаңа оқу жылындағы жоспарлар мен жаңалықтар таныстырылды.",
-              photos: []
-            }
-          ]
-        },
-        {
-          month: "Қыркүйек",
-          events: [
-            { id: "qyr-1", title: "Білім күні мерекесі", date: "1 қыркүйек", description: "Жаңа оқу жылын ашу салтанаты", photos: [] },
-            { id: "qyr-2", title: "Адаптация аптасы", date: "5-9 қыркүйек", description: "Жаңа оқушыларды бейімдеу", photos: [] }
-          ]
-        },
-        {
-          month: "Қазан",
-          events: [
-            { id: "qaz-1", title: "Ұстаздар күні", date: "7 қазан", description: "Мұғалімдерді құрметтеу шарасы", photos: [] },
-            { id: "qaz-2", title: "Күз мерекесі", date: "15 қазан", description: "Шығармашылық көрме-конкурс", photos: [] }
-          ]
-        }
-        // ... adding enough for visibility
-      ];
+      return expandedEvents;
     }
 
     return monthNames
@@ -677,90 +743,6 @@ export default function UpbringingWorkPage() {
   ];
 
   // Expanded Annual Events
-  const expandedEvents = [
-    {
-      month: "Тамыз",
-      events: [
-        {
-          id: "tamyz-1",
-          title: "FGS IV олимпиадасы",
-          date: "20 тамыз",
-          description: "FGS IV олимпиадасы өтті, олимпиадаға қаланың барлық мектептерінен оқушылар қатысты. Олар өз білімдерін байқап шыңдай білді.",
-          photos: [] as string[]
-        },
-        {
-          id: "tamyz-2",
-          title: "Ашық есік күні «Білім мен мүмкіндіктер әлемі»",
-          date: "25 тамыз",
-          description: "Ашық есік күні барысында мектептің әкімшілігі мен педагогикалық ұжым ата-аналар мен оқушыларды қарсы алып, жаңа оқу жылындағы жоспарлар мен жаңалықтар таныстырылды. Қатысушыларға пән кабинеттері, кітапхана, спорт және шығармашылық үйірмелердің жұмысы таныстырылды. Сонымен қатар оқушылардың жетістіктері мен мектеп жетістіктерінен көрме ұйымдастырылды.",
-          photos: [] as string[]
-        }
-      ]
-    },
-    {
-      month: "Қыркүйек",
-      events: [
-        { id: "qyr-1", title: "Білім күні мерекесі", date: "1 қыркүйек", description: "Жаңа оқу жылын ашу салтанаты", photos: [] as string[] },
-        { id: "qyr-2", title: "Адаптация аптасы", date: "5-9 қыркүйек", description: "Жаңа оқушыларды бейімдеу", photos: [] as string[] }
-      ]
-    },
-    {
-      month: "Қазан",
-      events: [
-        { id: "qaz-1", title: "Ұстаздар күні", date: "7 қазан", description: "Мұғалімдерді құрметтеу шарасы", photos: [] as string[] },
-        { id: "qaz-2", title: "Күз мерекесі", date: "15 қазан", description: "Шығармашылық көрме-конкурс", photos: [] as string[] }
-      ]
-    },
-    {
-      month: "Қараша",
-      events: [
-        { id: "qar-1", title: "Толерантність күні", date: "16 қараша", description: "Достық пен түсіністік мерекесі", photos: [] as string[] },
-        { id: "qar-2", title: "Ана тілі фестивалі", date: "25 қараша", description: "Тілдік әртүрлілікті құрметтеу", photos: [] as string[] }
-      ]
-    },
-    {
-      month: "Желтоқсан",
-      events: [
-        { id: "zhel-1", title: "Тәуелсіздік күні", date: "16 желтоқсан", description: "Қазақстан тәуелсіздігін тойлау", photos: [] as string[] },
-        { id: "zhel-2", title: "Жаңа жыл кеші", date: "28 желтоқсан", description: "Жылдық қорытынды мереке", photos: [] as string[] }
-      ]
-    },
-    {
-      month: "Қаңтар",
-      events: [
-        { id: "qan-1", title: "Зияткерлік олимпиада", date: "20 қаңтар", description: "Пәндік білім сайысы", photos: [] as string[] },
-        { id: "qan-2", title: "Спорт фестивалі", date: "28 қаңтар", description: "Қысқы спорт түрлері", photos: [] as string[] }
-      ]
-    },
-    {
-      month: "Ақпан",
-      events: [
-        { id: "aqp-1", title: "Ғылым мен техника апты", date: "10-14 ақпан", description: "Инновациялық жобалар көрмесі", photos: [] as string[] },
-        { id: "aqp-2", title: "Отан қорғаушылар күні", date: "23 ақпан", description: "Патриоттық тәрбие шарасы", photos: [] as string[] }
-      ]
-    },
-    {
-      month: "Наурыз",
-      events: [
-        { id: "nau-1", title: "Наурыз мейрамы", date: "22 наурыз", description: "Ұлттық мереке өткізу", photos: [] as string[] },
-        { id: "nau-2", title: "Көктем фестивалі", date: "25 наурыз", description: "Табиғатты қорғау жобалары", photos: [] as string[] }
-      ]
-    },
-    {
-      month: "Сәуір",
-      events: [
-        { id: "sau-1", title: "Денсаулық аптасы", date: "7-14 сәуір", description: "Салауатты өмір салты", photos: [] as string[] },
-        { id: "sau-2", title: "Ғарыш күні", date: "12 сәуір", description: "Ғылыми-танымдық іс-шара", photos: [] as string[] }
-      ]
-    },
-    {
-      month: "Мамыр",
-      events: [
-        { id: "mam-1", title: "Жеңіс күні", date: "9 мамыр", description: "Патриоттық тәрбие шарасы", photos: [] as string[] },
-        { id: "mam-2", title: "Оқу жылын қорытындылау", date: "25 мамыр", description: "Жылдық жетістіктерді мақтау", photos: [] as string[] }
-      ]
-    }
-  ];
 
   // Crime Prevention structured data
   const preventionMeasures = [
@@ -867,7 +849,7 @@ export default function UpbringingWorkPage() {
               <span className="hidden sm:inline">Басты бетке оралу</span>
               <span className="sm:hidden">Басты бет</span>
             </Link>
-            <h1 className="text-lg sm:text-2xl font-bold text-gray-800 dark:text-gray-100">Тәрбие жұмысы</h1>
+            <h1 className="text-lg sm:text-2xl font-bold text-gray-800 dark:text-gray-100">Мектеп тынысы</h1>
           </div>
         </div>
       </div>
@@ -901,7 +883,7 @@ export default function UpbringingWorkPage() {
           <CardHeader>
             <CardTitle className="text-blue-800 dark:text-blue-400 flex items-center space-x-2">
               <Target className="w-6 h-6" />
-              <span>Тәрбие жұмысының мақсаты</span>
+              <span>Мектеп тынысының мақсаты</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -1657,10 +1639,21 @@ export default function UpbringingWorkPage() {
 
         {/* Expanded Annual Events */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6 flex items-center space-x-2">
-            <Calendar className="w-6 h-6 text-blue-600" />
-            <span>Жылдық іс-шаралар</span>
-          </h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 flex items-center space-x-2">
+              <Calendar className="w-6 h-6 text-blue-600" />
+              <span>Жылдық іс-шаралар</span>
+            </h2>
+            {isAdmin && (
+              <Button
+                onClick={() => setIsAddEventDialogOpen(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Іс-шара қосу
+              </Button>
+            )}
+          </div>
           <div className="grid gap-6">
             {groupedEvents.map((monthData, index) => (
               <Card key={index} className="hover:shadow-lg transition-shadow duration-300 dark:bg-[#1e293b] dark:border-gray-700">
@@ -2014,10 +2007,20 @@ export default function UpbringingWorkPage() {
               <div className="space-y-2">
                 <Label className="text-gray-300">Күні</Label>
                 <Input
-                  value={editingEvent?.date || ""}
-                  onChange={(e) => setEditingEvent({ ...editingEvent, date: e.target.value })}
+                  value={editingEvent?.dateText || editingEvent?.date || ""}
+                  onChange={(e) => setEditingEvent({ ...editingEvent, dateText: e.target.value })}
                   className="bg-[#0d1117] border-white/20 text-white"
                 />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-gray-300">Айы</Label>
+                <select
+                  className="w-full bg-[#0d1117] border border-white/20 text-white rounded-md p-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none"
+                  value={editingEvent?.month || "Тамыз"}
+                  onChange={(e) => setEditingEvent({ ...editingEvent, month: e.target.value })}
+                >
+                  {monthNames.map(m => <option key={m} value={m}>{m}</option>)}
+                </select>
               </div>
               <div className="space-y-2">
                 <Label className="text-gray-300">Сипаттамасы</Label>
@@ -2030,7 +2033,15 @@ export default function UpbringingWorkPage() {
               <div className="flex gap-2 pt-2">
                 <Button
                   className="flex-1 bg-blue-600 hover:bg-blue-700"
-                  onClick={() => eventUpdateMutation.mutate({ id: editingEvent.id, data: { title: editingEvent.title, date: editingEvent.date, description: editingEvent.description } })}
+                  onClick={() => eventUpdateMutation.mutate({
+                    id: editingEvent.id,
+                    data: {
+                      title: editingEvent.title,
+                      dateText: editingEvent.dateText || editingEvent.date,
+                      month: editingEvent.month,
+                      description: editingEvent.description
+                    }
+                  })}
                   disabled={eventUpdateMutation.isPending}
                 >
                   {eventUpdateMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : "Сақтау"}
@@ -2039,6 +2050,70 @@ export default function UpbringingWorkPage() {
                   variant="outline"
                   className="flex-1 bg-[#1e293b] text-white border-white/10 hover:bg-white/5"
                   onClick={() => setIsEventEditDialogOpen(false)}
+                >
+                  Болдырмау
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Annual Event Add Dialog */}
+        <Dialog open={isAddEventDialogOpen} onOpenChange={setIsAddEventDialogOpen}>
+          <DialogContent className="sm:max-w-[500px] bg-[#1e293b] border border-white/10 text-white">
+            <DialogHeader>
+              <DialogTitle className="text-white">Жаңа іс-шара қосу</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 pt-4">
+              <div className="space-y-2">
+                <Label className="text-gray-300">Тақырыбы</Label>
+                <Input
+                  placeholder="Мәселен: Білім күні"
+                  value={newEvent.title}
+                  onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
+                  className="bg-[#0d1117] border-white/20 text-white placeholder:text-gray-500"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-gray-300">Күні</Label>
+                <Input
+                  placeholder="Мәселен: 1 қыркүйек"
+                  value={newEvent.dateText}
+                  onChange={(e) => setNewEvent({ ...newEvent, dateText: e.target.value })}
+                  className="bg-[#0d1117] border-white/20 text-white placeholder:text-gray-500"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-gray-300">Айы</Label>
+                <select
+                  className="w-full bg-[#0d1117] border border-white/20 text-white rounded-md p-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none"
+                  value={newEvent.month}
+                  onChange={(e) => setNewEvent({ ...newEvent, month: e.target.value })}
+                >
+                  {monthNames.map(m => <option key={m} value={m}>{m}</option>)}
+                </select>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-gray-300">Сипаттамасы</Label>
+                <textarea
+                  placeholder="Іс-шара туралы қысқаша мәлімет..."
+                  className="w-full bg-[#0d1117] border border-white/20 text-white rounded-md p-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none min-h-[100px] placeholder:text-gray-500"
+                  value={newEvent.description}
+                  onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}
+                />
+              </div>
+              <div className="flex gap-2 pt-2">
+                <Button
+                  className="flex-1 bg-blue-600 hover:bg-blue-700"
+                  onClick={() => eventCreateMutation.mutate(newEvent)}
+                  disabled={eventCreateMutation.isPending}
+                >
+                  {eventCreateMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : "Қосу"}
+                </Button>
+                <Button
+                  variant="outline"
+                  className="flex-1 bg-[#1e293b] text-white border-white/10 hover:bg-white/5"
+                  onClick={() => setIsAddEventDialogOpen(false)}
                 >
                   Болдырмау
                 </Button>

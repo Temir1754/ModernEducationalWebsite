@@ -25,15 +25,15 @@ const translations = {
     'nav.clubs': 'Үйірмелер',
     'nav.admission': 'Қабылдау',
     'nav.contact': 'Байланыс',
-    
+
     // Hero Section
-    'hero.title': 'FGS - Болашақ ұрпақ мектебіне қош келдіңіздер!',
+    'hero.title': 'Білімді ұрпақ жекеменшік мектебіне қош келдіңіздер!',
     'hero.subtitle': '0-9 сыныптары үшін қазіргі заманғы білім беру орталығы. Балаларыңыздың болашағына инвестиция жасаңыз.',
     'hero.apply': 'Өтінім жіберу',
     'hero.call': 'Қоңырау шалу',
     'hero.workingHours': 'Жұмыс уақыты: 08:00 - 18:00',
     'hero.phoneNumber': '+7‒775‒790‒63‒63',
-    
+
     // Statistics
     'stats.since': 'Жылдан бастап',
     // ========================================
@@ -43,7 +43,7 @@ const translations = {
     // ========================================
     'stats.students': '12-18 сыныптағы балалар',
     'stats.admission': '< 50% НИШ/РФМШ түсу',
-    
+
     // Features
     'features.title': 'Неліктен FGS мектебін таңдау керек?',
     'features.subtitle': 'Біз балаларыңыздың толыққанды дамуы үшін барлық жағдай жасаймыз',
@@ -53,7 +53,7 @@ const translations = {
     'features.meals.desc': 'Диетологтармен жасалған мәзір',
     'features.transport': 'Оқушы тасымалы',
     'features.transport.desc': 'Қауіпсіз және ыңғайлы көлік',
-    
+
     // Teacher Pages
     'teachers.primary.title': 'Бастауыш сынып мұғалімдері',
     'teachers.primary.subtitle': 'Балалардың оқуға деген сүйіспеншілігін ояту үшін жауапты мұғалімдер',
@@ -64,11 +64,11 @@ const translations = {
     'teachers.backToHome': 'Басты бетке оралу',
     'teachers.about': 'туралы',
     'teachers.photosComingSoon': 'Мұғалімдердің фотосуреттері жақын арада қосылады',
-    
+
     // Common
     'common.readMore': 'Толығырақ оқу',
     'common.viewAll': 'Барлығын көру',
-    
+
     // Language Switching
     'lang.kazakh': 'Қазақша',
     'lang.russian': 'Русский',

@@ -1,0 +1,152 @@
+[
+  {
+    "id": "12bdc1c4-b2db-4956-87d4-606dcd10ae92",
+    "month": "Қаңтар",
+    "title": "Қысқы мектеп",
+    "dateText": "Қаңтар",
+    "description": "Оқушылардың білімін толықтыру",
+    "mediaUrl": null,
+    "mediaType": null,
+    "createdAt": "2026-02-27T14:04:35.000Z"
+  },
+  {
+    "id": "1c3e1adc-7688-4176-b913-91314455a8d6",
+    "month": "Қазан",
+    "title": "Ұстаздар күні",
+    "dateText": "7 қазан",
+    "description": "Мұғалімдерді құрметтеу шарасы",
+    "mediaUrl": null,
+    "mediaType": null,
+    "createdAt": "2026-02-27T14:04:35.000Z"
+  },
+  {
+    "id": "21092987-70e5-45ee-ad57-5d2797977656",
+    "month": "Тамыз",
+    "title": "FGS IV олимпиадасы",
+    "dateText": "20 тамыз",
+    "description": "FGS IV олимпиадасы өтті, олимпиадаға қаланың барлық мектептерінен оқушылар қатысты. Олар өз білімдерін байқап шыңдай білді.",
+    "mediaUrl": null,
+    "mediaType": null,
+    "createdAt": "2026-02-27T14:04:35.000Z"
+  },
+  {
+    "id": "218682d5-6894-40d7-b11a-a2cb46060544",
+    "month": "Қыркүйек",
+    "title": "Білім күні мерекесі",
+    "dateText": "1 қыркүйек",
+    "description": "Жаңа оқу жылын ашу салтанаты",
+    "mediaUrl": null,
+    "mediaType": null,
+    "createdAt": "2026-02-27T14:04:35.000Z"
+  },
+  {
+    "id": "3a550d0f-86f3-44b4-b451-21b6d6e6f98e",
+    "month": "Желтоқсан",
+    "title": "Жаңа жыл мерекесі",
+    "dateText": "Желтоқсан",
+    "description": "Мерекелік ертеңгілік",
+    "mediaUrl": null,
+    "mediaType": null,
+    "createdAt": "2026-02-27T14:04:35.000Z"
+  },
+  {
+    "id": "41e2c4dd-0309-4c13-b59e-825ead53a9ee",
+    "month": "Наурыз",
+    "title": "Наурыз мейрамы",
+    "dateText": "22 наурыз",
+    "description": "Ұлттық мерекені тойлау",
+    "mediaUrl": null,
+    "mediaType": null,
+    "createdAt": "2026-02-27T14:04:35.000Z"
+  },
+  {
+    "id": "45eec1d7-0558-4e8d-abac-1adb298d808c",
+    "month": "Мамыр",
+    "title": "Жеңіс күні",
+    "dateText": "9 мамыр",
+    "description": "Патриоттық шара",
+    "mediaUrl": null,
+    "mediaType": null,
+    "createdAt": "2026-02-27T14:04:35.000Z"
+  },
+  {
+    "id": "4a27f491-5000-47dd-bf11-662b940ad8cb",
+    "month": "Ақпан",
+    "title": "Ғылым апталығы",
+    "dateText": "Ақпан",
+    "description": "Жас зерттеушілер көрмесі",
+    "mediaUrl": null,
+    "mediaType": null,
+    "createdAt": "2026-02-27T14:04:35.000Z"
+  },
+  {
+    "id": "6b3914d3-5b7d-4fde-9605-efc0918867d7",
+    "month": "Мамыр",
+    "title": "Сыңғырла, соңғы қоңырау!",
+    "dateText": "25 мамыр",
+    "description": "Оқу жылын қорытындылау",
+    "mediaUrl": null,
+    "mediaType": null,
+    "createdAt": "2026-02-27T14:04:35.000Z"
+  },
+  {
+    "id": "7179a7b9-b9e9-42e4-b8d9-37c9634d1452",
+    "month": "Желтоқсан",
+    "title": "Тәуелсіздік күні",
+    "dateText": "16 желтоқсан",
+    "description": "Мерекелік іс-шара",
+    "mediaUrl": null,
+    "mediaType": null,
+    "createdAt": "2026-02-27T14:04:35.000Z"
+  },
+  {
+    "id": "7c35ed47-4708-49e3-99bf-ab33d193ada7",
+    "month": "Қыркүйек",
+    "title": "Адаптация аптасы",
+    "dateText": "5-9 қыркүйек",
+    "description": "Жаңа оқушыларды бейімдеу",
+    "mediaUrl": null,
+    "mediaType": null,
+    "createdAt": "2026-02-27T14:04:35.000Z"
+  },
+  {
+    "id": "97559d47-bcd3-4fc7-90e5-4b88fdcbe6f1",
+    "month": "Қазан",
+    "title": "Күз мерекесі",
+    "dateText": "15 қазан",
+    "description": "Шығармашылық көрме-конкурс",
+    "mediaUrl": null,
+    "mediaType": null,
+    "createdAt": "2026-02-27T14:04:35.000Z"
+  },
+  {
+    "id": "a4549d17-cb7f-4692-8d23-034ff2c1e4b4",
+    "month": "Қараша",
+    "title": "Тәуелсіздік күні қарсаңындағы шаралар",
+    "dateText": "Қараша",
+    "description": "Патриоттық тәрбие шаралары",
+    "mediaUrl": null,
+    "mediaType": null,
+    "createdAt": "2026-02-27T14:04:35.000Z"
+  },
+  {
+    "id": "ae371697-1274-4da4-a46c-ef29645663bd",
+    "month": "Тамыз",
+    "title": "Ашық есік күні «Білім мен мүмкіндіктер әлемі»",
+    "dateText": "25 тамыз",
+    "description": "Ашық есік күні барысында мектептің әкімшілігі мен педагогикалық ұжым ата-аналар мен оқушыларды қарсы алып, жаңа оқу жылындағы жоспарлар мен жаңалықтар таныстырылды.",
+    "mediaUrl": null,
+    "mediaType": null,
+    "createdAt": "2026-02-27T14:04:35.000Z"
+  },
+  {
+    "id": "ca9e2bf1-e052-4826-a5e9-23d1c21057f2",
+    "month": "Сәуір",
+    "title": "Бенефис шоу",
+    "dateText": "Сәуір",
+    "description": "Шығармашылық есеп беру кеші",
+    "mediaUrl": null,
+    "mediaType": null,
+    "createdAt": "2026-02-27T14:04:35.000Z"
+  }
+]

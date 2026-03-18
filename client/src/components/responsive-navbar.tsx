@@ -24,7 +24,7 @@ const navigation: NavItem[] = [
   { label: "Оқушылар", href: "/students" },
   { label: "Асхана", href: "/canteen" },
   { label: "Құжаттар", href: "/school-documents" },
-  { label: "Тәрбие жұмысы", href: "/upbringing-work" },
+  { label: "Мектеп тынысы", href: "/upbringing-work" },
   { label: "Фотогалерея", href: "/gallery" },
   { label: "Байланыс", href: "/contact" }
 ];
@@ -96,20 +96,32 @@ const ResponsiveNavbar = () => {
           <div className="flex items-center justify-between h-20">
 
             {/* Logo with Poppins font */}
-            <Link href="/">
-              <motion.span
+            {/* Logo area with strict hover reset */}
+            <style>
+              {`
+                #logo-link, #logo-link *, #logo-link:hover, #logo-link:hover * {
+                  filter: none !important;
+                  -webkit-filter: none !important;
+                  box-shadow: none !important;
+                  text-shadow: none !important;
+                  brightness: 100% !important;
+                }
+              `}
+            </style>
+            <Link href="/" id="logo-link">
+              <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className={`text-2xl lg:text-3xl font-black tracking-tight cursor-pointer transition-all duration-300 flex-shrink-0 ${isScrolled
-                  ? 'text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400'
-                  : 'text-white'
-                  }`}
-                style={{ fontFamily: "'Poppins', sans-serif" }}
-                data-testid="nav-logo"
+                className="cursor-pointer flex-shrink-0 transition-transform active:scale-95"
               >
-                FGS
-              </motion.span>
+                <img
+                  src="/logo.png"
+                  alt="FGS Logo"
+                  className="h-10 sm:h-12 lg:h-16 w-auto max-w-[150px] sm:max-w-none object-contain"
+                  data-testid="nav-logo"
+                />
+              </motion.div>
             </Link>
 
             {/* Desktop Navigation Links with staggered animation */}

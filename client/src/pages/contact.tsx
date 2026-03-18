@@ -34,7 +34,7 @@ export default function ContactPage() {
     {
       name: "Instagram",
       icon: Instagram,
-      url: "https://instagram.com/fgs_school",
+      url: "https://www.instagram.com/fgs.schoolkz/",
       color: "hover:text-pink-500",
       bgColor: "hover:bg-pink-50"
     },
