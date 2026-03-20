@@ -23,6 +23,7 @@ import { queryClient } from "@/lib/queryClient";
 interface SubFolder {
   id: string;
   label: string;
+  subfolders?: SubFolder[];
 }
 
 interface CategoryDef {
@@ -34,15 +35,57 @@ interface CategoryDef {
   subfolders?: SubFolder[]; // used when type === "grouped"
 }
 
+// Helper to get doc count for a subfolder
+function getDocCount(sf: SubFolder, docs: Document[]): number {
+  let count = docs.filter((d) => d.section === sf.id).length;
+  if (sf.subfolders) {
+    count += sf.subfolders.reduce((acc, child) => acc + getDocCount(child, docs), 0);
+  }
+  return count;
+}
+
 const CATEGORIES: CategoryDef[] = [
   {
     id: "founding",
-    label: "Құрылтайшылық құжаттар",
+    label: "Білім беру ұйымының жалпы сипаттамасы",
     type: "grouped",
     subfolders: [
-      { id: "founding-2024", label: "2024-2025" },
-      { id: "founding-2025", label: "2025-2026" },
-      { id: "founding-2026", label: "2026-2027" },
+      { 
+        id: "founding-2024", 
+        label: "2024-2025",
+        subfolders: [
+          { id: "founding-2024-1", label: "Заңды тұлғаны мемлекеттік тіркеу / қайта тіркеу туралы анықтама" },
+          { id: "founding-2024-2", label: "Заңды тұлға өкілін басшы лауазымына тағайындау туралы бұйрық" },
+          { id: "founding-2024-3", label: "Білім беру ұйымының Жарғысы" },
+          { id: "founding-2024-4", label: "Лиценция және оған қосымша" },
+          { id: "founding-2024-5", label: "Мектептің техникалық төлқұжаты" },
+          { id: "founding-2024-6", label: "Меншік иесі туралы мәліметтер" }
+        ]
+      },
+      { 
+        id: "founding-2025", 
+        label: "2025-2026",
+        subfolders: [
+          { id: "founding-2025-1", label: "Заңды тұлғаны мемлекеттік тіркеу / қайта тіркеу туралы анықтама" },
+          { id: "founding-2025-2", label: "Заңды тұлға өкілін басшы лауазымына тағайындау туралы бұйрық" },
+          { id: "founding-2025-3", label: "Білім беру ұйымының Жарғысы" },
+          { id: "founding-2025-4", label: "Лиценция және оған қосымша" },
+          { id: "founding-2025-5", label: "Мектептің техникалық төлқұжаты" },
+          { id: "founding-2025-6", label: "Меншік иесі туралы мәліметтер" }
+        ]
+      },
+      { 
+        id: "founding-2026", 
+        label: "2026-2027",
+        subfolders: [
+          { id: "founding-2026-1", label: "Заңды тұлғаны мемлекеттік тіркеу / қайта тіркеу туралы анықтама" },
+          { id: "founding-2026-2", label: "Заңды тұлға өкілін басшы лауазымына тағайындау туралы бұйрық" },
+          { id: "founding-2026-3", label: "Білім беру ұйымының Жарғысы" },
+          { id: "founding-2026-4", label: "Лиценция және оған қосымша" },
+          { id: "founding-2026-5", label: "Мектептің техникалық төлқұжаты" },
+          { id: "founding-2026-6", label: "Меншік иесі туралы мәліметтер" }
+        ]
+      },
     ],
   },
   {
@@ -50,9 +93,207 @@ const CATEGORIES: CategoryDef[] = [
     label: "Кадр құрамының сапасы",
     type: "grouped",
     subfolders: [
-      { id: "staff-2024", label: "2024-2025" },
-      { id: "staff-2025", label: "2025-2026" },
-      { id: "staff-2026", label: "2026-2027" },
+      { 
+        id: "staff-2024", 
+        label: "2024-2025",
+        subfolders: [
+          { 
+            id: "staff-2024-1", 
+            label: "1-папка Әкімшілік",
+            subfolders: [
+              { id: "staff-2024-1-1", label: "Тізім" },
+              { id: "staff-2024-1-2", label: "Диплом" },
+              { id: "staff-2024-1-3", label: "Біліктілік санат" },
+              { id: "staff-2024-1-4", label: "Біліктілік курсы" },
+            ]
+          },
+          { 
+            id: "staff-2024-2", 
+            label: "2-папка Мұғалімдер",
+            subfolders: [
+              { id: "staff-2024-2-0-1", label: "Жалпы мұғалімдер тізімі" },
+              { id: "staff-2024-2-0-2", label: "Дипломы" },
+              { id: "staff-2024-2-0-3", label: "Біліктілік арттыру курсының куәлігі" },
+              {
+                id: "staff-2024-2-1",
+                label: "Бастауыш білім деңгейі",
+                subfolders: [
+                  { id: "staff-2024-2-1-1", label: "Тізім" },
+                  { id: "staff-2024-2-1-2", label: "Біліктілік санаты куәлігі" },
+                  { id: "staff-2024-2-1-3", label: "Біліктілік санаты бар мұғалімдер тізімі" },
+                ]
+              },
+              {
+                id: "staff-2024-2-2",
+                label: "Негізгі білім деңгейі",
+                subfolders: [
+                  { id: "staff-2024-2-2-1", label: "Тізім" },
+                  { id: "staff-2024-2-2-2", label: "Біліктілік санаты куәлігі" },
+                  { id: "staff-2024-2-2-3", label: "Біліктілік санаты бар мұғалімдер тізімі" },
+                ]
+              }
+            ]
+          },
+          { 
+            id: "staff-2024-3", 
+            label: "3-папка Тарификациялық мәліметтер",
+            subfolders: [
+              { 
+                id: "staff-2024-3-1", 
+                label: "Бірінші жартыжылдық",
+                subfolders: [
+                  { id: "staff-2024-3-1-1", label: "Тарифициялық тізім" },
+                  { id: "staff-2024-3-1-2", label: "Штаттық бірліктер саны туралы ақпарат" },
+                  { id: "staff-2024-3-1-3", label: "Бірінші жартыжылдықтағы жүктеме саны" }
+                ]
+              },
+              { 
+                id: "staff-2024-3-2", 
+                label: "Екінші жартыжылдық",
+                subfolders: [
+                  { id: "staff-2024-3-2-1", label: "Тарифициялық тізім" },
+                  { id: "staff-2024-3-2-2", label: "Штаттық бірліктер саны туралы ақпарат" },
+                  { id: "staff-2024-3-2-3", label: "Екінші жартыжылдықтағы жүктеме саны" }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      { 
+        id: "staff-2025", 
+        label: "2025-2026",
+        subfolders: [
+          { 
+            id: "staff-2025-1", 
+            label: "1-папка Әкімшілік",
+            subfolders: [
+              { id: "staff-2025-1-1", label: "Тізім" },
+              { id: "staff-2025-1-2", label: "Диплом" },
+              { id: "staff-2025-1-3", label: "Біліктілік санат" },
+              { id: "staff-2025-1-4", label: "Біліктілік курсы" },
+            ]
+          },
+          { 
+            id: "staff-2025-2", 
+            label: "2-папка Мұғалімдер",
+            subfolders: [
+              { id: "staff-2025-2-0-1", label: "Жалпы мұғалімдер тізімі" },
+              { id: "staff-2025-2-0-2", label: "Дипломы" },
+              { id: "staff-2025-2-0-3", label: "Біліктілік арттыру курсының куәлігі" },
+              {
+                id: "staff-2025-2-1",
+                label: "Бастауыш білім деңгейі",
+                subfolders: [
+                  { id: "staff-2025-2-1-1", label: "Тізім" },
+                  { id: "staff-2025-2-1-2", label: "Біліктілік санаты куәлігі" },
+                  { id: "staff-2025-2-1-3", label: "Біліктілік санаты бар мұғалімдер тізімі" },
+                ]
+              },
+              {
+                id: "staff-2025-2-2",
+                label: "Негізгі білім деңгейі",
+                subfolders: [
+                  { id: "staff-2025-2-2-1", label: "Тізім" },
+                  { id: "staff-2025-2-2-2", label: "Біліктілік санаты куәлігі" },
+                  { id: "staff-2025-2-2-3", label: "Біліктілік санаты бар мұғалімдер тізімі" },
+                ]
+              }
+            ]
+          },
+          { 
+            id: "staff-2025-3", 
+            label: "3-папка Тарификациялық мәліметтер",
+            subfolders: [
+              { 
+                id: "staff-2025-3-1", 
+                label: "Бірінші жартыжылдық",
+                subfolders: [
+                  { id: "staff-2025-3-1-1", label: "Тарифициялық тізім" },
+                  { id: "staff-2025-3-1-2", label: "Штаттық бірліктер саны туралы ақпарат" },
+                  { id: "staff-2025-3-1-3", label: "Бірінші жартыжылдықтағы жүктеме саны" }
+                ]
+              },
+              { 
+                id: "staff-2025-3-2", 
+                label: "Екінші жартыжылдық",
+                subfolders: [
+                  { id: "staff-2025-3-2-1", label: "Тарифициялық тізім" },
+                  { id: "staff-2025-3-2-2", label: "Штаттық бірліктер саны туралы ақпарат" },
+                  { id: "staff-2025-3-2-3", label: "Екінші жартыжылдықтағы жүктеме саны" }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      { 
+        id: "staff-2026", 
+        label: "2026-2027",
+        subfolders: [
+          { 
+            id: "staff-2026-1", 
+            label: "1-папка Әкімшілік",
+            subfolders: [
+              { id: "staff-2026-1-1", label: "Тізім" },
+              { id: "staff-2026-1-2", label: "Диплом" },
+              { id: "staff-2026-1-3", label: "Біліктілік санат" },
+              { id: "staff-2026-1-4", label: "Біліктілік курсы" },
+            ]
+          },
+          { 
+            id: "staff-2026-2", 
+            label: "2-папка Мұғалімдер",
+            subfolders: [
+              { id: "staff-2026-2-0-1", label: "Жалпы мұғалімдер тізімі" },
+              { id: "staff-2026-2-0-2", label: "Дипломы" },
+              { id: "staff-2026-2-0-3", label: "Біліктілік арттыру курсының куәлігі" },
+              {
+                id: "staff-2026-2-1",
+                label: "Бастауыш білім деңгейі",
+                subfolders: [
+                  { id: "staff-2026-2-1-1", label: "Тізім" },
+                  { id: "staff-2026-2-1-2", label: "Біліктілік санаты куәлігі" },
+                  { id: "staff-2026-2-1-3", label: "Біліктілік санаты бар мұғалімдер тізімі" },
+                ]
+              },
+              {
+                id: "staff-2026-2-2",
+                label: "Негізгі білім деңгейі",
+                subfolders: [
+                  { id: "staff-2026-2-2-1", label: "Тізім" },
+                  { id: "staff-2026-2-2-2", label: "Біліктілік санаты куәлігі" },
+                  { id: "staff-2026-2-2-3", label: "Біліктілік санаты бар мұғалімдер тізімі" },
+                ]
+              }
+            ]
+          },
+          { 
+            id: "staff-2026-3", 
+            label: "3-папка Тарификациялық мәліметтер",
+            subfolders: [
+              { 
+                id: "staff-2026-3-1", 
+                label: "Бірінші жартыжылдық",
+                subfolders: [
+                  { id: "staff-2026-3-1-1", label: "Тарифициялық тізім" },
+                  { id: "staff-2026-3-1-2", label: "Штаттық бірліктер саны туралы ақпарат" },
+                  { id: "staff-2026-3-1-3", label: "Бірінші жартыжылдықтағы жүктеме саны" }
+                ]
+              },
+              { 
+                id: "staff-2026-3-2", 
+                label: "Екінші жартыжылдық",
+                subfolders: [
+                  { id: "staff-2026-3-2-1", label: "Тарифициялық тізім" },
+                  { id: "staff-2026-3-2-2", label: "Штаттық бірліктер саны туралы ақпарат" },
+                  { id: "staff-2026-3-2-3", label: "Екінші жартыжылдықтағы жүктеме саны" }
+                ]
+              }
+            ]
+          }
+        ]
+      },
     ],
   },
   {
@@ -60,9 +301,96 @@ const CATEGORIES: CategoryDef[] = [
     label: "Білім алушылардың контингенті",
     type: "grouped",
     subfolders: [
-      { id: "contingent-2024", label: "2024-2025" },
-      { id: "contingent-2025", label: "2025-2026" },
-      { id: "contingent-2026", label: "2026-2027" },
+      { 
+        id: "contingent-2024", 
+        label: "2024-2025",
+        subfolders: [
+          {
+            id: "contingent-2024-main",
+            label: "Контингент",
+            subfolders: [
+              {
+                id: "contingent-2024-1",
+                label: "Бірінші жартыжылдық",
+                subfolders: [
+                  { id: "contingent-2024-1-list", label: "Білім алушылар тізімі" },
+                  { id: "contingent-2024-1-gender", label: "Сыныптар бойынша қыздармен ұлдарға бөлініу туралы мәлімет" },
+                  { id: "contingent-2024-1-struct", label: "Білім алушылар контингентінің құрылымы" }
+                ]
+              },
+              {
+                id: "contingent-2024-2",
+                label: "Екінші жартыжылдық",
+                subfolders: [
+                  { id: "contingent-2024-2-list", label: "Білім алушылар тізімі" },
+                  { id: "contingent-2024-2-gender", label: "Сыныптар бойынша қыздармен ұлдарға бөлініу туралы мәлімет" },
+                  { id: "contingent-2024-2-struct", label: "Білім алушылар контингентінің құрылымы" }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      { 
+        id: "contingent-2025", 
+        label: "2025-2026",
+        subfolders: [
+          {
+            id: "contingent-2025-main",
+            label: "Контингент",
+            subfolders: [
+              {
+                id: "contingent-2025-1",
+                label: "Бірінші жартыжылдық",
+                subfolders: [
+                  { id: "contingent-2025-1-list", label: "Білім алушылар тізімі" },
+                  { id: "contingent-2025-1-gender", label: "Сыныптар бойынша қыздармен ұлдарға бөлініу туралы мәлімет" },
+                  { id: "contingent-2025-1-struct", label: "Білім алушылар контингентінің құрылымы" }
+                ]
+              },
+              {
+                id: "contingent-2025-2",
+                label: "Екінші жартыжылдық",
+                subfolders: [
+                  { id: "contingent-2025-2-list", label: "Білім алушылар тізімі" },
+                  { id: "contingent-2025-2-gender", label: "Сыныптар бойынша қыздармен ұлдарға бөлініу туралы мәлімет" },
+                  { id: "contingent-2025-2-struct", label: "Білім алушылар контингентінің құрылымы" }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      { 
+        id: "contingent-2026", 
+        label: "2026-2027",
+        subfolders: [
+          {
+            id: "contingent-2026-main",
+            label: "Контингент",
+            subfolders: [
+              {
+                id: "contingent-2026-1",
+                label: "Бірінші жартыжылдық",
+                subfolders: [
+                  { id: "contingent-2026-1-list", label: "Білім алушылар тізімі" },
+                  { id: "contingent-2026-1-gender", label: "Сыныптар бойынша қыздармен ұлдарға бөлініу туралы мәлімет" },
+                  { id: "contingent-2026-1-struct", label: "Білім алушылар контингентінің құрылымы" }
+                ]
+              },
+              {
+                id: "contingent-2026-2",
+                label: "Екінші жартыжылдық",
+                subfolders: [
+                  { id: "contingent-2026-2-list", label: "Білім алушылар тізімі" },
+                  { id: "contingent-2026-2-gender", label: "Сыныптар бойынша қыздармен ұлдарға бөлініу туралы мәлімет" },
+                  { id: "contingent-2026-2-struct", label: "Білім алушылар контингентінің құрылымы" }
+                ]
+              }
+            ]
+          }
+        ]
+      },
     ],
   },
   {
@@ -70,9 +398,36 @@ const CATEGORIES: CategoryDef[] = [
     label: "Оқу жоспары",
     type: "grouped",
     subfolders: [
-      { id: "curriculum-2024", label: "2024-2025" },
-      { id: "curriculum-2025", label: "2025-2026" },
-      { id: "curriculum-2026", label: "2026-2027" },
+      { 
+        id: "curriculum-2024", 
+        label: "2024-2025",
+        subfolders: [
+          { id: "curriculum-2024-work", label: "Жұмыс оқу жоспары" },
+          { id: "curriculum-2024-schedule", label: "Сабақ кестесі" },
+          { id: "curriculum-2024-var", label: "Вариативтік компонент бойынша сабақ кестесі" },
+          { id: "curriculum-2024-max", label: "Білім алушылардың апталық оқу жүктемесінің ең жоғары көлемінің сәйкестігі" }
+        ]
+      },
+      { 
+        id: "curriculum-2025", 
+        label: "2025-2026",
+        subfolders: [
+          { id: "curriculum-2025-work", label: "Жұмыс оқу жоспары" },
+          { id: "curriculum-2025-schedule", label: "Сабақ кестесі" },
+          { id: "curriculum-2025-var", label: "Вариативтік компонент бойынша сабақ кестесі" },
+          { id: "curriculum-2025-max", label: "Білім алушылардың апталық оқу жүктемесінің ең жоғары көлемінің сәйкестігі" }
+        ]
+      },
+      { 
+        id: "curriculum-2026", 
+        label: "2026-2027",
+        subfolders: [
+          { id: "curriculum-2026-work", label: "Жұмыс оқу жоспары" },
+          { id: "curriculum-2026-schedule", label: "Сабақ кестесі" },
+          { id: "curriculum-2026-var", label: "Вариативтік компонент бойынша сабақ кестесі" },
+          { id: "curriculum-2026-max", label: "Білім алушылардың апталық оқу жүктемесінің ең жоғары көлемінің сәйкестігі" }
+        ]
+      },
     ],
   },
   {
@@ -118,14 +473,20 @@ const CATEGORIES: CategoryDef[] = [
 ];
 
 // Flat list of all sections for the "add document" dropdown
+const flattenSubfolders = (catLabel: string, sfs: SubFolder[]): { id: string; label: string }[] => {
+  return sfs.flatMap(sf => {
+    const currentLabel = `${catLabel} › ${sf.label}`;
+    const rest = sf.subfolders ? flattenSubfolders(currentLabel, sf.subfolders) : [];
+    return [{ id: sf.id, label: currentLabel }, ...rest];
+  });
+};
+
+// Flat list of all sections for the "add document" dropdown
 const ALL_SECTIONS: { id: string; label: string }[] = CATEGORIES.flatMap((cat) => {
   if (cat.type === "simple") {
     return [{ id: cat.section!, label: cat.label }];
   }
-  return (cat.subfolders ?? []).map((sf) => ({
-    id: sf.id,
-    label: `${cat.label} › ${sf.label}`,
-  }));
+  return flattenSubfolders(cat.label, cat.subfolders ?? []);
 });
 
 // ─── Document row ─────────────────────────────────────────────────────────────
@@ -298,6 +659,8 @@ function SubFolderAccordion({
 }) {
   const [open, setOpen] = useState(false);
   const docs = documents.filter((d) => d.section === subfolder.id);
+  const hasSubfolders = subfolder.subfolders && subfolder.subfolders.length > 0;
+  const count = getDocCount(subfolder, documents);
 
   return (
     <div className="ml-4 border-l border-gray-100 dark:border-white/10 pl-3">
@@ -311,7 +674,7 @@ function SubFolderAccordion({
           <Folder className="w-4 h-4 text-yellow-500 shrink-0" />
         )}
         <span className="text-sm font-medium text-gray-700 dark:text-gray-200 flex-1">{subfolder.label}</span>
-        <span className="text-xs text-gray-400 mr-1">{docs.length}</span>
+        <span className="text-xs text-gray-400 mr-1">{count}</span>
         {open ? (
           <ChevronDown className="w-4 h-4 text-gray-400" />
         ) : (
@@ -321,7 +684,19 @@ function SubFolderAccordion({
 
       {open && (
         <div className="mt-1 mb-2 space-y-1.5 pl-1">
-          {docs.length === 0 ? (
+          {hasSubfolders && subfolder.subfolders!.map((sf) => (
+            <SubFolderAccordion
+              key={sf.id}
+              subfolder={sf}
+              documents={documents}
+              user={user}
+              updateMutation={updateMutation}
+              deleteMutation={deleteMutation}
+              onEdit={onEdit}
+              toast={toast}
+            />
+          ))}
+          {!hasSubfolders && docs.length === 0 ? (
             <p className="text-xs text-gray-600 px-4 py-2">Құжаттар жоқ</p>
           ) : (
             docs.map((doc, i) => (
@@ -368,7 +743,7 @@ function CategoryAccordion({
     category.type === "simple"
       ? documents.filter((d) => d.section === category.section).length
       : (category.subfolders ?? []).reduce(
-        (acc, sf) => acc + documents.filter((d) => d.section === sf.id).length,
+        (acc, sf) => acc + getDocCount(sf, documents),
         0
       );
 
@@ -476,7 +851,17 @@ export default function SchoolDocumentsPage() {
       const fd = new FormData();
       fd.append("file", uploadFile);
       const uploadRes = await fetch("/api/upload", { method: "POST", body: fd });
-      if (!uploadRes.ok) throw new Error("File upload failed");
+      if (!uploadRes.ok) {
+        const errText = await uploadRes.text().catch(() => "");
+        let errMsg = "File upload failed";
+        try {
+          const errData = JSON.parse(errText);
+          if (errData.message) errMsg = errData.message;
+        } catch {
+          if (errText) errMsg = errText.slice(0, 100);
+        }
+        throw new Error(errMsg);
+      }
       const { url } = await uploadRes.json();
 
       const docRes = await fetch("/api/documents", {
@@ -551,9 +936,9 @@ export default function SchoolDocumentsPage() {
             <div className="flex items-center justify-between flex-wrap gap-4">
               <Link
                 href="/"
-                className="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors text-sm font-medium"
+                className="flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors duration-200 bg-blue-50 dark:bg-[#1e293b] hover:bg-blue-100 dark:hover:bg-slate-700 px-3 py-2 rounded-lg shadow-sm"
               >
-                <ArrowLeft className="w-4 h-4" />
+                <ArrowLeft className="w-4 h-4 mr-2" />
                 Басты бетке оралу
               </Link>
 

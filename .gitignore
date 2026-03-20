@@ -2,7 +2,6 @@ node_modules/
 dist/
 .env
 .local/
-uploads/
 
 # Суреттер мен медиа файлдар (XAMPP арқылы қосылады)
 *.png

@@ -1,6 +1,6 @@
 import SEOHead from "@/components/seo-head";
 import { Link } from "wouter";
-import { MapPin, Phone, Mail, Clock, MessageCircle, Send, Instagram, Building, ArrowLeft } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, MessageCircle, Send, Instagram, Facebook, Building, ArrowLeft } from "lucide-react";
 
 export default function ContactPage() {
   const contactInfo = [
@@ -51,6 +51,13 @@ export default function ContactPage() {
       url: "https://wa.me/77757906363",
       color: "hover:text-green-500",
       bgColor: "hover:bg-green-50"
+    },
+    {
+      name: "Facebook",
+      icon: Facebook,
+      url: "https://www.facebook.com/people/Fgs-School/pfbid0b3bkVb2Vz1B59RdK3PfLQR7DcKwJ92XaxfMXdB5kK7wv1AwTBBUbtUZ5uj1oAN7ul/",
+      color: "hover:text-blue-600",
+      bgColor: "hover:bg-blue-50"
     }
   ];
 
@@ -86,7 +93,7 @@ export default function ContactPage() {
             <div className="flex items-center justify-between">
               <Link
                 href="/"
-                className="flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors duration-200 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 px-3 py-2 rounded-lg"
+                className="flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors duration-200 bg-blue-50 dark:bg-[#1e293b] hover:bg-blue-100 dark:hover:bg-slate-700 px-3 py-2 rounded-lg shadow-sm"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 <span className="hidden sm:inline">Басты бетке оралу</span>

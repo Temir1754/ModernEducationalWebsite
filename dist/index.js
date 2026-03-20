@@ -369,7 +369,8 @@ var storage_multer = multer.diskStorage({
 });
 var upload = multer({
   storage: storage_multer,
-  limits: { fileSize: 50 * 1024 * 1024 },
+  limits: { fileSize: 500 * 1024 * 1024 },
+  // 500 MB
   fileFilter: (req, file, cb) => {
     const allowedTypes = [
       "application/pdf",
@@ -378,12 +379,28 @@ var upload = multer({
       "image/gif",
       "image/webp",
       "video/mp4",
-      "video/webm"
+      "video/webm",
+      "application/msword",
+      // .doc
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      // .docx
+      "application/vnd.ms-excel",
+      // .xls
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      // .xlsx
+      "application/vnd.ms-powerpoint",
+      // .ppt
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+      // .pptx
+      "application/zip",
+      // .zip
+      "application/x-rar-compressed"
+      // .rar
     ];
     if (allowedTypes.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(new Error("File type not allowed"));
+      cb(new Error("\u0420\u04B1\u049B\u0441\u0430\u0442 \u0435\u0442\u0456\u043B\u043C\u0435\u0433\u0435\u043D \u0444\u0430\u0439\u043B \u0444\u043E\u0440\u043C\u0430\u0442\u044B (File type not allowed)"));
     }
   }
 });
@@ -492,17 +509,23 @@ async function registerRoutes(app2) {
     res.setHeader("Cache-Control", "public, max-age=31536000");
     next();
   }, express.static(uploadDir));
-  app2.post("/api/upload", requireAdmin, upload.single("file"), (req, res) => {
-    try {
-      if (!req.file) {
-        return res.status(400).json({ message: "No file uploaded" });
+  app2.post("/api/upload", requireAdmin, (req, res) => {
+    upload.single("file")(req, res, (err) => {
+      if (err) {
+        console.error("Multer error:", err);
+        return res.status(400).json({ message: err.message || "File upload error" });
       }
-      const url = `/uploads/${req.file.filename}`;
-      res.json({ url, filename: req.file.filename, originalName: req.file.originalname });
-    } catch (error) {
-      console.error("Upload error:", error);
-      res.status(500).json({ message: "Upload failed" });
-    }
+      try {
+        if (!req.file) {
+          return res.status(400).json({ message: "No file uploaded" });
+        }
+        const url = `/uploads/${req.file.filename}`;
+        res.json({ url, filename: req.file.filename, originalName: req.file.originalname });
+      } catch (error) {
+        console.error("Upload error:", error);
+        res.status(500).json({ message: "Upload failed" });
+      }
+    });
   });
   app2.get("/api/events", async (req, res) => {
     try {
@@ -617,7 +640,8 @@ async function registerRoutes(app2) {
       const doc = await storage.createDocument(data);
       res.json(doc);
     } catch (error) {
-      res.status(400).json({ message: "Invalid document data" });
+      console.error("[Documents API Error]", error);
+      res.status(400).json({ message: "Invalid document data", error: String(error) });
     }
   });
   app2.patch("/api/documents/:id", requireAdmin, async (req, res) => {
@@ -946,8 +970,8 @@ function serveStatic(app2) {
 
 // server/index.ts
 var app = express3();
-app.use(express3.json());
-app.use(express3.urlencoded({ extended: false }));
+app.use(express3.json({ limit: "500mb" }));
+app.use(express3.urlencoded({ limit: "500mb", extended: false }));
 app.use((req, res, next) => {
   const start = Date.now();
   const path5 = req.path;

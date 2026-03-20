@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Menu, X, Phone, MessageCircle, Send } from "lucide-react";
+import { Menu, X, Phone, MessageCircle, Send, Facebook } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -250,6 +250,20 @@ const ResponsiveNavbar = () => {
               >
                 <Send className="w-5 h-5" />
               </motion.a>
+              <motion.a
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.5 }}
+                href="https://www.facebook.com/people/Fgs-School/pfbid0b3bkVb2Vz1B59RdK3PfLQR7DcKwJ92XaxfMXdB5kK7wv1AwTBBUbtUZ5uj1oAN7ul/"
+                data-testid="contact-facebook"
+                className={`w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 ${isScrolled
+                  ? 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-blue-600 hover:text-white'
+                  : 'bg-white/20 text-white hover:bg-blue-600 backdrop-blur-sm'
+                  }`}
+                title="Facebook"
+              >
+                <Facebook className="w-5 h-5" />
+              </motion.a>
 
             </div>
           </div>
@@ -359,6 +373,19 @@ const ResponsiveNavbar = () => {
                   >
                     <Send className="w-6 h-6" />
                     <span className="text-xs font-medium">Telegram</span>
+                  </motion.a>
+
+                  <motion.a
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 0.3, delay: 0.7 }}
+                    href="https://www.facebook.com/people/Fgs-School/pfbid0b3bkVb2Vz1B59RdK3PfLQR7DcKwJ92XaxfMXdB5kK7wv1AwTBBUbtUZ5uj1oAN7ul/"
+                    data-testid="mobile-contact-facebook"
+                    className="flex flex-col items-center gap-2 p-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-blue-600 hover:text-white transition-all duration-300 hover:scale-110"
+                    title="Facebook"
+                  >
+                    <Facebook className="w-6 h-6" />
+                    <span className="text-xs font-medium">Facebook</span>
                   </motion.a>
                 </div>
               </div>

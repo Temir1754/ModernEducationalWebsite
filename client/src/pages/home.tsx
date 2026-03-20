@@ -14,6 +14,7 @@ import {
   Send,
   MessageCircle,
   Share2,
+  Facebook,
   X,
   Star,
   Users,
@@ -1011,16 +1012,23 @@ export default function Home() {
                         <button
                           onClick={(e) => {
                             e.preventDefault();
-                            // Try to open WhatsApp app first, fallback to web
-                            window.location.href = 'whatsapp://send?phone=77757906363';
-                            setTimeout(() => {
-                              window.open('https://wa.me/77757906363', '_blank');
-                            }, 1000);
+                            window.open('https://wa.me/77757906363', '_blank');
                           }}
                           className="flex items-center bg-green-500 text-white px-4 py-2 rounded-full hover:bg-green-600 transform hover:scale-105 transition-all duration-200 text-sm font-medium shadow-md"
                         >
                           <MessageCircle className="w-5 h-5 mr-2" />
                           WhatsApp
+                        </button>
+
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            window.open('https://www.facebook.com/people/Fgs-School/pfbid0b3bkVb2Vz1B59RdK3PfLQR7DcKwJ92XaxfMXdB5kK7wv1AwTBBUbtUZ5uj1oAN7ul/', '_blank');
+                          }}
+                          className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transform hover:scale-105 transition-all duration-200 text-sm font-medium shadow-md"
+                        >
+                          <Facebook className="w-5 h-5 mr-2" />
+                          Facebook
                         </button>
                       </div>
                     </div>

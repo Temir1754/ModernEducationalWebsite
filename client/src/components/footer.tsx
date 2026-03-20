@@ -46,6 +46,11 @@ export default function Footer() {
         }, 1000);
       }
     },
+    {
+      href: "https://www.facebook.com/people/Fgs-School/pfbid0b3bkVb2Vz1B59RdK3PfLQR7DcKwJ92XaxfMXdB5kK7wv1AwTBBUbtUZ5uj1oAN7ul/",
+      icon: "fab fa-facebook-f",
+      className: "text-blue-400 hover:text-blue-500 transform hover:scale-110 transition-all duration-200",
+    },
   ];
 
   return (
