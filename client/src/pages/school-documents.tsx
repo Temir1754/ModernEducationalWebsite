@@ -3,18 +3,19 @@ import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import {
   ArrowLeft, Download, Eye, Loader2, Plus, Trash2, Pencil,
-  ChevronRight, ChevronDown, Folder, FolderOpen, FileText
+  ChevronRight, ChevronDown, Folder, FolderOpen, FileText, Search, X, Check
 } from "lucide-react";
 import SEOHead from "@/components/seo-head";
 import type { Document } from "@shared/schema";
 import { useAuth } from "@/hooks/use-auth";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient } from "@/lib/queryClient";
 
@@ -508,6 +509,7 @@ function DocRow({
   onEdit: (doc: Document) => void;
   toast: any;
 }) {
+  const [isDeleting, setIsDeleting] = useState(false);
   const handleView = (url: string) => window.open(url, "_blank");
   const handleDownload = (url: string, title: string) => {
     const a = document.createElement("a");
@@ -618,19 +620,46 @@ function DocRow({
               size="sm"
               onClick={() => onEdit(doc)}
               className="text-gray-400 hover:text-white hover:bg-white/10 h-7 w-7 p-0"
+              disabled={isDeleting}
             >
               <Pencil className="w-3.5 h-3.5" />
             </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => {
-                if (confirm("Құжатты өшіру керек пе?")) deleteMutation.mutate(doc.id);
-              }}
-              className="text-red-400 hover:text-red-300 hover:bg-red-500/10 h-7 w-7 p-0"
-            >
-              <Trash2 className="w-3.5 h-3.5" />
-            </Button>
+            
+            {isDeleting ? (
+              <div className="flex items-center gap-1 bg-red-500/10 rounded-md p-0.5">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    deleteMutation.mutate(doc.id);
+                    setIsDeleting(false);
+                  }}
+                  className="text-red-400 hover:text-red-300 hover:bg-red-500/20 h-7 w-7 p-0"
+                  title="Растау"
+                >
+                  <Check className="w-3.5 h-3.5" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsDeleting(false)}
+                  className="text-gray-400 hover:text-gray-300 hover:bg-white/10 h-7 w-7 p-0"
+                  title="Болдырмау"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </Button>
+              </div>
+            ) : (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsDeleting(true)}
+                className="text-red-400 hover:text-red-300 hover:bg-red-500/10 h-7 w-7 p-0"
+                title="Өшіру"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </Button>
+            )}
           </div>
         )}
       </div>
@@ -818,6 +847,294 @@ function CategoryAccordion({
 
 // ─── Main page ────────────────────────────────────────────────────────────────
 
+// ─── Search Result Section ───────────────────────────────────────────────────
+
+function SearchSection({
+  label,
+  docs,
+  user,
+  updateMutation,
+  deleteMutation,
+  onEdit,
+  toast,
+}: {
+  label: string;
+  docs: Document[];
+  user: any;
+  updateMutation: any;
+  deleteMutation: any;
+  onEdit: (doc: Document) => void;
+  toast: any;
+}) {
+  const [open, setOpen] = useState(true);
+
+  return (
+    <div className="rounded-xl border border-gray-200 dark:border-white/10 overflow-hidden bg-white dark:bg-[#1e293b] shadow-sm">
+      <button
+        onClick={() => setOpen((o) => !o)}
+        className={`flex items-center gap-3 w-full px-4 py-3 transition-colors text-left ${
+          open ? "bg-blue-50 dark:bg-blue-600/10" : "bg-white dark:bg-white/5 hover:bg-gray-50 dark:hover:bg-white/8"
+        }`}
+      >
+        <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center shrink-0">
+          {open ? (
+            <FolderOpen className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+          ) : (
+            <Folder className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+          )}
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-semibold text-gray-800 dark:text-white truncate">
+            {label}
+          </p>
+          <p className="text-[10px] text-gray-500 uppercase tracking-wider uppercase">
+            {docs.length} құжат табылды
+          </p>
+        </div>
+        {open ? (
+          <ChevronDown className="w-4 h-4 text-gray-400" />
+        ) : (
+          <ChevronRight className="w-4 h-4 text-gray-400" />
+        )}
+      </button>
+
+      {open && (
+        <div className="bg-gray-50/50 dark:bg-[#0d1117] p-2 space-y-1.5 border-t border-gray-100 dark:border-white/5">
+          {docs.map((doc, i) => (
+            <DocRow
+              key={doc.id}
+              doc={doc}
+              index={i}
+              user={user}
+              updateMutation={updateMutation}
+              deleteMutation={deleteMutation}
+              onEdit={onEdit}
+              toast={toast}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Nested Section Selector ────────────────────────────────────────────────
+
+function FolderSelection({
+  folder,
+  selectedId,
+  onSelect,
+  level = 0,
+}: {
+  folder: SubFolder;
+  selectedId: string;
+  onSelect: (id: string, label: string) => void;
+  level?: number;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const isSelected = selectedId === folder.id;
+  const hasChildren = folder.subfolders && folder.subfolders.length > 0;
+
+  return (
+    <div className="space-y-1">
+      <div className="flex items-center gap-1 group/row">
+        <motion.div
+          whileHover={{ x: 2 }}
+          className={`flex-1 flex items-center gap-2 px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-200 ${
+            isSelected
+              ? "bg-blue-600 text-white shadow-lg shadow-blue-900/40"
+              : "hover:bg-white/10 text-gray-400 hover:text-white"
+          }`}
+          style={{ marginLeft: `${level * 16}px` }}
+          onClick={() => {
+            if (hasChildren) {
+              setIsOpen(!isOpen);
+            } else {
+              onSelect(folder.id, folder.label);
+            }
+          }}
+        >
+          <div className="shrink-0 w-5 flex items-center justify-center">
+            {hasChildren ? (
+              <motion.div animate={{ rotate: isOpen ? 90 : 0 }}>
+                <ChevronRight className={`w-3.5 h-3.5 ${isSelected ? "text-white" : "text-gray-500"}`} />
+              </motion.div>
+            ) : (
+              <div className={`w-2 h-2 rounded-full border ${isSelected ? "bg-white border-white scale-110" : "bg-blue-500/20 border-blue-500/50"}`} />
+            )}
+          </div>
+          <span className={`text-sm tracking-tight flex-1 truncate ${isSelected ? "font-bold" : "font-medium"}`}>
+            {folder.label}
+          </span>
+          {!hasChildren && isSelected && (
+            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
+              <Check className="w-4 h-4 text-white" />
+            </motion.div>
+          )}
+        </motion.div>
+        
+        {hasChildren && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className={`h-9 px-2 text-[10px] uppercase font-bold tracking-tighter transition-all ${
+              isSelected ? "text-blue-400 bg-white/10" : "text-gray-600 hover:text-blue-400 opacity-0 group-hover/row:opacity-100"
+            }`}
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelect(folder.id, folder.label);
+            }}
+          >
+            {isSelected ? "Таңдалды" : "Бұны таңдау"}
+          </Button>
+        )}
+      </div>
+
+      <AnimatePresence>
+        {hasChildren && isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="overflow-hidden"
+          >
+            <div className="mt-0.5 ml-4 pl-3 border-l-2 border-white/5 space-y-1">
+              {folder.subfolders!.map((sf) => (
+                <FolderSelection
+                  key={sf.id}
+                  folder={sf}
+                  selectedId={selectedId}
+                  onSelect={onSelect}
+                  level={level}
+                />
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function NestedSectionSelector({
+  selectedId,
+  onSelect,
+}: {
+  selectedId: string;
+  onSelect: (id: string, label: string) => void;
+}) {
+  const [openCategory, setOpenCategory] = useState<string | null>(null);
+
+  const selectedSection = ALL_SECTIONS.find((s) => s.id === selectedId);
+  const breadcrumbs = selectedSection?.label.split(" › ") || [];
+
+  return (
+    <div className="space-y-4">
+      {/* Premium Breadcrumb Path */}
+      <div className="p-4 rounded-2xl border border-white/10 bg-gradient-to-br from-blue-600/10 to-transparent backdrop-blur-md shadow-inner">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="w-1.5 h-4 bg-blue-500 rounded-full" />
+          <p className="text-[10px] text-blue-400 uppercase tracking-[0.2em] font-black">Таңдалған бағыт</p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2 min-h-[1.5rem]">
+          {breadcrumbs.length > 0 ? (
+            breadcrumbs.map((crumb, idx) => (
+              <React.Fragment key={idx}>
+                <span className={`px-2 py-1 rounded-md text-xs transition-colors ${
+                  idx === breadcrumbs.length - 1 
+                    ? "bg-blue-600 text-white font-bold shadow-sm" 
+                    : "bg-white/5 text-gray-400 font-medium"
+                }`}>
+                  {crumb}
+                </span>
+                {idx < breadcrumbs.length - 1 && (
+                  <ChevronRight className="w-3 h-3 text-gray-600" />
+                )}
+              </React.Fragment>
+            ))
+          ) : (
+            <span className="text-xs text-gray-600 italic pl-1">Тізімнен бөлімді таңдаңыз...</span>
+          )}
+        </div>
+      </div>
+
+      {/* Categories List */}
+      <div className="space-y-2.5 max-h-[350px] overflow-y-auto pr-2 custom-scrollbar p-1">
+        {CATEGORIES.map((cat) => (
+          <div key={cat.id} className="group border border-white/5 rounded-2xl overflow-hidden bg-white/[0.02] hover:bg-white/[0.04] transition-all shadow-sm">
+            <button
+              type="button"
+              onClick={() => setOpenCategory(openCategory === cat.id ? null : cat.id)}
+              className={`w-full flex items-center justify-between px-5 py-4 text-left transition-all ${
+                openCategory === cat.id ? "bg-blue-600/10" : ""
+              }`}
+            >
+              <div className="flex items-center gap-4 min-w-0">
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
+                  openCategory === cat.id ? "bg-blue-600 text-white shadow-lg shadow-blue-900/40" : "bg-white/5 text-gray-500 group-hover:text-gray-300"
+                }`}>
+                  <Folder className="w-5 h-5" />
+                </div>
+                <div className="min-w-0">
+                  <span className={`block text-xs font-black truncate uppercase tracking-widest ${
+                    openCategory === cat.id ? "text-blue-400" : "text-gray-400 group-hover:text-gray-300"
+                  }`}>
+                    {cat.label}
+                  </span>
+                  <span className="text-[10px] text-gray-600 mt-0.5 block">Разделдерді көру</span>
+                </div>
+              </div>
+              <motion.div animate={{ rotate: openCategory === cat.id ? 180 : 0 }}>
+                <ChevronDown className={`w-4 h-4 transition-colors ${openCategory === cat.id ? "text-blue-400" : "text-gray-700"}`} />
+              </motion.div>
+            </button>
+
+            <AnimatePresence initial={false}>
+              {openCategory === cat.id && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="overflow-hidden bg-[#0a0f1a]/80"
+                >
+                  <div className="p-3 pb-4 space-y-2 border-t border-white/5 shadow-inner">
+                    {cat.type === "simple" ? (
+                      <div
+                        className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all ${
+                          selectedId === cat.section
+                            ? "bg-blue-600 text-white shadow-lg shadow-blue-900/40"
+                            : "hover:bg-white/10 text-gray-400"
+                        }`}
+                        onClick={() => onSelect(cat.section!, cat.label)}
+                      >
+                        <div className={`w-2 h-2 rounded-full border ${selectedId === cat.section ? "bg-white border-white scale-110" : "bg-blue-500/20 border-blue-500/50"}`} />
+                        <span className={`text-sm tracking-tight truncate ${selectedId === cat.section ? "font-bold" : "font-medium"}`}>
+                          {cat.label}
+                        </span>
+                        {selectedId === cat.section && <Check className="w-4 h-4 text-white ml-auto" />}
+                      </div>
+                    ) : (
+                      cat.subfolders?.map((sf) => (
+                        <FolderSelection
+                          key={sf.id}
+                          folder={sf}
+                          selectedId={selectedId}
+                          onSelect={onSelect}
+                        />
+                      ))
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function SchoolDocumentsPage() {
   const { user } = useAuth();
   const { toast } = useToast();
@@ -832,6 +1149,7 @@ export default function SchoolDocumentsPage() {
     description: "",
     section: defaultSection,
   });
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Fetch ALL documents in one request
   const { data: documents = [], isLoading } = useQuery<Document[]>({
@@ -911,12 +1229,18 @@ export default function SchoolDocumentsPage() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      await fetch(`/api/documents/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/documents/${id}`, { method: "DELETE" });
+      if (!res.ok) {
+        const errText = await res.text().catch(() => "");
+        throw new Error(errText || "Өшіру сәтсіз аяқталды");
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/documents"] });
       toast({ title: "Құжат өшірілді" });
     },
+    onError: (err: Error) =>
+      toast({ title: "Қате", description: err.message, variant: "destructive" }),
   });
 
   const handleEdit = (doc: Document) => {
@@ -934,13 +1258,33 @@ export default function SchoolDocumentsPage() {
         <div className="bg-white dark:bg-[#1e293b] shadow-sm border-b border-gray-200 dark:border-white/10">
           <div className="container mx-auto px-4 py-5">
             <div className="flex items-center justify-between flex-wrap gap-4">
-              <Link
-                href="/"
-                className="flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors duration-200 bg-blue-50 dark:bg-[#1e293b] hover:bg-blue-100 dark:hover:bg-slate-700 px-3 py-2 rounded-lg shadow-sm"
-              >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Басты бетке оралу
-              </Link>
+              <div className="flex items-center gap-4 flex-1 min-w-[300px]">
+                <Link
+                  href="/"
+                  className="flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors duration-200 bg-blue-50 dark:bg-[#1e293b] hover:bg-blue-100 dark:hover:bg-slate-700 px-3 py-2 rounded-lg shadow-sm shrink-0"
+                >
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Басты бет
+                </Link>
+
+                <div className="relative flex-1 max-w-md">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <Input
+                    placeholder="Құжаттарды іздеу..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 bg-gray-50 dark:bg-[#0d1117] border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-blue-500 transition-all text-gray-900 dark:text-white"
+                  />
+                  {searchTerm && (
+                    <button
+                      onClick={() => setSearchTerm("")}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+              </div>
 
               {user && (
                 <Dialog
@@ -959,84 +1303,84 @@ export default function SchoolDocumentsPage() {
                       Құжат қосу
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-[500px] bg-white dark:bg-[#1e293b] border border-gray-200 dark:border-white/10">
-                    <DialogHeader>
-                      <DialogTitle className="text-gray-900 dark:text-white">
+                  <DialogContent className="bg-[#111827] border-white/10 text-white max-w-lg max-h-[90vh] overflow-hidden flex flex-col p-0">
+                    <DialogHeader className="p-6 pb-2">
+                      <DialogTitle className="text-xl font-bold text-white">
                         {editingDocId ? "Құжатты өңдеу" : "Жаңа құжат жүктеу"}
                       </DialogTitle>
                     </DialogHeader>
-                    <form
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        if (editingDocId) {
-                          updateMutation.mutate({ id: editingDocId, data: newDoc });
-                        } else {
-                          uploadMutation.mutate(e);
-                        }
-                      }}
-                      className="space-y-4"
-                    >
-                      {/* Section selector */}
-                      <div className="space-y-2">
-                        <Label className="text-gray-300">Бөлім</Label>
-                        <select
-                          value={newDoc.section}
-                          onChange={(e) => setNewDoc({ ...newDoc, section: e.target.value })}
-                          className="w-full p-2 border rounded-md bg-[#0d1117] border-white/20 text-white text-sm"
-                        >
-                          {ALL_SECTIONS.map((s) => (
-                            <option key={s.id} value={s.id}>
-                              {s.label}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-
-                      {/* Title */}
-                      <div className="space-y-2">
-                        <Label className="text-gray-300">Атауы</Label>
-                        <Input
-                          value={newDoc.title}
-                          onChange={(e) => setNewDoc({ ...newDoc, title: e.target.value })}
-                          required
-                          className="bg-[#0d1117] border-white/20 text-white"
-                        />
-                      </div>
-
-                      {/* Description */}
-                      <div className="space-y-2">
-                        <Label className="text-gray-300">Сипаттамасы</Label>
-                        <Textarea
-                          value={newDoc.description}
-                          onChange={(e) => setNewDoc({ ...newDoc, description: e.target.value })}
-                          className="bg-[#0d1117] border-white/20 text-white"
-                        />
-                      </div>
-
-                      {/* File (only on create) */}
-                      {!editingDocId && (
-                        <div className="space-y-2">
-                          <Label className="text-gray-300">Файл</Label>
-                          <Input
-                            type="file"
-                            onChange={(e) => setUploadFile(e.target.files?.[0] || null)}
-                            required
-                            className="bg-[#0d1117] border-white/20 text-white"
+                    
+                    <div className="flex-1 overflow-y-auto p-6 pt-2 custom-scrollbar space-y-6">
+                      <form
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          if (editingDocId) {
+                            updateMutation.mutate({ id: editingDocId, data: newDoc });
+                          } else {
+                            uploadMutation.mutate(e);
+                          }
+                        }}
+                        className="space-y-6"
+                      >
+                        {/* Combined Section Selector */}
+                        <div className="space-y-3">
+                          <Label className="text-xs uppercase tracking-widest text-gray-500 font-bold">Бөлім таңдау</Label>
+                          <NestedSectionSelector
+                            selectedId={newDoc.section}
+                            onSelect={(id) => setNewDoc({ ...newDoc, section: id })}
                           />
                         </div>
-                      )}
 
-                      <Button
-                        type="submit"
-                        className="w-full bg-blue-600 hover:bg-blue-700"
-                        disabled={uploadMutation.isPending || updateMutation.isPending}
-                      >
-                        {(uploadMutation.isPending || updateMutation.isPending) && (
-                          <Loader2 className="animate-spin mr-2" />
+                        {/* Title */}
+                        <div className="space-y-2">
+                          <Label className="text-gray-300">Атауы</Label>
+                          <Input
+                            value={newDoc.title}
+                            onChange={(e) => setNewDoc({ ...newDoc, title: e.target.value })}
+                            required
+                            className="bg-[#0d1117] border-white/20 text-white h-11"
+                            placeholder="Құжат атауын енгізіңіз..."
+                          />
+                        </div>
+
+                        {/* Description */}
+                        <div className="space-y-2">
+                          <Label className="text-gray-300">Сипаттамасы</Label>
+                          <Textarea
+                            value={newDoc.description}
+                            onChange={(e) => setNewDoc({ ...newDoc, description: e.target.value })}
+                            className="bg-[#0d1117] border-white/20 text-white min-h-[100px]"
+                            placeholder="Қосымша мәліметтер (міндетті емес)..."
+                          />
+                        </div>
+
+                        {/* File (only on create) */}
+                        {!editingDocId && (
+                          <div className="space-y-2">
+                            <Label className="text-gray-300">Файл</Label>
+                            <Input
+                              type="file"
+                              onChange={(e) => setUploadFile(e.target.files?.[0] || null)}
+                              required
+                              className="bg-[#0d1117] border-white/20 text-white h-11 py-2"
+                            />
+                          </div>
                         )}
-                        {editingDocId ? "Жаңарту" : "Жүктеу"}
-                      </Button>
-                    </form>
+
+                        <div className="pt-2 sticky bottom-0 bg-[#111827] pb-2">
+                          <Button
+                            type="submit"
+                            className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-lg shadow-blue-900/20"
+                            disabled={uploadMutation.isPending || updateMutation.isPending}
+                          >
+                            {(uploadMutation.isPending || updateMutation.isPending) && (
+                              <Loader2 className="animate-spin mr-2" />
+                            )}
+                            {editingDocId ? "Жаңарту" : "Жүктеу"}
+                          </Button>
+                        </div>
+                      </form>
+                    </div>
                   </DialogContent>
                 </Dialog>
               )}
@@ -1054,6 +1398,64 @@ export default function SchoolDocumentsPage() {
           {isLoading ? (
             <div className="flex items-center justify-center py-20">
               <Loader2 className="w-8 h-8 animate-spin text-blue-400" />
+            </div>
+          ) : searchTerm ? (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between px-1">
+                <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+                  Іздеу нәтижелері: {searchTerm}
+                </h2>
+                <span className="text-sm text-gray-500 bg-gray-100 dark:bg-white/5 px-2 py-0.5 rounded-full">
+                  Табылды: {
+                    documents.filter(d =>
+                      d.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                      d.description?.toLowerCase().includes(searchTerm.toLowerCase())
+                    ).length
+                  }
+                </span>
+              </div>
+
+              <div className="space-y-4">
+                {(() => {
+                  const filtered = documents.filter(d =>
+                    d.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    d.description?.toLowerCase().includes(searchTerm.toLowerCase())
+                  );
+                  
+                  // Group by section
+                  const groups: Record<string, Document[]> = {};
+                  filtered.forEach(d => {
+                    if (!groups[d.section]) groups[d.section] = [];
+                    groups[d.section].push(d);
+                  });
+
+                  const sectionIds = Object.keys(groups);
+                  if (sectionIds.length === 0) {
+                    return (
+                      <div className="text-center py-12">
+                        <Search className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                        <p className="text-gray-500">Сұраныс бойынша ештеңе табылмады</p>
+                      </div>
+                    );
+                  }
+
+                  return sectionIds.map(sid => {
+                    const section = ALL_SECTIONS.find(s => s.id === sid);
+                    return (
+                      <SearchSection
+                        key={sid}
+                        label={section?.label || sid}
+                        docs={groups[sid]}
+                        user={user}
+                        updateMutation={updateMutation}
+                        deleteMutation={deleteMutation}
+                        onEdit={handleEdit}
+                        toast={toast}
+                      />
+                    );
+                  });
+                })()}
+              </div>
             </div>
           ) : (
             <div className="space-y-3">

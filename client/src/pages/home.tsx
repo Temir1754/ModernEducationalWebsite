@@ -29,6 +29,7 @@ import MobileOlympiadAccordion from "@/components/mobile-olympiad-accordion";
 import MobileDevelopmentCarousel from "@/components/mobile-development-carousel";
 import MobileSchoolFactsSlides from "@/components/mobile-school-facts-slides";
 import MobileNewsSlides from "@/components/mobile-news-slides";
+import InstagramFeed from "@/components/instagram-feed";
 
 import WhatsApp_Image_2025_08_15_at_18_02_15 from "@assets/WhatsApp Image 2025-08-15 at 18.02.15_1755264555912.jpeg";
 import sportsPhoto from "@assets/9E3A2784_1760360997075.jpg";
@@ -432,27 +433,48 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              <div className="space-y-4">
-                <div className="rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]">
+              <div className="grid grid-cols-2 gap-4 h-full min-h-[500px]">
+                {/* Large Featured Image */}
+                <div className="col-span-2 md:col-span-1 md:row-span-2 relative group rounded-2xl overflow-hidden shadow-2xl transition-all duration-500 hover:shadow-blue-500/20">
                   <img
                     src={student2}
                     alt="Оқушы - НІШ, РФМШ, БИЛ сертификаттарымен"
-                    className="w-full h-[220px] object-cover object-[center_top]"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute bottom-4 left-4 right-4 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                    <div className="bg-white/10 backdrop-blur-md border border-white/20 p-2 rounded-lg">
+                      <p className="text-white text-[10px] font-black tracking-widest uppercase">Үздік нәтиже</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]">
+
+                {/* Supporting Image 1 */}
+                <div className="relative group rounded-2xl overflow-hidden shadow-xl transition-all duration-500 hover:shadow-green-500/20 translate-y-4 md:translate-y-0">
                   <img
                     src={student3}
-                    alt="Оқушы - Үлгі ерасыл сертификатпен"
-                    className="w-full h-[220px] object-cover object-[center_top]"
+                    alt="Оқушы жетістігі"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
+                  <div className="absolute top-3 left-3">
+                    <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white shadow-lg">
+                      <Award className="w-4 h-4" />
+                    </div>
+                  </div>
                 </div>
-                <div className="rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]">
+
+                {/* Supporting Image 2 */}
+                <div className="relative group rounded-2xl overflow-hidden shadow-xl transition-all duration-500 hover:shadow-purple-500/20 translate-y-4 md:translate-y-0">
                   <img
                     src={student4}
-                    alt="Оқушы - Ермаханұлы Мардан сертификатпен"
-                    className="w-full h-[220px] object-cover object-[center_top]"
+                    alt="Оқушы марапаты"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
+                  <div className="absolute top-3 left-3">
+                    <div className="w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center text-white shadow-lg">
+                      <Star className="w-4 h-4" />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -735,6 +757,10 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* Instagram Section */}
+        <InstagramFeed />
+
         {/* FAQ Section */}
         <section className="py-16">
           <div className="container mx-auto px-4">
