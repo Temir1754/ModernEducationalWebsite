@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { db } from "./server/db";
-import { documentFolders } from "@shared/schema";
+import { documentFolders } from "./shared/schema";
 import { eq } from "drizzle-orm";
 
 interface SubFolder {
