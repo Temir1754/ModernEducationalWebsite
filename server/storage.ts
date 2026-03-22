@@ -1,4 +1,4 @@
-import { users, events, media, documents, teachers, news, siteContent, sections, type User, type InsertUser, type Event, type InsertEvent, type Media, type InsertMedia, type Document, type InsertDocument, type Teacher, type InsertTeacher, type News, type InsertNews, type SiteContent, type InsertSiteContent, type Section, type InsertSection } from "@shared/schema";
+import { users, events, media, documents, teachers, news, siteContent, sections, documentFolders, type User, type InsertUser, type Event, type InsertEvent, type Media, type InsertMedia, type Document, type InsertDocument, type Teacher, type InsertTeacher, type News, type InsertNews, type SiteContent, type InsertSiteContent, type Section, type InsertSection, type DocumentFolder, type InsertDocumentFolder } from "@shared/schema";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
 import session from "express-session";
@@ -51,6 +51,12 @@ export interface IStorage {
   createSection(section: InsertSection): Promise<Section>;
   updateSection(id: string, section: Partial<InsertSection>): Promise<Section | undefined>;
   deleteSection(id: string): Promise<void>;
+
+  getFolders(): Promise<DocumentFolder[]>;
+  getFolder(id: string): Promise<DocumentFolder | undefined>;
+  createFolder(folder: InsertDocumentFolder): Promise<DocumentFolder>;
+  updateFolder(id: string, folder: Partial<InsertDocumentFolder>): Promise<DocumentFolder | undefined>;
+  deleteFolder(id: string): Promise<void>;
 
   sessionStore: session.Store;
 }
@@ -274,6 +280,31 @@ export class DatabaseStorage implements IStorage {
 
   async deleteSection(id: string): Promise<void> {
     await db.delete(sections).where(eq(sections.id, id));
+  }
+
+  async getFolders(): Promise<DocumentFolder[]> {
+    return db.select().from(documentFolders);
+  }
+
+  async getFolder(id: string): Promise<DocumentFolder | undefined> {
+    const [folder] = await db.select().from(documentFolders).where(eq(documentFolders.id, id));
+    return folder;
+  }
+
+  async createFolder(insertFolder: InsertDocumentFolder): Promise<DocumentFolder> {
+    const id = crypto.randomUUID();
+    await db.insert(documentFolders).values({ ...insertFolder, id });
+    const [folder] = await db.select().from(documentFolders).where(eq(documentFolders.id, id));
+    return folder;
+  }
+
+  async updateFolder(id: string, folderData: Partial<InsertDocumentFolder>): Promise<DocumentFolder | undefined> {
+    await db.update(documentFolders).set(folderData).where(eq(documentFolders.id, id));
+    return this.getFolder(id);
+  }
+
+  async deleteFolder(id: string): Promise<void> {
+    await db.delete(documentFolders).where(eq(documentFolders.id, id));
   }
 }
 

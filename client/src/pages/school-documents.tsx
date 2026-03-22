@@ -3,10 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import {
   ArrowLeft, Download, Eye, Loader2, Plus, Trash2, Pencil,
-  ChevronRight, ChevronDown, Folder, FolderOpen, FileText, Search, X, Check
+  ChevronRight, ChevronDown, Folder, FolderOpen, FileText, Search, X, Check, FolderPlus
 } from "lucide-react";
 import SEOHead from "@/components/seo-head";
-import type { Document } from "@shared/schema";
+import type { Document, DocumentFolder } from "@shared/schema";
 import { useAuth } from "@/hooks/use-auth";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -45,450 +45,7 @@ function getDocCount(sf: SubFolder, docs: Document[]): number {
   return count;
 }
 
-const CATEGORIES: CategoryDef[] = [
-  {
-    id: "founding",
-    label: "Білім беру ұйымының жалпы сипаттамасы",
-    type: "grouped",
-    subfolders: [
-      { 
-        id: "founding-2024", 
-        label: "2024-2025",
-        subfolders: [
-          { id: "founding-2024-1", label: "Заңды тұлғаны мемлекеттік тіркеу / қайта тіркеу туралы анықтама" },
-          { id: "founding-2024-2", label: "Заңды тұлға өкілін басшы лауазымына тағайындау туралы бұйрық" },
-          { id: "founding-2024-3", label: "Білім беру ұйымының Жарғысы" },
-          { id: "founding-2024-4", label: "Лиценция және оған қосымша" },
-          { id: "founding-2024-5", label: "Мектептің техникалық төлқұжаты" },
-          { id: "founding-2024-6", label: "Меншік иесі туралы мәліметтер" }
-        ]
-      },
-      { 
-        id: "founding-2025", 
-        label: "2025-2026",
-        subfolders: [
-          { id: "founding-2025-1", label: "Заңды тұлғаны мемлекеттік тіркеу / қайта тіркеу туралы анықтама" },
-          { id: "founding-2025-2", label: "Заңды тұлға өкілін басшы лауазымына тағайындау туралы бұйрық" },
-          { id: "founding-2025-3", label: "Білім беру ұйымының Жарғысы" },
-          { id: "founding-2025-4", label: "Лиценция және оған қосымша" },
-          { id: "founding-2025-5", label: "Мектептің техникалық төлқұжаты" },
-          { id: "founding-2025-6", label: "Меншік иесі туралы мәліметтер" }
-        ]
-      },
-      { 
-        id: "founding-2026", 
-        label: "2026-2027",
-        subfolders: [
-          { id: "founding-2026-1", label: "Заңды тұлғаны мемлекеттік тіркеу / қайта тіркеу туралы анықтама" },
-          { id: "founding-2026-2", label: "Заңды тұлға өкілін басшы лауазымына тағайындау туралы бұйрық" },
-          { id: "founding-2026-3", label: "Білім беру ұйымының Жарғысы" },
-          { id: "founding-2026-4", label: "Лиценция және оған қосымша" },
-          { id: "founding-2026-5", label: "Мектептің техникалық төлқұжаты" },
-          { id: "founding-2026-6", label: "Меншік иесі туралы мәліметтер" }
-        ]
-      },
-    ],
-  },
-  {
-    id: "staff-quality",
-    label: "Кадр құрамының сапасы",
-    type: "grouped",
-    subfolders: [
-      { 
-        id: "staff-2024", 
-        label: "2024-2025",
-        subfolders: [
-          { 
-            id: "staff-2024-1", 
-            label: "1-папка Әкімшілік",
-            subfolders: [
-              { id: "staff-2024-1-1", label: "Тізім" },
-              { id: "staff-2024-1-2", label: "Диплом" },
-              { id: "staff-2024-1-3", label: "Біліктілік санат" },
-              { id: "staff-2024-1-4", label: "Біліктілік курсы" },
-            ]
-          },
-          { 
-            id: "staff-2024-2", 
-            label: "2-папка Мұғалімдер",
-            subfolders: [
-              { id: "staff-2024-2-0-1", label: "Жалпы мұғалімдер тізімі" },
-              { id: "staff-2024-2-0-2", label: "Дипломы" },
-              { id: "staff-2024-2-0-3", label: "Біліктілік арттыру курсының куәлігі" },
-              {
-                id: "staff-2024-2-1",
-                label: "Бастауыш білім деңгейі",
-                subfolders: [
-                  { id: "staff-2024-2-1-1", label: "Тізім" },
-                  { id: "staff-2024-2-1-2", label: "Біліктілік санаты куәлігі" },
-                  { id: "staff-2024-2-1-3", label: "Біліктілік санаты бар мұғалімдер тізімі" },
-                ]
-              },
-              {
-                id: "staff-2024-2-2",
-                label: "Негізгі білім деңгейі",
-                subfolders: [
-                  { id: "staff-2024-2-2-1", label: "Тізім" },
-                  { id: "staff-2024-2-2-2", label: "Біліктілік санаты куәлігі" },
-                  { id: "staff-2024-2-2-3", label: "Біліктілік санаты бар мұғалімдер тізімі" },
-                ]
-              }
-            ]
-          },
-          { 
-            id: "staff-2024-3", 
-            label: "3-папка Тарификациялық мәліметтер",
-            subfolders: [
-              { 
-                id: "staff-2024-3-1", 
-                label: "Бірінші жартыжылдық",
-                subfolders: [
-                  { id: "staff-2024-3-1-1", label: "Тарифициялық тізім" },
-                  { id: "staff-2024-3-1-2", label: "Штаттық бірліктер саны туралы ақпарат" },
-                  { id: "staff-2024-3-1-3", label: "Бірінші жартыжылдықтағы жүктеме саны" }
-                ]
-              },
-              { 
-                id: "staff-2024-3-2", 
-                label: "Екінші жартыжылдық",
-                subfolders: [
-                  { id: "staff-2024-3-2-1", label: "Тарифициялық тізім" },
-                  { id: "staff-2024-3-2-2", label: "Штаттық бірліктер саны туралы ақпарат" },
-                  { id: "staff-2024-3-2-3", label: "Екінші жартыжылдықтағы жүктеме саны" }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      { 
-        id: "staff-2025", 
-        label: "2025-2026",
-        subfolders: [
-          { 
-            id: "staff-2025-1", 
-            label: "1-папка Әкімшілік",
-            subfolders: [
-              { id: "staff-2025-1-1", label: "Тізім" },
-              { id: "staff-2025-1-2", label: "Диплом" },
-              { id: "staff-2025-1-3", label: "Біліктілік санат" },
-              { id: "staff-2025-1-4", label: "Біліктілік курсы" },
-            ]
-          },
-          { 
-            id: "staff-2025-2", 
-            label: "2-папка Мұғалімдер",
-            subfolders: [
-              { id: "staff-2025-2-0-1", label: "Жалпы мұғалімдер тізімі" },
-              { id: "staff-2025-2-0-2", label: "Дипломы" },
-              { id: "staff-2025-2-0-3", label: "Біліктілік арттыру курсының куәлігі" },
-              {
-                id: "staff-2025-2-1",
-                label: "Бастауыш білім деңгейі",
-                subfolders: [
-                  { id: "staff-2025-2-1-1", label: "Тізім" },
-                  { id: "staff-2025-2-1-2", label: "Біліктілік санаты куәлігі" },
-                  { id: "staff-2025-2-1-3", label: "Біліктілік санаты бар мұғалімдер тізімі" },
-                ]
-              },
-              {
-                id: "staff-2025-2-2",
-                label: "Негізгі білім деңгейі",
-                subfolders: [
-                  { id: "staff-2025-2-2-1", label: "Тізім" },
-                  { id: "staff-2025-2-2-2", label: "Біліктілік санаты куәлігі" },
-                  { id: "staff-2025-2-2-3", label: "Біліктілік санаты бар мұғалімдер тізімі" },
-                ]
-              }
-            ]
-          },
-          { 
-            id: "staff-2025-3", 
-            label: "3-папка Тарификациялық мәліметтер",
-            subfolders: [
-              { 
-                id: "staff-2025-3-1", 
-                label: "Бірінші жартыжылдық",
-                subfolders: [
-                  { id: "staff-2025-3-1-1", label: "Тарифициялық тізім" },
-                  { id: "staff-2025-3-1-2", label: "Штаттық бірліктер саны туралы ақпарат" },
-                  { id: "staff-2025-3-1-3", label: "Бірінші жартыжылдықтағы жүктеме саны" }
-                ]
-              },
-              { 
-                id: "staff-2025-3-2", 
-                label: "Екінші жартыжылдық",
-                subfolders: [
-                  { id: "staff-2025-3-2-1", label: "Тарифициялық тізім" },
-                  { id: "staff-2025-3-2-2", label: "Штаттық бірліктер саны туралы ақпарат" },
-                  { id: "staff-2025-3-2-3", label: "Екінші жартыжылдықтағы жүктеме саны" }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      { 
-        id: "staff-2026", 
-        label: "2026-2027",
-        subfolders: [
-          { 
-            id: "staff-2026-1", 
-            label: "1-папка Әкімшілік",
-            subfolders: [
-              { id: "staff-2026-1-1", label: "Тізім" },
-              { id: "staff-2026-1-2", label: "Диплом" },
-              { id: "staff-2026-1-3", label: "Біліктілік санат" },
-              { id: "staff-2026-1-4", label: "Біліктілік курсы" },
-            ]
-          },
-          { 
-            id: "staff-2026-2", 
-            label: "2-папка Мұғалімдер",
-            subfolders: [
-              { id: "staff-2026-2-0-1", label: "Жалпы мұғалімдер тізімі" },
-              { id: "staff-2026-2-0-2", label: "Дипломы" },
-              { id: "staff-2026-2-0-3", label: "Біліктілік арттыру курсының куәлігі" },
-              {
-                id: "staff-2026-2-1",
-                label: "Бастауыш білім деңгейі",
-                subfolders: [
-                  { id: "staff-2026-2-1-1", label: "Тізім" },
-                  { id: "staff-2026-2-1-2", label: "Біліктілік санаты куәлігі" },
-                  { id: "staff-2026-2-1-3", label: "Біліктілік санаты бар мұғалімдер тізімі" },
-                ]
-              },
-              {
-                id: "staff-2026-2-2",
-                label: "Негізгі білім деңгейі",
-                subfolders: [
-                  { id: "staff-2026-2-2-1", label: "Тізім" },
-                  { id: "staff-2026-2-2-2", label: "Біліктілік санаты куәлігі" },
-                  { id: "staff-2026-2-2-3", label: "Біліктілік санаты бар мұғалімдер тізімі" },
-                ]
-              }
-            ]
-          },
-          { 
-            id: "staff-2026-3", 
-            label: "3-папка Тарификациялық мәліметтер",
-            subfolders: [
-              { 
-                id: "staff-2026-3-1", 
-                label: "Бірінші жартыжылдық",
-                subfolders: [
-                  { id: "staff-2026-3-1-1", label: "Тарифициялық тізім" },
-                  { id: "staff-2026-3-1-2", label: "Штаттық бірліктер саны туралы ақпарат" },
-                  { id: "staff-2026-3-1-3", label: "Бірінші жартыжылдықтағы жүктеме саны" }
-                ]
-              },
-              { 
-                id: "staff-2026-3-2", 
-                label: "Екінші жартыжылдық",
-                subfolders: [
-                  { id: "staff-2026-3-2-1", label: "Тарифициялық тізім" },
-                  { id: "staff-2026-3-2-2", label: "Штаттық бірліктер саны туралы ақпарат" },
-                  { id: "staff-2026-3-2-3", label: "Екінші жартыжылдықтағы жүктеме саны" }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-    ],
-  },
-  {
-    id: "contingent",
-    label: "Білім алушылардың контингенті",
-    type: "grouped",
-    subfolders: [
-      { 
-        id: "contingent-2024", 
-        label: "2024-2025",
-        subfolders: [
-          {
-            id: "contingent-2024-main",
-            label: "Контингент",
-            subfolders: [
-              {
-                id: "contingent-2024-1",
-                label: "Бірінші жартыжылдық",
-                subfolders: [
-                  { id: "contingent-2024-1-list", label: "Білім алушылар тізімі" },
-                  { id: "contingent-2024-1-gender", label: "Сыныптар бойынша қыздармен ұлдарға бөлініу туралы мәлімет" },
-                  { id: "contingent-2024-1-struct", label: "Білім алушылар контингентінің құрылымы" }
-                ]
-              },
-              {
-                id: "contingent-2024-2",
-                label: "Екінші жартыжылдық",
-                subfolders: [
-                  { id: "contingent-2024-2-list", label: "Білім алушылар тізімі" },
-                  { id: "contingent-2024-2-gender", label: "Сыныптар бойынша қыздармен ұлдарға бөлініу туралы мәлімет" },
-                  { id: "contingent-2024-2-struct", label: "Білім алушылар контингентінің құрылымы" }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      { 
-        id: "contingent-2025", 
-        label: "2025-2026",
-        subfolders: [
-          {
-            id: "contingent-2025-main",
-            label: "Контингент",
-            subfolders: [
-              {
-                id: "contingent-2025-1",
-                label: "Бірінші жартыжылдық",
-                subfolders: [
-                  { id: "contingent-2025-1-list", label: "Білім алушылар тізімі" },
-                  { id: "contingent-2025-1-gender", label: "Сыныптар бойынша қыздармен ұлдарға бөлініу туралы мәлімет" },
-                  { id: "contingent-2025-1-struct", label: "Білім алушылар контингентінің құрылымы" }
-                ]
-              },
-              {
-                id: "contingent-2025-2",
-                label: "Екінші жартыжылдық",
-                subfolders: [
-                  { id: "contingent-2025-2-list", label: "Білім алушылар тізімі" },
-                  { id: "contingent-2025-2-gender", label: "Сыныптар бойынша қыздармен ұлдарға бөлініу туралы мәлімет" },
-                  { id: "contingent-2025-2-struct", label: "Білім алушылар контингентінің құрылымы" }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      { 
-        id: "contingent-2026", 
-        label: "2026-2027",
-        subfolders: [
-          {
-            id: "contingent-2026-main",
-            label: "Контингент",
-            subfolders: [
-              {
-                id: "contingent-2026-1",
-                label: "Бірінші жартыжылдық",
-                subfolders: [
-                  { id: "contingent-2026-1-list", label: "Білім алушылар тізімі" },
-                  { id: "contingent-2026-1-gender", label: "Сыныптар бойынша қыздармен ұлдарға бөлініу туралы мәлімет" },
-                  { id: "contingent-2026-1-struct", label: "Білім алушылар контингентінің құрылымы" }
-                ]
-              },
-              {
-                id: "contingent-2026-2",
-                label: "Екінші жартыжылдық",
-                subfolders: [
-                  { id: "contingent-2026-2-list", label: "Білім алушылар тізімі" },
-                  { id: "contingent-2026-2-gender", label: "Сыныптар бойынша қыздармен ұлдарға бөлініу туралы мәлімет" },
-                  { id: "contingent-2026-2-struct", label: "Білім алушылар контингентінің құрылымы" }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-    ],
-  },
-  {
-    id: "curriculum",
-    label: "Оқу жоспары",
-    type: "grouped",
-    subfolders: [
-      { 
-        id: "curriculum-2024", 
-        label: "2024-2025",
-        subfolders: [
-          { id: "curriculum-2024-work", label: "Жұмыс оқу жоспары" },
-          { id: "curriculum-2024-schedule", label: "Сабақ кестесі" },
-          { id: "curriculum-2024-var", label: "Вариативтік компонент бойынша сабақ кестесі" },
-          { id: "curriculum-2024-max", label: "Білім алушылардың апталық оқу жүктемесінің ең жоғары көлемінің сәйкестігі" }
-        ]
-      },
-      { 
-        id: "curriculum-2025", 
-        label: "2025-2026",
-        subfolders: [
-          { id: "curriculum-2025-work", label: "Жұмыс оқу жоспары" },
-          { id: "curriculum-2025-schedule", label: "Сабақ кестесі" },
-          { id: "curriculum-2025-var", label: "Вариативтік компонент бойынша сабақ кестесі" },
-          { id: "curriculum-2025-max", label: "Білім алушылардың апталық оқу жүктемесінің ең жоғары көлемінің сәйкестігі" }
-        ]
-      },
-      { 
-        id: "curriculum-2026", 
-        label: "2026-2027",
-        subfolders: [
-          { id: "curriculum-2026-work", label: "Жұмыс оқу жоспары" },
-          { id: "curriculum-2026-schedule", label: "Сабақ кестесі" },
-          { id: "curriculum-2026-var", label: "Вариативтік компонент бойынша сабақ кестесі" },
-          { id: "curriculum-2026-max", label: "Білім алушылардың апталық оқу жүктемесінің ең жоғары көлемінің сәйкестігі" }
-        ]
-      },
-    ],
-  },
-  {
-    id: "upbringing",
-    label: "Мектеп тынысы",
-    type: "grouped",
-    subfolders: [
-      { id: "upbringing-2024", label: "2024-2025" },
-      { id: "upbringing-2025", label: "2025-2026" },
-      { id: "upbringing-2026", label: "2026-2027" },
-    ],
-  },
-  {
-    id: "assets",
-    label: "Оқу-материалдық активтер",
-    type: "grouped",
-    subfolders: [
-      { id: "assets-2024", label: "2024-2025" },
-      { id: "assets-2025", label: "2025-2026" },
-      { id: "assets-2026", label: "2026-2027" },
-    ],
-  },
-  {
-    id: "safety",
-    label: "Білім алушылардың қауіпсіздігі",
-    type: "grouped",
-    subfolders: [
-      { id: "safety-2024", label: "2024-2025" },
-      { id: "safety-2025", label: "2025-2026" },
-      { id: "safety-2026", label: "2026-2027" },
-    ],
-  },
-  {
-    id: "control",
-    label: "Мектепшілік бақылау",
-    type: "grouped",
-    subfolders: [
-      { id: "control-2024", label: "2024-2025" },
-      { id: "control-2025", label: "2025-2026" },
-      { id: "control-2026", label: "2026-2027" },
-    ],
-  },
-];
-
-// Flat list of all sections for the "add document" dropdown
-const flattenSubfolders = (catLabel: string, sfs: SubFolder[]): { id: string; label: string }[] => {
-  return sfs.flatMap(sf => {
-    const currentLabel = `${catLabel} › ${sf.label}`;
-    const rest = sf.subfolders ? flattenSubfolders(currentLabel, sf.subfolders) : [];
-    return [{ id: sf.id, label: currentLabel }, ...rest];
-  });
-};
-
-// Flat list of all sections for the "add document" dropdown
-const ALL_SECTIONS: { id: string; label: string }[] = CATEGORIES.flatMap((cat) => {
-  if (cat.type === "simple") {
-    return [{ id: cat.section!, label: cat.label }];
-  }
-  return flattenSubfolders(cat.label, cat.subfolders ?? []);
-});
+// Dynamic categories will be fetched inside the component
 
 // ─── Document row ─────────────────────────────────────────────────────────────
 
@@ -675,6 +232,7 @@ function SubFolderAccordion({
   user,
   updateMutation,
   deleteMutation,
+  deleteFolderMutation,
   onEdit,
   toast,
 }: {
@@ -683,6 +241,7 @@ function SubFolderAccordion({
   user: any;
   updateMutation: any;
   deleteMutation: any;
+  deleteFolderMutation: any;
   onEdit: (doc: Document) => void;
   toast: any;
 }) {
@@ -693,23 +252,41 @@ function SubFolderAccordion({
 
   return (
     <div className="ml-4 border-l border-gray-100 dark:border-white/10 pl-3">
-      <button
-        onClick={() => setOpen((p) => !p)}
-        className="flex items-center gap-2 w-full py-2 px-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-left"
-      >
-        {open ? (
-          <FolderOpen className="w-4 h-4 text-yellow-500 shrink-0" />
-        ) : (
-          <Folder className="w-4 h-4 text-yellow-500 shrink-0" />
+      <div className="flex items-center w-full rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">
+        <button
+          onClick={() => setOpen((p) => !p)}
+          className="flex items-center gap-2 w-full py-2 px-2 text-left"
+        >
+          {open ? (
+            <FolderOpen className="w-4 h-4 text-yellow-500 shrink-0" />
+          ) : (
+            <Folder className="w-4 h-4 text-yellow-500 shrink-0" />
+          )}
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-200 flex-1">{subfolder.label}</span>
+          <span className="text-xs text-gray-400 mr-1">{count}</span>
+          {open ? (
+            <ChevronDown className="w-4 h-4 text-gray-400" />
+          ) : (
+            <ChevronRight className="w-4 h-4 text-gray-400" />
+          )}
+        </button>
+        {user && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0 text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 mr-1 shrink-0"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (confirm(`"${subfolder.label}" папкасын өшіруге сенімдісіз бе? Ішіндегі мәліметтер жойылуы мүмкін.`)) {
+                deleteFolderMutation.mutate(subfolder.id);
+              }
+            }}
+            title="Папканы өшіру"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+          </Button>
         )}
-        <span className="text-sm font-medium text-gray-700 dark:text-gray-200 flex-1">{subfolder.label}</span>
-        <span className="text-xs text-gray-400 mr-1">{count}</span>
-        {open ? (
-          <ChevronDown className="w-4 h-4 text-gray-400" />
-        ) : (
-          <ChevronRight className="w-4 h-4 text-gray-400" />
-        )}
-      </button>
+      </div>
 
       {open && (
         <div className="mt-1 mb-2 space-y-1.5 pl-1">
@@ -721,6 +298,7 @@ function SubFolderAccordion({
               user={user}
               updateMutation={updateMutation}
               deleteMutation={deleteMutation}
+              deleteFolderMutation={deleteFolderMutation}
               onEdit={onEdit}
               toast={toast}
             />
@@ -755,6 +333,7 @@ function CategoryAccordion({
   user,
   updateMutation,
   deleteMutation,
+  deleteFolderMutation,
   onEdit,
   toast,
 }: {
@@ -763,6 +342,7 @@ function CategoryAccordion({
   user: any;
   updateMutation: any;
   deleteMutation: any;
+  deleteFolderMutation: any;
   onEdit: (doc: Document) => void;
   toast: any;
 }) {
@@ -784,26 +364,43 @@ function CategoryAccordion({
   return (
     <div className="rounded-xl border border-gray-200 dark:border-white/10 overflow-hidden bg-white dark:bg-[#1e293b] shadow-sm">
       {/* Category header */}
-      <button
-        onClick={() => setOpen((p) => !p)}
-        className={`flex items-center gap-3 w-full px-5 py-4 transition-colors text-left ${open ? "bg-blue-50 dark:bg-blue-600/20" : "bg-white dark:bg-white/5 hover:bg-gray-50 dark:hover:bg-white/8"
-          }`}
-      >
-        {open ? (
-          <FolderOpen className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0" />
-        ) : (
-          <Folder className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0" />
+      <div className={`flex items-center w-full transition-colors ${open ? "bg-blue-50 dark:bg-blue-600/20" : "bg-white dark:bg-white/5 hover:bg-gray-50 dark:hover:bg-white/8"}`}>
+        <button
+          onClick={() => setOpen((p) => !p)}
+          className="flex items-center gap-3 w-full px-5 py-4 text-left"
+        >
+          {open ? (
+            <FolderOpen className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0" />
+          ) : (
+            <Folder className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0" />
+          )}
+          <span className="font-semibold text-gray-800 dark:text-white flex-1">{category.label}</span>
+          <span className="text-xs text-gray-500 bg-gray-100 dark:bg-white/10 px-2 py-0.5 rounded-full">
+            {docCount}
+          </span>
+          {open ? (
+            <ChevronDown className="w-4 h-4 text-gray-400 ml-1" />
+          ) : (
+            <ChevronRight className="w-4 h-4 text-gray-400 ml-1" />
+          )}
+        </button>
+        {user && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 mr-3 shrink-0"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (confirm(`"${category.label}" папкасын өшіруге сенімдісіз бе? Ішіндегі барлық мәліметтер өшуі мүмкін!`)) {
+                deleteFolderMutation.mutate(category.id);
+              }
+            }}
+            title="Папканы өшіру"
+          >
+            <Trash2 className="w-4 h-4" />
+          </Button>
         )}
-        <span className="font-semibold text-gray-800 dark:text-white flex-1">{category.label}</span>
-        <span className="text-xs text-gray-500 bg-gray-100 dark:bg-white/10 px-2 py-0.5 rounded-full">
-          {docCount}
-        </span>
-        {open ? (
-          <ChevronDown className="w-4 h-4 text-gray-400 ml-1" />
-        ) : (
-          <ChevronRight className="w-4 h-4 text-gray-400 ml-1" />
-        )}
-      </button>
+      </div>
 
       {/* Category body */}
       {open && (
@@ -834,6 +431,7 @@ function CategoryAccordion({
                 user={user}
                 updateMutation={updateMutation}
                 deleteMutation={deleteMutation}
+                deleteFolderMutation={deleteFolderMutation}
                 onEdit={onEdit}
                 toast={toast}
               />
@@ -947,14 +545,18 @@ function FolderSelection({
           }`}
           style={{ marginLeft: `${level * 16}px` }}
           onClick={() => {
-            if (hasChildren) {
-              setIsOpen(!isOpen);
-            } else {
-              onSelect(folder.id, folder.label);
-            }
+            onSelect(folder.id, folder.label);
           }}
         >
-          <div className="shrink-0 w-5 flex items-center justify-center">
+          <div 
+            className="shrink-0 w-5 flex items-center justify-center cursor-pointer hover:bg-white/20 rounded"
+            onClick={(e) => {
+              if (hasChildren) {
+                e.stopPropagation();
+                setIsOpen(!isOpen);
+              }
+            }}
+          >
             {hasChildren ? (
               <motion.div animate={{ rotate: isOpen ? 90 : 0 }}>
                 <ChevronRight className={`w-3.5 h-3.5 ${isSelected ? "text-white" : "text-gray-500"}`} />
@@ -1020,13 +622,17 @@ function FolderSelection({
 function NestedSectionSelector({
   selectedId,
   onSelect,
+  categories,
+  allSections,
 }: {
   selectedId: string;
   onSelect: (id: string, label: string) => void;
+  categories: CategoryDef[];
+  allSections: {id: string, label: string}[];
 }) {
   const [openCategory, setOpenCategory] = useState<string | null>(null);
 
-  const selectedSection = ALL_SECTIONS.find((s) => s.id === selectedId);
+  const selectedSection = allSections.find((s) => s.id === selectedId);
   const breadcrumbs = selectedSection?.label.split(" › ") || [];
 
   return (
@@ -1061,7 +667,7 @@ function NestedSectionSelector({
 
       {/* Categories List */}
       <div className="space-y-2.5 max-h-[350px] overflow-y-auto pr-2 custom-scrollbar p-1">
-        {CATEGORIES.map((cat) => (
+        {categories.map((cat) => (
           <div key={cat.id} className="group border border-white/5 rounded-2xl overflow-hidden bg-white/[0.02] hover:bg-white/[0.04] transition-all shadow-sm">
             <button
               type="button"
@@ -1139,7 +745,58 @@ export default function SchoolDocumentsPage() {
   const { user } = useAuth();
   const { toast } = useToast();
 
-  const defaultSection = ALL_SECTIONS[0]?.id || "";
+  const { data: dbFolders = [], isLoading: isFoldersLoading } = useQuery<DocumentFolder[]>({
+    queryKey: ["/api/folders"],
+    queryFn: async () => {
+      const res = await fetch("/api/folders");
+      if (!res.ok) return [];
+      return res.json();
+    },
+  });
+
+  const categories: CategoryDef[] = React.useMemo(() => {
+    const rootFolders = dbFolders.filter((f) => f.isCategory).sort((a,b) => Number(a.order) - Number(b.order));
+    const buildSubfolders = (parentId: string): SubFolder[] => {
+      return dbFolders
+        .filter((f) => f.parentId === parentId)
+        .sort((a,b) => Number(a.order) - Number(b.order))
+        .map(f => ({
+          id: f.id,
+          label: f.name,
+          subfolders: buildSubfolders(f.id)
+        }));
+    };
+
+    return rootFolders.map(cat => {
+      const subs = buildSubfolders(cat.id);
+      return {
+        id: cat.id,
+        label: cat.name,
+        type: subs.length > 0 ? "grouped" : "simple",
+        section: subs.length === 0 ? cat.id : undefined,
+        subfolders: subs.length > 0 ? subs : undefined,
+      };
+    });
+  }, [dbFolders]);
+
+  const allSections: { id: string; label: string }[] = React.useMemo(() => {
+    const flattenSubfolders = (catLabel: string, sfs: SubFolder[]): { id: string; label: string }[] => {
+      return sfs.flatMap(sf => {
+        const currentLabel = `${catLabel} › ${sf.label}`;
+        const rest = sf.subfolders ? flattenSubfolders(currentLabel, sf.subfolders) : [];
+        return [{ id: sf.id, label: currentLabel }, ...rest];
+      });
+    };
+
+    return categories.flatMap((cat) => {
+      if (cat.type === "simple") {
+        return [{ id: cat.section!, label: cat.label }];
+      }
+      return [{ id: cat.id, label: cat.label }, ...flattenSubfolders(cat.label, cat.subfolders ?? [])];
+    });
+  }, [categories]);
+
+  const defaultSection = allSections[0]?.id || "";
 
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [editingDocId, setEditingDocId] = useState<string | null>(null);
@@ -1150,6 +807,117 @@ export default function SchoolDocumentsPage() {
     section: defaultSection,
   });
   const [searchTerm, setSearchTerm] = useState("");
+
+  const [isFolderOpen, setIsFolderOpen] = useState(false);
+  const [editingFolderId, setEditingFolderId] = useState<string | null>(null);
+  const [newFolder, setNewFolder] = useState({
+    name: "",
+    subName: "",
+    parentId: "null",
+    autoCreateYears: false,
+  });
+
+  const selectedParent = dbFolders.find(f => f.id === newFolder.parentId);
+  const isParentYear = selectedParent && selectedParent.name.match(/20\d\d[\s\-–—]20\d\d/);
+
+  const folderUploadMutation = useMutation({
+    mutationFn: async (e: React.FormEvent) => {
+      e.preventDefault();
+      
+      const payload1: any = {
+        name: newFolder.name,
+        order: "0",
+        isCategory: newFolder.parentId === "null"
+      };
+      if (newFolder.parentId !== "null") {
+        payload1.parentId = newFolder.parentId;
+      }
+
+      const res1 = await fetch("/api/folders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload1)
+      });
+      if (!res1.ok) {
+        throw new Error("Папканы жасау кезінде қате кетті");
+      }
+      const createdFolder = await res1.json();
+
+      let targetId = createdFolder.id;
+
+      if (newFolder.subName.trim() !== "") {
+        const payload2 = {
+          name: newFolder.subName.trim(),
+          parentId: createdFolder.id,
+          order: "0",
+          isCategory: false
+        };
+        const res2 = await fetch("/api/folders", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload2)
+        });
+        if (!res2.ok) throw new Error("Ішкі папканы жасау кезінде қате кетті");
+        const createdSubFolder = await res2.json();
+        targetId = createdSubFolder.id;
+      }
+
+      if (newFolder.autoCreateYears) {
+        if (isParentYear) {
+          const siblings = dbFolders.filter(f => f.parentId === selectedParent.parentId && f.id !== selectedParent.id);
+          for (const sib of siblings) {
+            const sibRes = await fetch("/api/folders", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                name: newFolder.name,
+                parentId: sib.id,
+                order: "0",
+                isCategory: false
+              })
+            });
+            if (sibRes.ok && newFolder.subName.trim() !== "") {
+              const sibFolder = await sibRes.json();
+              await fetch("/api/folders", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  name: newFolder.subName.trim(),
+                  parentId: sibFolder.id,
+                  order: "0",
+                  isCategory: false
+                })
+              });
+            }
+          }
+        } else {
+          const years = ["2024-2025", "2025-2026", "2026-2027"];
+          for (let i = 0; i < years.length; i++) {
+            await fetch("/api/folders", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                name: years[i],
+                parentId: targetId,
+                order: String(i),
+                isCategory: false
+              })
+            });
+          }
+        }
+      }
+
+      return createdFolder;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/folders"] });
+      toast({ title: "Папка сәтті қосылды!" });
+      setIsFolderOpen(false);
+      // Keep parentId so the user can add another folder to the same section easily
+      setNewFolder(prev => ({ ...prev, name: "", subName: "", autoCreateYears: false }));
+    },
+    onError: (err: Error) => toast({ title: "Қате", description: err.message, variant: "destructive" })
+  });
 
   // Fetch ALL documents in one request
   const { data: documents = [], isLoading } = useQuery<Document[]>({
@@ -1243,6 +1011,21 @@ export default function SchoolDocumentsPage() {
       toast({ title: "Қате", description: err.message, variant: "destructive" }),
   });
 
+  const deleteFolderMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const res = await fetch(`/api/folders/${id}`, { method: "DELETE" });
+      if (!res.ok) {
+        throw new Error("Өшіру сәтсіз аяқталды");
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/folders"] });
+      toast({ title: "Папка өшірілді" });
+    },
+    onError: (err: Error) =>
+      toast({ title: "Қате", description: err.message, variant: "destructive" }),
+  });
+
   const handleEdit = (doc: Document) => {
     setEditingDocId(doc.id);
     setNewDoc({ title: doc.title, description: doc.description || "", section: doc.section });
@@ -1287,16 +1070,115 @@ export default function SchoolDocumentsPage() {
               </div>
 
               {user && (
-                <Dialog
-                  open={isUploadOpen}
-                  onOpenChange={(open) => {
-                    setIsUploadOpen(open);
-                    if (!open) {
-                      setEditingDocId(null);
-                      setNewDoc({ title: "", description: "", section: defaultSection });
-                    }
-                  }}
-                >
+                <div className="flex items-center gap-2">
+                  <Dialog open={isFolderOpen} onOpenChange={setIsFolderOpen}>
+                    <DialogTrigger asChild>
+                      <Button size="sm" variant="outline" className="border-blue-200 text-blue-600 hover:bg-blue-50 dark:border-blue-900 dark:text-blue-400 dark:hover:bg-blue-900/30">
+                        <FolderPlus className="w-4 h-4 mr-2" />
+                        Папка қосу
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="bg-[#111827] border-white/10 text-white max-w-lg max-h-[90vh] overflow-hidden flex flex-col p-0">
+                      <DialogHeader className="p-6 pb-2">
+                        <DialogTitle className="text-xl font-bold text-white">
+                          Жаңа папка қосу
+                        </DialogTitle>
+                      </DialogHeader>
+                      <div className="flex-1 overflow-y-auto p-6 pt-2 custom-scrollbar space-y-6">
+                        <form onSubmit={(e) => folderUploadMutation.mutate(e)} className="space-y-6">
+                          {/* Folder Section Selector */}
+                          <div className="space-y-3">
+                            <Label className="text-xs uppercase tracking-widest text-gray-500 font-bold">Орналасатын жері</Label>
+                            
+                            <div
+                              onClick={() => setNewFolder({ ...newFolder, parentId: "null" })}
+                              className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all border ${
+                                newFolder.parentId === "null"
+                                  ? "bg-blue-600/20 border-blue-500/50"
+                                  : "bg-white/5 border-white/10 hover:bg-white/10"
+                              }`}
+                            >
+                              <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
+                                newFolder.parentId === "null" ? "border-blue-400" : "border-gray-500"
+                              }`}>
+                                {newFolder.parentId === "null" && <div className="w-2 h-2 rounded-full bg-blue-400" />}
+                              </div>
+                              <span className={`text-sm font-medium ${newFolder.parentId === "null" ? "text-blue-400" : "text-gray-300"}`}>
+                                Негізгі бөлім (Жаңа категория)
+                              </span>
+                            </div>
+
+                            <div className="pt-2">
+                              <NestedSectionSelector
+                                selectedId={newFolder.parentId !== "null" ? newFolder.parentId : ""}
+                                onSelect={(id) => setNewFolder({ ...newFolder, parentId: id })}
+                                categories={categories}
+                                allSections={allSections}
+                              />
+                            </div>
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label className="text-gray-300">Папка атауы</Label>
+                            <Input
+                              value={newFolder.name}
+                              onChange={(e) => setNewFolder({ ...newFolder, name: e.target.value })}
+                              required
+                              className="bg-[#0d1117] border-white/20 text-white h-11"
+                              placeholder="Атауын енгізіңіз..."
+                            />
+                          </div>
+                          
+                          <div className="space-y-2">
+                            <Label className="text-gray-300">Ішкі папка атауы (Міндетті емес)</Label>
+                            <Input
+                              value={newFolder.subName}
+                              onChange={(e) => setNewFolder({ ...newFolder, subName: e.target.value })}
+                              className="bg-[#0d1117] border-white/20 text-white h-11"
+                              placeholder="Егер ішкі папка қосқыңыз келсе жазыңыз..."
+                            />
+                          </div>
+                          
+                          <div className="flex items-center gap-3 mt-4 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
+                            <input 
+                              type="checkbox" 
+                              id="autoCreateYears" 
+                              checked={newFolder.autoCreateYears}
+                              onChange={(e) => setNewFolder(f => ({ ...f, autoCreateYears: e.target.checked }))}
+                              className="w-5 h-5 rounded border-blue-500/30 text-blue-600 focus:ring-blue-500/50 bg-[#0d1117]"
+                            />
+                            <Label htmlFor="autoCreateYears" className="text-sm font-medium text-blue-100 cursor-pointer flex-1">
+                              {isParentYear 
+                                ? "Басқа оқу жылдарында да дәл осы папканы жасау (Дубликат)" 
+                                : "Оқу жылдарын автоматты түрде қосу (2024-2027)"}
+                            </Label>
+                          </div>
+
+                          <div className="pt-2 sticky bottom-0 bg-[#111827] pb-2">
+                            <Button
+                              type="submit"
+                              className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-lg shadow-blue-900/20"
+                              disabled={folderUploadMutation.isPending}
+                            >
+                              {folderUploadMutation.isPending && <Loader2 className="animate-spin mr-2" />}
+                              Сақтау
+                            </Button>
+                          </div>
+                        </form>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+
+                  <Dialog
+                    open={isUploadOpen}
+                    onOpenChange={(open) => {
+                      setIsUploadOpen(open);
+                      if (!open) {
+                        setEditingDocId(null);
+                        setNewDoc({ title: "", description: "", section: defaultSection });
+                      }
+                    }}
+                  >
                   <DialogTrigger asChild>
                     <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white border-0">
                       <Plus className="w-4 h-4 mr-2" />
@@ -1328,6 +1210,8 @@ export default function SchoolDocumentsPage() {
                           <NestedSectionSelector
                             selectedId={newDoc.section}
                             onSelect={(id) => setNewDoc({ ...newDoc, section: id })}
+                            categories={categories}
+                            allSections={allSections}
                           />
                         </div>
 
@@ -1383,6 +1267,7 @@ export default function SchoolDocumentsPage() {
                     </div>
                   </DialogContent>
                 </Dialog>
+                </div>
               )}
             </div>
           </div>
@@ -1440,7 +1325,7 @@ export default function SchoolDocumentsPage() {
                   }
 
                   return sectionIds.map(sid => {
-                    const section = ALL_SECTIONS.find(s => s.id === sid);
+                    const section = allSections.find(s => s.id === sid);
                     return (
                       <SearchSection
                         key={sid}
@@ -1459,7 +1344,7 @@ export default function SchoolDocumentsPage() {
             </div>
           ) : (
             <div className="space-y-3">
-              {CATEGORIES.map((cat) => (
+              {categories.map((cat) => (
                 <CategoryAccordion
                   key={cat.id}
                   category={cat}
@@ -1467,6 +1352,7 @@ export default function SchoolDocumentsPage() {
                   user={user}
                   updateMutation={updateMutation}
                   deleteMutation={deleteMutation}
+                  deleteFolderMutation={deleteFolderMutation}
                   onEdit={handleEdit}
                   toast={toast}
                 />

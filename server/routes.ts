@@ -14,7 +14,8 @@ import {
   insertTeacherSchema,
   insertNewsSchema,
   insertSiteContentSchema,
-  insertSectionSchema
+  insertSectionSchema,
+  insertDocumentFolderSchema
 } from "@shared/schema";
 // import connectPgSimple from "connect-pg-simple";
 import { Pool } from "@neondatabase/serverless";
@@ -581,6 +582,61 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ message: "Section deleted" });
     } catch (error) {
       res.status(500).json({ message: "Failed to delete section" });
+    }
+  });
+
+  // Folders Routes
+  app.get("/api/folders", async (req, res) => {
+    try {
+      const folders = await storage.getFolders();
+      res.json(folders);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch folders" });
+    }
+  });
+
+  app.get("/api/folders/:id", async (req, res) => {
+    try {
+      const folder = await storage.getFolder(req.params.id);
+      if (!folder) {
+        return res.status(404).json({ message: "Folder not found" });
+      }
+      res.json(folder);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch folder" });
+    }
+  });
+
+  app.post("/api/folders", requireAdmin, async (req, res) => {
+    try {
+      console.log("POST /api/folders payload:", req.body);
+      const data = insertDocumentFolderSchema.parse(req.body);
+      const folder = await storage.createFolder(data);
+      res.json(folder);
+    } catch (error: any) {
+      console.error("Zod Validation Error on folders:", error.issues || error.message || error);
+      res.status(400).json({ message: "Invalid folder data", details: error.issues || error.message });
+    }
+  });
+
+  app.patch("/api/folders/:id", requireAdmin, async (req, res) => {
+    try {
+      const folder = await storage.updateFolder(req.params.id, req.body);
+      if (!folder) {
+        return res.status(404).json({ message: "Folder not found" });
+      }
+      res.json(folder);
+    } catch (error) {
+      res.status(400).json({ message: "Failed to update folder" });
+    }
+  });
+
+  app.delete("/api/folders/:id", requireAdmin, async (req, res) => {
+    try {
+      await storage.deleteFolder(req.params.id);
+      res.json({ message: "Folder deleted" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete folder" });
     }
   });
 

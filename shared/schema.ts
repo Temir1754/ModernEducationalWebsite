@@ -148,3 +148,21 @@ export const insertSectionSchema = createInsertSchema(sections).omit({
 
 export type InsertSection = z.infer<typeof insertSectionSchema>;
 export type Section = typeof sections.$inferSelect;
+
+export const documentFolders = mysqlTable("document_folders", {
+  id: varchar("id", { length: 100 }).primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  parentId: varchar("parent_id", { length: 100 }),
+  isCategory: boolean("is_category").default(false),
+  order: varchar("order", { length: 10 }).default("0"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertDocumentFolderSchema = createInsertSchema(documentFolders).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertDocumentFolder = z.infer<typeof insertDocumentFolderSchema>;
+export type DocumentFolder = typeof documentFolders.$inferSelect;
+
