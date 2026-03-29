@@ -16,8 +16,10 @@ import express from "express";
 // shared/schema.ts
 var schema_exports = {};
 __export(schema_exports, {
+  documentFolders: () => documentFolders,
   documents: () => documents,
   events: () => events,
+  insertDocumentFolderSchema: () => insertDocumentFolderSchema,
   insertDocumentSchema: () => insertDocumentSchema,
   insertEventSchema: () => insertEventSchema,
   insertMediaSchema: () => insertMediaSchema,
@@ -143,6 +145,18 @@ var insertSectionSchema = createInsertSchema(sections).omit({
   id: true,
   createdAt: true
 });
+var documentFolders = mysqlTable("document_folders", {
+  id: varchar("id", { length: 100 }).primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  parentId: varchar("parent_id", { length: 100 }),
+  isCategory: boolean("is_category").default(false),
+  order: varchar("order", { length: 10 }).default("0"),
+  createdAt: timestamp("created_at").defaultNow()
+});
+var insertDocumentFolderSchema = createInsertSchema(documentFolders).omit({
+  id: true,
+  createdAt: true
+});
 
 // server/db.ts
 import { drizzle } from "drizzle-orm/mysql2";
@@ -161,6 +175,7 @@ var db = drizzle(pool, { mode: "default", schema: schema_exports });
 import { eq } from "drizzle-orm";
 import session from "express-session";
 import createMemoryStore from "memorystore";
+import crypto from "crypto";
 var MemoryStore = createMemoryStore(session);
 var DatabaseStorage = class {
   sessionStore;
@@ -344,6 +359,26 @@ var DatabaseStorage = class {
   async deleteSection(id) {
     await db.delete(sections).where(eq(sections.id, id));
   }
+  async getFolders() {
+    return db.select().from(documentFolders);
+  }
+  async getFolder(id) {
+    const [folder] = await db.select().from(documentFolders).where(eq(documentFolders.id, id));
+    return folder;
+  }
+  async createFolder(insertFolder) {
+    const id = crypto.randomUUID();
+    await db.insert(documentFolders).values({ ...insertFolder, id });
+    const [folder] = await db.select().from(documentFolders).where(eq(documentFolders.id, id));
+    return folder;
+  }
+  async updateFolder(id, folderData) {
+    await db.update(documentFolders).set(folderData).where(eq(documentFolders.id, id));
+    return this.getFolder(id);
+  }
+  async deleteFolder(id) {
+    await db.delete(documentFolders).where(eq(documentFolders.id, id));
+  }
 };
 var storage = new DatabaseStorage();
 
@@ -369,8 +404,8 @@ var storage_multer = multer.diskStorage({
 });
 var upload = multer({
   storage: storage_multer,
-  limits: { fileSize: 500 * 1024 * 1024 },
-  // 500 MB
+  limits: { fileSize: 1024 * 1024 * 1024 },
+  // 1 GB
   fileFilter: (req, file, cb) => {
     const allowedTypes = [
       "application/pdf",
@@ -475,11 +510,11 @@ async function registerRoutes(app2) {
   });
   app2.get("/api/auth/me", async (req, res) => {
     if (!req.session.userId) {
-      return res.status(401).json({ message: "Not authenticated" });
+      return res.json({ user: null });
     }
     const user = await storage.getUser(req.session.userId);
     if (!user) {
-      return res.status(401).json({ message: "User not found" });
+      return res.json({ user: null });
     }
     res.json({ user: { id: user.id, username: user.username, role: user.role } });
   });
@@ -510,19 +545,22 @@ async function registerRoutes(app2) {
     next();
   }, express.static(uploadDir));
   app2.post("/api/upload", requireAdmin, (req, res) => {
+    console.log("[Upload API] Initiating upload...");
     upload.single("file")(req, res, (err) => {
       if (err) {
-        console.error("Multer error:", err);
+        console.error("[Upload API] Multer error:", err);
         return res.status(400).json({ message: err.message || "File upload error" });
       }
       try {
         if (!req.file) {
+          console.error("[Upload API] No file in request");
           return res.status(400).json({ message: "No file uploaded" });
         }
+        console.log(`[Upload API] File uploaded successfully: ${req.file.originalname} (${req.file.size} bytes)`);
         const url = `/uploads/${req.file.filename}`;
         res.json({ url, filename: req.file.filename, originalName: req.file.originalname });
       } catch (error) {
-        console.error("Upload error:", error);
+        console.error("[Upload API] Processing error:", error);
         res.status(500).json({ message: "Upload failed" });
       }
     });
@@ -856,6 +894,55 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Failed to delete section" });
     }
   });
+  app2.get("/api/folders", async (req, res) => {
+    try {
+      const folders = await storage.getFolders();
+      res.json(folders);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch folders" });
+    }
+  });
+  app2.get("/api/folders/:id", async (req, res) => {
+    try {
+      const folder = await storage.getFolder(req.params.id);
+      if (!folder) {
+        return res.status(404).json({ message: "Folder not found" });
+      }
+      res.json(folder);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch folder" });
+    }
+  });
+  app2.post("/api/folders", requireAdmin, async (req, res) => {
+    try {
+      console.log("POST /api/folders payload:", req.body);
+      const data = insertDocumentFolderSchema.parse(req.body);
+      const folder = await storage.createFolder(data);
+      res.json(folder);
+    } catch (error) {
+      console.error("Zod Validation Error on folders:", error.issues || error.message || error);
+      res.status(400).json({ message: "Invalid folder data", details: error.issues || error.message });
+    }
+  });
+  app2.patch("/api/folders/:id", requireAdmin, async (req, res) => {
+    try {
+      const folder = await storage.updateFolder(req.params.id, req.body);
+      if (!folder) {
+        return res.status(404).json({ message: "Folder not found" });
+      }
+      res.json(folder);
+    } catch (error) {
+      res.status(400).json({ message: "Failed to update folder" });
+    }
+  });
+  app2.delete("/api/folders/:id", requireAdmin, async (req, res) => {
+    try {
+      await storage.deleteFolder(req.params.id);
+      res.json({ message: "Folder deleted" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete folder" });
+    }
+  });
   const httpServer = createServer(app2);
   return httpServer;
 }
@@ -970,8 +1057,8 @@ function serveStatic(app2) {
 
 // server/index.ts
 var app = express3();
-app.use(express3.json({ limit: "500mb" }));
-app.use(express3.urlencoded({ limit: "500mb", extended: false }));
+app.use(express3.json({ limit: "1024mb" }));
+app.use(express3.urlencoded({ limit: "1024mb", extended: false }));
 app.use((req, res, next) => {
   const start = Date.now();
   const path5 = req.path;

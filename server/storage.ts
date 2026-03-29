@@ -3,6 +3,7 @@ import { db } from "./db";
 import { eq } from "drizzle-orm";
 import session from "express-session";
 import createMemoryStore from "memorystore";
+import crypto from "crypto";
 
 const MemoryStore = createMemoryStore(session);
 

@@ -10,7 +10,7 @@ import type { Document, DocumentFolder } from "@shared/schema";
 import { useAuth } from "@/hooks/use-auth";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -1083,6 +1083,9 @@ export default function SchoolDocumentsPage() {
                         <DialogTitle className="text-xl font-bold text-white">
                           Жаңа папка қосу
                         </DialogTitle>
+                        <DialogDescription className="text-gray-400">
+                          Құжаттарды жүйелеу үшін жаңа папка немесе категория жасаңыз.
+                        </DialogDescription>
                       </DialogHeader>
                       <div className="flex-1 overflow-y-auto p-6 pt-2 custom-scrollbar space-y-6">
                         <form onSubmit={(e) => folderUploadMutation.mutate(e)} className="space-y-6">
@@ -1190,6 +1193,9 @@ export default function SchoolDocumentsPage() {
                       <DialogTitle className="text-xl font-bold text-white">
                         {editingDocId ? "Құжатты өңдеу" : "Жаңа құжат жүктеу"}
                       </DialogTitle>
+                      <DialogDescription className="text-gray-400">
+                        {editingDocId ? "Құжат мәліметтерін өзгертіңіз." : "Керекті бөлімді таңдап, құжат файлын жүктеңіз."}
+                      </DialogDescription>
                     </DialogHeader>
                     
                     <div className="flex-1 overflow-y-auto p-6 pt-2 custom-scrollbar space-y-6">

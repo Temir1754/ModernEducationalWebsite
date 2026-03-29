@@ -42,7 +42,7 @@ import student4 from "@assets/untitled-2038_1760364231925.jpg";
 
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
-import type { News } from "@shared/schema";
+import type { News, SiteContent } from "@shared/schema";
 import { queryClient } from "@/lib/queryClient";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
@@ -121,7 +121,14 @@ export default function Home() {
     setIsAddNewsOpen(true);
   };
 
-  // Map DB news to component format
+  // Instagram Widget ID Fetching
+  const { data: content = [] } = useQuery<SiteContent[]>({
+    queryKey: ["/api/content"],
+  });
+
+  const instagramWidgetId = content.find(item => item.key === "instagram_widget_id")?.value;
+
+
   const formattedNews = newsItems.map(item => ({
     id: item.id,
     title: item.title,
@@ -759,7 +766,7 @@ export default function Home() {
         </section>
 
         {/* Instagram Section */}
-        <InstagramFeed />
+        <InstagramFeed widgetId={instagramWidgetId} />
 
         {/* FAQ Section */}
         <section className="py-16">

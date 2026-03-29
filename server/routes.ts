@@ -38,7 +38,7 @@ const storage_multer = multer.diskStorage({
 
 const upload = multer({
   storage: storage_multer,
-  limits: { fileSize: 500 * 1024 * 1024 }, // 500 MB
+  limits: { fileSize: 1024 * 1024 * 1024 }, // 1 GB
   fileFilter: (req, file, cb) => {
     const allowedTypes = [
       'application/pdf',
@@ -202,19 +202,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
   }, express.static(uploadDir));
 
   app.post("/api/upload", requireAdmin, (req, res) => {
+    console.log("[Upload API] Initiating upload...");
     upload.single("file")(req, res, (err: any) => {
       if (err) {
-        console.error("Multer error:", err);
+        console.error("[Upload API] Multer error:", err);
         return res.status(400).json({ message: err.message || "File upload error" });
       }
       try {
         if (!req.file) {
+          console.error("[Upload API] No file in request");
           return res.status(400).json({ message: "No file uploaded" });
         }
+        console.log(`[Upload API] File uploaded successfully: ${req.file.originalname} (${req.file.size} bytes)`);
         const url = `/uploads/${req.file.filename}`;
         res.json({ url, filename: req.file.filename, originalName: req.file.originalname });
       } catch (error) {
-        console.error("Upload error:", error);
+        console.error("[Upload API] Processing error:", error);
         res.status(500).json({ message: "Upload failed" });
       }
     });

@@ -15,9 +15,9 @@ dist/
 *.pdf
 *.svg
 
-# Исключение: attached_assets папкасындағы файлдарды git-ке қосу
-!attached_assets/**
-!uploads/**
+# Exclude uploads and attached_assets folders as they contain large files
+attached_assets/
+uploads/
 
 # Скриншоттар мен тест файлдар (тек корень папкасындағы)
 /public/gallery/

@@ -1,14 +1,68 @@
-import { useEffect } from "react";
+import { Instagram, Pencil, Loader2, Check, X } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Instagram } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
+import { useToast } from "@/hooks/use-toast";
 
 interface InstagramFeedProps {
-  widgetId?: string; // Optional: The ID provided by Elfsight/LightWidget
+  widgetId?: string;
 }
 
 export default function InstagramFeed({ widgetId }: InstagramFeedProps) {
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [isEditing, setIsEditing] = useState(false);
+  const [newWidgetId, setNewWidgetId] = useState(widgetId || "");
+
+  const updateWidgetIdMutation = useMutation({
+    mutationFn: async (id: string) => {
+      // First check if the content item exists
+      const checkRes = await fetch("/api/content?key=instagram_widget_id");
+      const existing = await checkRes.json();
+      
+      if (existing.length > 0) {
+        // Update existing
+        const res = await fetch(`/api/content/${existing[0].id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ value: id }),
+        });
+        if (!res.ok) throw new Error("Failed to update widget ID");
+      } else {
+        // Create new
+        const res = await fetch("/api/content", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ 
+            key: "instagram_widget_id", 
+            value: id,
+            lang: "kz",
+            type: "text" 
+          }),
+        });
+        if (!res.ok) throw new Error("Failed to create widget ID");
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/content"] });
+      setIsEditing(false);
+      toast({ title: "Instagram виджеті жаңартылды" });
+    },
+    onError: (error: any) => {
+      toast({ 
+        title: "Қате", 
+        description: error.message, 
+        variant: "destructive" 
+      });
+    }
+  });
+
   useEffect(() => {
-    // If we have an Elfsight widget, we need to load their platform script
+    if (!widgetId) return;
     const script = document.createElement("script");
     script.src = "https://static.elfsight.com/platform/platform.js";
     script.async = true;
@@ -38,7 +92,51 @@ export default function InstagramFeed({ widgetId }: InstagramFeedProps) {
           </p>
         </div>
 
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-6xl mx-auto relative group">
+          {user?.role === "admin" && (
+            <div className="absolute -top-10 right-0 z-20">
+              {isEditing ? (
+                <div className="flex items-center gap-2 bg-white dark:bg-slate-800 p-2 rounded-lg shadow-xl border border-blue-100 dark:border-blue-900 border-2">
+                  <Input 
+                    value={newWidgetId}
+                    onChange={(e) => setNewWidgetId(e.target.value)}
+                    placeholder="Elfsight Widget ID"
+                    className="w-48 h-8 text-xs"
+                  />
+                  <Button 
+                    size="sm" 
+                    className="h-8 w-8 p-0 bg-green-500 hover:bg-green-600"
+                    onClick={() => updateWidgetIdMutation.mutate(newWidgetId)}
+                    disabled={updateWidgetIdMutation.isPending}
+                  >
+                    {updateWidgetIdMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    variant="ghost"
+                    className="h-8 w-8 p-0"
+                    onClick={() => {
+                      setIsEditing(false);
+                      setNewWidgetId(widgetId || "");
+                    }}
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              ) : (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => setIsEditing(true)}
+                  className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-blue-200 dark:border-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/40 text-blue-600 dark:text-blue-400 font-bold shadow-lg"
+                >
+                  <Pencil className="w-4 h-4 mr-2" />
+                  Виджет ID өңдеу
+                </Button>
+              )}
+            </div>
+          )}
+
           {widgetId ? (
             /* Elfsight Widget Container */
             <div 
