@@ -233,6 +233,7 @@ function SubFolderAccordion({
   updateMutation,
   deleteMutation,
   deleteFolderMutation,
+  updateFolderMutation,
   onEdit,
   toast,
 }: {
@@ -242,6 +243,7 @@ function SubFolderAccordion({
   updateMutation: any;
   deleteMutation: any;
   deleteFolderMutation: any;
+  updateFolderMutation: any;
   onEdit: (doc: Document) => void;
   toast: any;
 }) {
@@ -286,6 +288,58 @@ function SubFolderAccordion({
             <Trash2 className="w-3.5 h-3.5" />
           </Button>
         )}
+        {user && (
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0 text-blue-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 mr-1 shrink-0"
+                onClick={(e) => e.stopPropagation()}
+                title="Папка атауын өзгерту"
+              >
+                <Pencil className="w-3.5 h-3.5" />
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="bg-[#111827] border-white/10 text-white" onClick={(e) => e.stopPropagation()}>
+              <DialogHeader>
+                <DialogTitle>Папка атауын өзгерту</DialogTitle>
+                <DialogDescription className="text-gray-400">
+                  Папканың жаңа атауын енгізіңіз.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="py-4">
+                <Label htmlFor={`folder-name-${subfolder.id}`} className="text-gray-300 mb-2 block">Атауы</Label>
+                <Input
+                  id={`folder-name-${subfolder.id}`}
+                  defaultValue={subfolder.label}
+                  className="bg-[#0d1117] border-white/20 text-white"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      updateFolderMutation.mutate({ id: subfolder.id, name: e.currentTarget.value });
+                    }
+                  }}
+                />
+              </div>
+              <div className="flex justify-end gap-2">
+                <DialogTrigger asChild>
+                  <Button variant="ghost">Болдырмау</Button>
+                </DialogTrigger>
+                <Button
+                  onClick={(e) => {
+                    const input = e.currentTarget.closest('[role="dialog"]')?.querySelector('input');
+                    if (input) {
+                      updateFolderMutation.mutate({ id: subfolder.id, name: input.value });
+                    }
+                  }}
+                  className="bg-blue-600 hover:bg-blue-700"
+                >
+                  Сақтау
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
 
       {open && (
@@ -299,6 +353,7 @@ function SubFolderAccordion({
               updateMutation={updateMutation}
               deleteMutation={deleteMutation}
               deleteFolderMutation={deleteFolderMutation}
+              updateFolderMutation={updateFolderMutation}
               onEdit={onEdit}
               toast={toast}
             />
@@ -334,6 +389,7 @@ function CategoryAccordion({
   updateMutation,
   deleteMutation,
   deleteFolderMutation,
+  updateFolderMutation,
   onEdit,
   toast,
 }: {
@@ -343,6 +399,7 @@ function CategoryAccordion({
   updateMutation: any;
   deleteMutation: any;
   deleteFolderMutation: any;
+  updateFolderMutation: any;
   onEdit: (doc: Document) => void;
   toast: any;
 }) {
@@ -400,6 +457,58 @@ function CategoryAccordion({
             <Trash2 className="w-4 h-4" />
           </Button>
         )}
+        {user && (
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0 text-blue-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 mr-3 shrink-0"
+                onClick={(e) => e.stopPropagation()}
+                title="Категория атауын өзгерту"
+              >
+                <Pencil className="w-4 h-4" />
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="bg-[#111827] border-white/10 text-white" onClick={(e) => e.stopPropagation()}>
+              <DialogHeader>
+                <DialogTitle>Категория атауын өзгерту</DialogTitle>
+                <DialogDescription className="text-gray-400">
+                  Категорияның жаңа атауын енгізіңіз.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="py-4">
+                <Label htmlFor={`category-name-${category.id}`} className="text-gray-300 mb-2 block">Атауы</Label>
+                <Input
+                  id={`category-name-${category.id}`}
+                  defaultValue={category.label}
+                  className="bg-[#0d1117] border-white/20 text-white"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      updateFolderMutation.mutate({ id: category.id, name: e.currentTarget.value });
+                    }
+                  }}
+                />
+              </div>
+              <div className="flex justify-end gap-2">
+                <DialogTrigger asChild>
+                  <Button variant="ghost">Болдырмау</Button>
+                </DialogTrigger>
+                <Button
+                  onClick={(e) => {
+                    const input = e.currentTarget.closest('[role="dialog"]')?.querySelector('input');
+                    if (input) {
+                      updateFolderMutation.mutate({ id: category.id, name: input.value });
+                    }
+                  }}
+                  className="bg-blue-600 hover:bg-blue-700"
+                >
+                  Сақтау
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
 
       {/* Category body */}
@@ -432,6 +541,7 @@ function CategoryAccordion({
                 updateMutation={updateMutation}
                 deleteMutation={deleteMutation}
                 deleteFolderMutation={deleteFolderMutation}
+                updateFolderMutation={updateFolderMutation}
                 onEdit={onEdit}
                 toast={toast}
               />
@@ -1025,6 +1135,24 @@ export default function SchoolDocumentsPage() {
     onError: (err: Error) =>
       toast({ title: "Қате", description: err.message, variant: "destructive" }),
   });
+  
+  const updateFolderMutation = useMutation({
+    mutationFn: async ({ id, name }: { id: string; name: string }) => {
+      const res = await fetch(`/api/folders/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name }),
+      });
+      if (!res.ok) throw new Error("Атауын өзгерту сәтсіз аяқталды");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/folders"] });
+      toast({ title: "Папка атауы жаңартылды" });
+    },
+    onError: (err: Error) =>
+      toast({ title: "Қате", description: err.message, variant: "destructive" }),
+  });
 
   const handleEdit = (doc: Document) => {
     setEditingDocId(doc.id);
@@ -1359,6 +1487,7 @@ export default function SchoolDocumentsPage() {
                   updateMutation={updateMutation}
                   deleteMutation={deleteMutation}
                   deleteFolderMutation={deleteFolderMutation}
+                  updateFolderMutation={updateFolderMutation}
                   onEdit={handleEdit}
                   toast={toast}
                 />
