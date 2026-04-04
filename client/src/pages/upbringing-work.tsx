@@ -13,7 +13,7 @@ import {
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
 import { queryClient } from "@/lib/queryClient";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import type { Media, Document } from "@shared/schema";
@@ -1098,6 +1098,9 @@ export default function UpbringingWorkPage() {
                   <DialogContent className="sm:max-w-[400px] bg-[#1e293b] border border-white/10">
                     <DialogHeader>
                       <DialogTitle className="text-white">Фото жүктеу</DialogTitle>
+                      <DialogDescription className="text-gray-400">
+                        Оқиғалар галереясына жаңа фотосурет жүктеңіз.
+                      </DialogDescription>
                     </DialogHeader>
                     <form onSubmit={(e) => galleryUploadMutation.mutate(e)} className="space-y-4">
                       <div className="space-y-2">
@@ -1131,6 +1134,9 @@ export default function UpbringingWorkPage() {
                   <DialogContent className="sm:max-w-[400px] bg-[#1e293b] border border-white/10">
                     <DialogHeader>
                       <DialogTitle className="text-white">Скан жүктеу</DialogTitle>
+                      <DialogDescription className="text-gray-400">
+                        Құжаттың скан нұсқасын (PDF немесе сурет) жүктеңіз.
+                      </DialogDescription>
                     </DialogHeader>
                     <form onSubmit={(e) => scansUploadMutation.mutate(e)} className="space-y-4">
                       <div className="space-y-2">
@@ -1247,8 +1253,11 @@ export default function UpbringingWorkPage() {
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[400px] bg-[#1e293b] border border-white/10">
                   <DialogHeader>
-                    <DialogTitle className="text-white">Скан жүктеу</DialogTitle>
-                  </DialogHeader>
+                  <DialogTitle className="text-white">Құжатты жүктеу</DialogTitle>
+                  <DialogDescription className="text-gray-400">
+                    Тәрбие жұмысының жоспарлары мен бағдарламаларын жүктеңіз.
+                  </DialogDescription>
+                </DialogHeader>
                   <form onSubmit={(e) => scansUploadMutation.mutate(e)} className="space-y-4">
                     <div className="space-y-2">
                       <Label className="text-gray-300">Атауы (міндетті)</Label>
@@ -1857,7 +1866,8 @@ export default function UpbringingWorkPage() {
 
         {/* Photo Gallery Upload Dialog */}
         <Dialog open={isGalleryUploadOpen} onOpenChange={setIsGalleryUploadOpen}>
-          <DialogContent className="sm:max-w-[400px] bg-[#1e293b] border border-white/10 text-white">
+          <DialogContent className="sm:max-w-[400px] bg-[#1e293b] border border-white/10 text-white" aria-describedby={undefined}>
+            <DialogTitle className="sr-only">Суретті үлкейту</DialogTitle>
             <DialogHeader>
               <DialogTitle className="text-white">Іс-шара суретін жүктеу</DialogTitle>
             </DialogHeader>
@@ -1938,8 +1948,11 @@ export default function UpbringingWorkPage() {
         <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
           <DialogContent className="sm:max-w-[400px] bg-[#1e293b] border border-white/10 text-white">
             <DialogHeader>
-              <DialogTitle className="text-white">Құжатты өңдеу</DialogTitle>
-            </DialogHeader>
+            <DialogTitle className="text-white">Құжатты өңдеу</DialogTitle>
+            <DialogDescription className="text-gray-400">
+              Құжаттың атауы мен сілтемесін өзгертіңіз.
+            </DialogDescription>
+          </DialogHeader>
             <form onSubmit={(e) => {
               e.preventDefault();
               if (!editingDoc) return;
@@ -1993,8 +2006,11 @@ export default function UpbringingWorkPage() {
         <Dialog open={isEventEditDialogOpen} onOpenChange={setIsEventEditDialogOpen}>
           <DialogContent className="sm:max-w-[500px] bg-[#1e293b] border border-white/10 text-white">
             <DialogHeader>
-              <DialogTitle className="text-white">Іс-шараны өңдеу</DialogTitle>
-            </DialogHeader>
+            <DialogTitle className="text-white">Іс-шараны өңдеу</DialogTitle>
+            <DialogDescription className="text-gray-400">
+              Іс-шараның атауы мен мерзімін өзгертіңіз.
+            </DialogDescription>
+          </DialogHeader>
             <div className="space-y-4 pt-4">
               <div className="space-y-2">
                 <Label className="text-gray-300">Тақырыбы</Label>
@@ -2062,8 +2078,11 @@ export default function UpbringingWorkPage() {
         <Dialog open={isAddEventDialogOpen} onOpenChange={setIsAddEventDialogOpen}>
           <DialogContent className="sm:max-w-[500px] bg-[#1e293b] border border-white/10 text-white">
             <DialogHeader>
-              <DialogTitle className="text-white">Жаңа іс-шара қосу</DialogTitle>
-            </DialogHeader>
+            <DialogTitle className="text-white">Жаңа іс-шара қосу</DialogTitle>
+            <DialogDescription className="text-gray-400">
+              Күнтізбеге жаңа іс-шара мәліметтерін енгізіңіз.
+            </DialogDescription>
+          </DialogHeader>
             <div className="space-y-4 pt-4">
               <div className="space-y-2">
                 <Label className="text-gray-300">Тақырыбы</Label>

@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import { Link } from "wouter";
 import { ArrowLeft, ChevronLeft, ChevronRight, X, Plus, Trash2, Loader2, Upload, Pencil } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
-import { Dialog, DialogContent, DialogClose, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogClose, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -169,6 +169,9 @@ export default function GalleryPage() {
                   <DialogContent className="bg-white">
                     <DialogHeader>
                       <DialogTitle className="text-gray-900">Фото жүктеу</DialogTitle>
+                      <DialogDescription className="text-gray-500">
+                        Галереяға жаңа фотосурет жүктеңіз.
+                      </DialogDescription>
                     </DialogHeader>
                     <form onSubmit={(e) => uploadMutation.mutate(e)} className="space-y-4">
                       <div className="space-y-2">
@@ -195,6 +198,9 @@ export default function GalleryPage() {
                   <DialogContent className="bg-white border-gray-200">
                     <DialogHeader>
                       <DialogTitle className="text-gray-900">Суреттің сипаттамасын өңдеу</DialogTitle>
+                      <DialogDescription className="text-gray-500">
+                        Таңдалған сурет үшін жаңа сипаттама енгізіңіз.
+                      </DialogDescription>
                     </DialogHeader>
                     <form onSubmit={(e) => {
                       e.preventDefault();
@@ -334,7 +340,8 @@ export default function GalleryPage() {
 
       {/* Image Modal Dialog */}
       <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
-        <DialogContent className="max-w-7xl w-full p-0 bg-transparent border-none">
+        <DialogContent className="max-w-7xl w-full p-0 bg-transparent border-none" aria-describedby={undefined}>
+          <DialogTitle className="sr-only">Суретті толық көлемде көру</DialogTitle>
           <div className="relative">
             <DialogClose className="absolute -top-12 right-0 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full p-2 hover:bg-white dark:hover:bg-gray-700 transition-colors z-50">
               <X className="w-6 h-6 text-gray-800 dark:text-gray-100" />

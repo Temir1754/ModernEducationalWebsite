@@ -44,7 +44,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
 import type { News, SiteContent } from "@shared/schema";
 import { queryClient } from "@/lib/queryClient";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -656,6 +656,9 @@ export default function Home() {
                     <DialogContent className="bg-white">
                       <DialogHeader>
                         <DialogTitle className="text-gray-900">{editingNewsId ? "Жаңалықты өңдеу" : "Жаңалық қосу"}</DialogTitle>
+                        <DialogDescription className="text-gray-500">
+                          {editingNewsId ? "Жаңалық мәліметтерін өзгертіңіз." : "Жаңа оқиға немесе хабарландыру қосыңыз."}
+                        </DialogDescription>
                       </DialogHeader>
                       <form onSubmit={(e) => {
                         e.preventDefault();
