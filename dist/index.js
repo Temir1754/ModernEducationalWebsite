@@ -972,7 +972,7 @@ var vite_config_default = defineConfig({
     alias: {
       "@": path2.resolve(import.meta.dirname, "client", "src"),
       "@shared": path2.resolve(import.meta.dirname, "shared"),
-      "@assets": path2.resolve(import.meta.dirname, "attached_assets")
+      "@assets": path2.resolve(import.meta.dirname, "client", "src", "assets")
     }
   },
   root: path2.resolve(import.meta.dirname, "client"),
@@ -1050,7 +1050,10 @@ function serveStatic(app2) {
     );
   }
   app2.use(express2.static(distPath));
-  app2.use("*", (_req, res) => {
+  app2.use("*", (req, res) => {
+    if (req.path.startsWith("/api")) {
+      return res.status(404).json({ message: "Not found" });
+    }
     res.sendFile(path3.resolve(distPath, "index.html"));
   });
 }
@@ -1059,6 +1062,12 @@ function serveStatic(app2) {
 var app = express3();
 app.use(express3.json({ limit: "1024mb" }));
 app.use(express3.urlencoded({ limit: "1024mb", extended: false }));
+app.use((req, res, next) => {
+  if (req.path.includes(".env") || req.path.includes(".git")) {
+    return res.status(403).json({ message: "Access forbidden" });
+  }
+  next();
+});
 app.use((req, res, next) => {
   const start = Date.now();
   const path5 = req.path;

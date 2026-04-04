@@ -8,6 +8,14 @@ const app = express();
 app.use(express.json({ limit: "1024mb" }));
 app.use(express.urlencoded({ limit: "1024mb", extended: false }));
 
+// Security middleware to block access to sensitive files
+app.use((req, res, next) => {
+  if (req.path.includes('.env') || req.path.includes('.git')) {
+    return res.status(403).json({ message: "Access forbidden" });
+  }
+  next();
+});
+
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
