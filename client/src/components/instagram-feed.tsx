@@ -16,7 +16,7 @@ export default function InstagramFeed({ widgetId }: InstagramFeedProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [isEditing, setIsEditing] = useState(false);
-  const [newWidgetId, setNewWidgetId] = useState(widgetId || "");
+  const [newWidgetId, setNewWidgetId] = useState(widgetId || "5b3b2e5f-c046-4903-98d6-9258f4e7638e");
 
   const updateWidgetIdMutation = useMutation({
     mutationFn: async (id: string) => {
@@ -62,7 +62,7 @@ export default function InstagramFeed({ widgetId }: InstagramFeedProps) {
   });
 
   useEffect(() => {
-    if (!widgetId) return;
+    if (!newWidgetId) return;
     const script = document.createElement("script");
     script.src = "https://static.elfsight.com/platform/platform.js";
     script.async = true;
@@ -137,10 +137,10 @@ export default function InstagramFeed({ widgetId }: InstagramFeedProps) {
             </div>
           )}
 
-          {widgetId ? (
+          {newWidgetId ? (
             /* Elfsight Widget Container */
             <div 
-              className={`elfsight-app-${widgetId}`} 
+              className={`elfsight-app-${newWidgetId}`} 
               data-elfsight-app-lazy
             ></div>
           ) : (
