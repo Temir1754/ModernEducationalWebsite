@@ -116,7 +116,7 @@ const ResponsiveNavbar = () => {
                 className="cursor-pointer flex-shrink-0 transition-transform active:scale-95"
               >
                 <img
-                  src="/logo.svg"
+                  src="/logo.png"
                   alt="FGS Logo"
                   className="h-10 sm:h-12 lg:h-16 w-auto max-w-[150px] sm:max-w-none object-contain"
                   data-testid="nav-logo"

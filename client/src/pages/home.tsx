@@ -644,7 +644,7 @@ export default function Home() {
               </p>
 
               {/* Admin Add News Button */}
-              {user && (
+              {user?.role === "admin" && (
                 <div className="absolute top-0 right-0">
                   <Dialog open={isAddNewsOpen} onOpenChange={setIsAddNewsOpen}>
                     <DialogTrigger asChild>
@@ -725,7 +725,7 @@ export default function Home() {
                       alt={article.title}
                       className="w-full h-48 object-cover transition-transform duration-300 hover:scale-110"
                     />
-                    {user && (
+                    {user?.role === "admin" && (
                       <>
                         <Button
                           variant="secondary"
