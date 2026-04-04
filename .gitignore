@@ -15,6 +15,12 @@ dist/
 *.pdf
 *.svg
 
+# Allow assets needed for UI build
+!client/src/assets/
+!client/src/assets/*
+!client/public/logo.png
+!client/public/logo.svg
+
 # Exclude uploads and attached_assets folders as they contain large files
 attached_assets/
 uploads/
