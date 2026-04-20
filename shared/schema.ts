@@ -1,12 +1,12 @@
-import { mysqlTable, serial, varchar, text, timestamp, boolean } from "drizzle-orm/mysql-core";
+import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const users = mysqlTable("users", {
-  id: varchar("id", { length: 36 }).primaryKey(), // UUIDs will be generated in app
-  username: varchar("username", { length: 255 }).notNull().unique(),
+export const users = sqliteTable("users", {
+  id: text("id").primaryKey(), // UUIDs will be generated in app
+  username: text("username").notNull().unique(),
   password: text("password").notNull(),
-  role: varchar("role", { length: 50 }).default("user"),
+  role: text("role").default("user"),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
@@ -18,15 +18,15 @@ export const insertUserSchema = createInsertSchema(users).pick({
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 
-export const events = mysqlTable("events", {
-  id: varchar("id", { length: 36 }).primaryKey(),
-  month: varchar("month", { length: 50 }).notNull(),
+export const events = sqliteTable("events", {
+  id: text("id").primaryKey(),
+  month: text("month").notNull(),
   title: text("title").notNull(),
   dateText: text("date_text").notNull(),
   description: text("description").notNull(),
   mediaUrl: text("media_url"),
-  mediaType: varchar("media_type", { length: 20 }),
-  createdAt: timestamp("created_at").defaultNow(),
+  mediaType: text("media_type"),
+  createdAt: integer("created_at", { mode: 'timestamp' }).default(new Date()),
 });
 
 export const insertEventSchema = createInsertSchema(events).omit({
@@ -37,15 +37,15 @@ export const insertEventSchema = createInsertSchema(events).omit({
 export type InsertEvent = z.infer<typeof insertEventSchema>;
 export type Event = typeof events.$inferSelect;
 
-export const media = mysqlTable("media", {
-  id: varchar("id", { length: 36 }).primaryKey(),
-  type: varchar("type", { length: 20 }).notNull(),
+export const media = sqliteTable("media", {
+  id: text("id").primaryKey(),
+  type: text("type").notNull(),
   url: text("url").notNull(),
   thumbnailUrl: text("thumbnail_url"),
   caption: text("caption"),
-  eventId: varchar("event_id", { length: 36 }).references(() => events.id),
-  section: varchar("section", { length: 100 }),
-  createdAt: timestamp("created_at").defaultNow(),
+  eventId: text("event_id").references(() => events.id),
+  section: text("section"),
+  createdAt: integer("created_at", { mode: 'timestamp' }).default(new Date()),
 });
 
 export const insertMediaSchema = createInsertSchema(media).omit({
@@ -56,16 +56,16 @@ export const insertMediaSchema = createInsertSchema(media).omit({
 export type InsertMedia = z.infer<typeof insertMediaSchema>;
 export type Media = typeof media.$inferSelect;
 
-export const documents = mysqlTable("documents", {
-  id: varchar("id", { length: 36 }).primaryKey(),
-  section: varchar("section", { length: 100 }).notNull(),
+export const documents = sqliteTable("documents", {
+  id: text("id").primaryKey(),
+  section: text("section").notNull(),
   title: text("title").notNull(),
   description: text("description"),
   url: text("url").notNull(),
   scanUrl: text("scan_url"),
-  color: varchar("color", { length: 50 }),
-  icon: varchar("icon", { length: 50 }),
-  createdAt: timestamp("created_at").defaultNow(),
+  color: text("color"),
+  icon: text("icon"),
+  createdAt: integer("created_at", { mode: 'timestamp' }).default(new Date()),
 });
 
 export const insertDocumentSchema = createInsertSchema(documents).omit({
@@ -76,15 +76,15 @@ export const insertDocumentSchema = createInsertSchema(documents).omit({
 export type InsertDocument = z.infer<typeof insertDocumentSchema>;
 export type Document = typeof documents.$inferSelect;
 
-export const teachers = mysqlTable("teachers", {
-  id: varchar("id", { length: 36 }).primaryKey(),
-  name: varchar("name", { length: 255 }).notNull(),
-  position: varchar("position", { length: 255 }).notNull(),
-  phone: varchar("phone", { length: 50 }),
-  email: varchar("email", { length: 255 }),
+export const teachers = sqliteTable("teachers", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  position: text("position").notNull(),
+  phone: text("phone"),
+  email: text("email"),
   photoUrl: text("photo_url"),
-  department: varchar("department", { length: 100 }),
-  createdAt: timestamp("created_at").defaultNow(),
+  department: text("department"),
+  createdAt: integer("created_at", { mode: 'timestamp' }).default(new Date()),
 });
 
 export const insertTeacherSchema = createInsertSchema(teachers).omit({
@@ -95,13 +95,13 @@ export const insertTeacherSchema = createInsertSchema(teachers).omit({
 export type InsertTeacher = z.infer<typeof insertTeacherSchema>;
 export type Teacher = typeof teachers.$inferSelect;
 
-export const news = mysqlTable("news", {
-  id: varchar("id", { length: 36 }).primaryKey(),
+export const news = sqliteTable("news", {
+  id: text("id").primaryKey(),
   title: text("title").notNull(),
   body: text("body").notNull(),
   coverUrl: text("cover_url"),
   dateText: text("date_text").notNull(),
-  createdAt: timestamp("created_at").defaultNow(),
+  createdAt: integer("created_at", { mode: 'timestamp' }).default(new Date()),
 });
 
 export const insertNewsSchema = createInsertSchema(news).omit({
@@ -112,14 +112,14 @@ export const insertNewsSchema = createInsertSchema(news).omit({
 export type InsertNews = z.infer<typeof insertNewsSchema>;
 export type News = typeof news.$inferSelect;
 
-export const siteContent = mysqlTable("site_content", {
-  id: varchar("id", { length: 36 }).primaryKey(),
-  key: varchar("key", { length: 255 }).notNull().unique(),
-  lang: varchar("lang", { length: 10 }).notNull().default("kz"),
+export const siteContent = sqliteTable("site_content", {
+  id: text("id").primaryKey(),
+  key: text("key").notNull().unique(),
+  lang: text("lang").notNull().default("kz"),
   value: text("value").notNull(),
-  type: varchar("type", { length: 50 }).default("text"),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+  type: text("type").default("text"),
+  createdAt: integer("created_at", { mode: 'timestamp' }).default(new Date()),
+  updatedAt: integer("updated_at", { mode: 'timestamp' }).default(new Date()),
 });
 
 export const insertSiteContentSchema = createInsertSchema(siteContent).omit({
@@ -131,14 +131,14 @@ export const insertSiteContentSchema = createInsertSchema(siteContent).omit({
 export type InsertSiteContent = z.infer<typeof insertSiteContentSchema>;
 export type SiteContent = typeof siteContent.$inferSelect;
 
-export const sections = mysqlTable("sections", {
-  id: varchar("id", { length: 36 }).primaryKey(),
-  page: varchar("page", { length: 100 }).notNull(),
-  slug: varchar("slug", { length: 100 }).notNull(),
-  order: varchar("order", { length: 10 }).notNull(),
-  isVisible: boolean("is_visible").default(true),
+export const sections = sqliteTable("sections", {
+  id: text("id").primaryKey(),
+  page: text("page").notNull(),
+  slug: text("slug").notNull(),
+  order: text("order").notNull(),
+  isVisible: integer("is_visible", { mode: 'boolean' }).default(true),
   config: text("config"),
-  createdAt: timestamp("created_at").defaultNow(),
+  createdAt: integer("created_at", { mode: 'timestamp' }).default(new Date()),
 });
 
 export const insertSectionSchema = createInsertSchema(sections).omit({
@@ -149,13 +149,13 @@ export const insertSectionSchema = createInsertSchema(sections).omit({
 export type InsertSection = z.infer<typeof insertSectionSchema>;
 export type Section = typeof sections.$inferSelect;
 
-export const documentFolders = mysqlTable("document_folders", {
-  id: varchar("id", { length: 100 }).primaryKey(),
-  name: varchar("name", { length: 255 }).notNull(),
-  parentId: varchar("parent_id", { length: 100 }),
-  isCategory: boolean("is_category").default(false),
-  order: varchar("order", { length: 10 }).default("0"),
-  createdAt: timestamp("created_at").defaultNow(),
+export const documentFolders = sqliteTable("document_folders", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  parentId: text("parent_id"),
+  isCategory: integer("is_category", { mode: 'boolean' }).default(false),
+  order: text("order").default("0"),
+  createdAt: integer("created_at", { mode: 'timestamp' }).default(new Date()),
 });
 
 export const insertDocumentFolderSchema = createInsertSchema(documentFolders).omit({

@@ -35,9 +35,8 @@ import WhatsApp_Image_2025_08_15_at_18_02_15 from "@assets/WhatsApp Image 2025-0
 import sportsPhoto from "@assets/9E3A2784_1760360997075.jpg";
 import creativePhoto from "@assets/9E3A6284_1760361922943.jpg";
 import intellectualPhoto from "@assets/9E3A8933_1760362017762.jpg";
-import student2 from "@assets/untitled-2030_1760364226199.jpg";
-import student3 from "@assets/untitled-2036_1760364229159.jpg";
-import student4 from "@assets/untitled-2038_1760364231925.jpg";
+
+
 
 
 import { useQuery, useMutation } from "@tanstack/react-query";
@@ -141,7 +140,7 @@ export default function Home() {
 
   const features = [
     {
-      image: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200",
+      image: "/gallery/school-life.jpg",
       title: "Сапалы білім беру",
       description: "0-9 сыныптары үшін қазақ және орыс тілдерінде сабақ",
       bgColor: "bg-blue-100",
@@ -161,7 +160,7 @@ export default function Home() {
       }
     },
     {
-      image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200",
+      image: creativePhoto,
       title: "Үш разы тамақ",
       description: "Балансталған және дәмді тамақ ас мәзірі күн сайын",
       bgColor: "bg-green-100",
@@ -181,7 +180,7 @@ export default function Home() {
       }
     },
     {
-      image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200",
+      image: intellectualPhoto,
       title: "Оқушы тасымалы",
       description: "Қауіпсіз және ыңғайлы көлік қызметі",
       bgColor: "bg-yellow-100",
@@ -215,7 +214,7 @@ export default function Home() {
       name: "Шахматы",
       icon: "fas fa-chess",
       color: "green",
-      image: "https://images.unsplash.com/photo-1529699211952-734e80c4d42b?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100"
+      image: "/gallery/chess.jpg"
     },
     {
       name: "Speaking Club",
@@ -354,18 +353,18 @@ export default function Home() {
         {/* Preparation Programs */}
         <section className="py-16 bg-white dark:bg-[#0f172a]">
           <div className="container mx-auto px-4">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="max-w-4xl mx-auto text-center">
               <div>
                 <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-6">
                   НИШ және РФМШ дайындық бағдарламалары
                 </h2>
-                <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
+                <p className="text-lg text-gray-600 dark:text-gray-300 mb-6 max-w-2xl mx-auto">
                   Балаларыңызды Назарбаев интеллектуалды мектептеріне және республикалық физика-математика мектебіне түсуге дайындаймыз.
                 </p>
 
                 {/* Mathematical Olympiad Results - Mobile/Desktop Responsive */}
                 <div className="mt-8">
-                  <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-6 text-center">
+                  <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-6">
                     Математикалық олимпиада нәтижелері
                   </h3>
 
@@ -375,7 +374,7 @@ export default function Home() {
                   </div>
 
                   {/* Desktop Version - Original Layout */}
-                  <div className="hidden md:block p-6 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-xl border border-yellow-200 dark:border-yellow-700">
+                  <div className="hidden md:block p-6 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-xl border border-yellow-200 dark:border-yellow-700 text-left">
                     {/* 5th Grade - Белов Вячеслав */}
                     <div className="mb-6 p-4 bg-white dark:bg-[#1e293b] rounded-lg shadow-sm border-l-4 border-yellow-500">
                       <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-3">5 сынып, Белов Вячеслав</h4>
@@ -440,50 +439,6 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4 h-full min-h-[500px]">
-                {/* Large Featured Image */}
-                <div className="col-span-2 md:col-span-1 md:row-span-2 relative group rounded-2xl overflow-hidden shadow-2xl transition-all duration-500 hover:shadow-blue-500/20">
-                  <img
-                    src={student2}
-                    alt="Оқушы - НІШ, РФМШ, БИЛ сертификаттарымен"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <div className="absolute bottom-4 left-4 right-4 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                    <div className="bg-white/10 backdrop-blur-md border border-white/20 p-2 rounded-lg">
-                      <p className="text-white text-[10px] font-black tracking-widest uppercase">Үздік нәтиже</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Supporting Image 1 */}
-                <div className="relative group rounded-2xl overflow-hidden shadow-xl transition-all duration-500 hover:shadow-green-500/20 translate-y-4 md:translate-y-0">
-                  <img
-                    src={student3}
-                    alt="Оқушы жетістігі"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div className="absolute top-3 left-3">
-                    <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white shadow-lg">
-                      <Award className="w-4 h-4" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Supporting Image 2 */}
-                <div className="relative group rounded-2xl overflow-hidden shadow-xl transition-all duration-500 hover:shadow-purple-500/20 translate-y-4 md:translate-y-0">
-                  <img
-                    src={student4}
-                    alt="Оқушы марапаты"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div className="absolute top-3 left-3">
-                    <div className="w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center text-white shadow-lg">
-                      <Star className="w-4 h-4" />
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </section>
@@ -505,14 +460,14 @@ export default function Home() {
             </div>
 
             {/* Desktop Version - Three Cards Layout */}
-            <div className="hidden md:grid lg:grid-cols-3 md:grid-cols-2 gap-10 lg:gap-10 max-w-6xl mx-auto">
+            <div className="hidden md:grid lg:grid-cols-3 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
 
               {/* Creative Direction Card */}
               <div className="text-center animate-fade-in-up">
                 <div className="relative mb-6">
 
-                  {/* Student Photo Circle - Exact 320px dimensions */}
-                  <div className="relative w-80 h-80 mx-auto">
+                  {/* Student Photo Circle - Responsive within grid cell */}
+                  <div className="relative w-full max-w-[320px] aspect-square mx-auto">
                     <div className="w-full h-full rounded-full overflow-hidden border-4 border-white shadow-2xl bg-gradient-to-br from-pink-50 to-purple-50">
                       <img
                         src={creativePhoto}
@@ -529,7 +484,7 @@ export default function Home() {
                 </div>
 
                 {/* Description - 80% width of card */}
-                <div className="max-w-[80%] mx-auto">
+                <div className="w-full mx-auto">
                   <p className="text-black dark:text-gray-300 text-base leading-relaxed text-center">
                     Балалардың эстетикалық талғамын, шығармашылық ойлауын және көркем қабілеттерін дамыту.
                     Хореография, домбыра, дизайн және глинолепка сияқты үйірмелер арқылы өнерге деген сүйіспеншілікті ояту.
@@ -541,8 +496,8 @@ export default function Home() {
               <div className="text-center animate-fade-in-up-delayed">
                 <div className="relative mb-6">
 
-                  {/* Student Photo Circle - Exact 320px dimensions */}
-                  <div className="relative w-80 h-80 mx-auto">
+                  {/* Student Photo Circle - Responsive within grid cell */}
+                  <div className="relative w-full max-w-[320px] aspect-square mx-auto">
                     <div className="w-full h-full rounded-full overflow-hidden border-4 border-white dark:border-gray-600 shadow-2xl bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30">
                       <img
                         src={intellectualPhoto}
@@ -559,7 +514,7 @@ export default function Home() {
                 </div>
 
                 {/* Description - 80% width of card */}
-                <div className="max-w-[80%] mx-auto">
+                <div className="w-full mx-auto">
                   <p className="text-black dark:text-gray-300 text-base leading-relaxed text-center">
                     Логикалық ойлау, аналитикалық қабілет және проблемаларды шешу дағдыларын дамыту.
                     Робототехника, шахмат, дебат және Speaking Club арқылы зият дамуын қамтамасыз ету.
@@ -571,8 +526,8 @@ export default function Home() {
               <div className="text-center animate-fade-in-up-delayed-2 md:col-span-2 lg:col-span-1">
                 <div className="relative mb-6">
 
-                  {/* Student Photo Circle - Exact 320px dimensions */}
-                  <div className="relative w-80 h-80 mx-auto">
+                  {/* Student Photo Circle - Responsive within grid cell */}
+                  <div className="relative w-full max-w-[320px] aspect-square mx-auto">
                     <div className="w-full h-full rounded-full overflow-hidden border-4 border-white dark:border-gray-600 shadow-2xl bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30">
                       <img
                         src={sportsPhoto}
@@ -783,7 +738,7 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="max-w-4xl mx-auto space-y-4">
+            <div className="max-w-6xl mx-auto space-y-4">
               <Card className="hover:shadow-lg transition-all duration-300 dark:bg-[#1e293b] dark:border-gray-700">
                 <CardContent className="p-6">
                   <details className="group">

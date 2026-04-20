@@ -71,23 +71,23 @@ function AnimatedNumber({ end, duration = 2000 }: { end: number; duration?: numb
 export default function AboutSchoolPage() {
   const schoolPhotos = [
     {
-      url: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800",
-      title: "Заманауи оқу сыныптары"
+      url: "/gallery/school-life.jpg",
+      title: "Мектеп өмірі"
     },
     {
-      url: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800",
+      url: "/gallery/nis-prep.jpg",
       title: "НИШ дайындық сабақтары"
     },
     {
-      url: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800",
-      title: "Интерактивті оқыту"
+      url: "/gallery/untitled-2318_1760366037457.jpg",
+      title: "Салтанатты іс-шаралар"
     },
     {
-      url: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800",
-      title: "Speaking Club"
+      url: "/gallery/untitled-2321_1760368464143.jpg",
+      title: "Жетістіктеріміз"
     },
     {
-      url: "https://images.unsplash.com/photo-1529699211952-734e80c4d42b?w=800",
+      url: "/gallery/chess.jpg",
       title: "Шахмат үйірмесі"
     },
     {
@@ -135,7 +135,7 @@ export default function AboutSchoolPage() {
               Біздің мектептің күнделікті өміріне көз жүгіртіңіз
             </p>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
               {schoolPhotos.map((photo, index) => (
                 <div
                   key={index}
@@ -204,7 +204,7 @@ export default function AboutSchoolPage() {
               Мектептің қол жеткізген табыстары цифрларда
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
               {/* Achievement 1 */}
               <div className="group">
                 <Card className="text-center p-8 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 bg-white dark:bg-[#1e293b] border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500">
@@ -284,7 +284,7 @@ export default function AboutSchoolPage() {
               Біздің негізгі мақсаттар мен бағыттар
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
               {/* Mission 1 */}
               <div className="group fade-in-delay-100">
                 <Card className="h-full bg-white dark:bg-[#1e293b] border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl dark:hover:shadow-blue-500/20">
@@ -380,7 +380,7 @@ export default function AboutSchoolPage() {
               Неліктен FGS-ті таңдау керек?
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
               {/* Advantage 1 */}
               <div className="group fade-in-delay-100">
                 <Card className="relative h-full overflow-hidden bg-gradient-to-br from-blue-50/80 to-purple-50/80 dark:from-blue-950/30 dark:to-purple-950/30 backdrop-blur-sm border-2 border-blue-200/50 dark:border-blue-700/50 transition-all duration-500 transform hover:scale-105 hover:shadow-2xl dark:hover:shadow-blue-500/30">

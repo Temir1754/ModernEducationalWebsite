@@ -56,7 +56,7 @@ export default function AdministrationPage() {
           </p>
         </div>
 
-        <div className="grid gap-8">
+        <div className="grid gap-8 max-w-6xl mx-auto">
           {administrators.map((admin, index) => (
             <Card key={index} className="hover:shadow-lg transition-shadow duration-300 dark:bg-[#1e293b] dark:border-gray-700">
               <CardContent className="p-6">

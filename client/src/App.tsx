@@ -27,6 +27,7 @@ import StudentsPage from "@/pages/students";
 import SchedulePage from "@/pages/schedule";
 import ContactPage from "@/pages/contact";
 import GalleryPage from "@/pages/gallery";
+import EventsPage from "@/pages/events";
 import NotFound from "@/pages/not-found";
 
 function ScrollToTop() {
@@ -60,6 +61,7 @@ function Router() {
         <Route path="/schedule" component={SchedulePage} />
         <Route path="/contact" component={ContactPage} />
         <Route path="/gallery" component={GalleryPage} />
+        <Route path="/events" component={EventsPage} />
         <Route path="/admin" component={AuthPage} />
         <Route component={NotFound} />
       </Switch>

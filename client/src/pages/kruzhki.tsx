@@ -57,7 +57,7 @@ export default function KruzhkiPage() {
         {
           name: "Шахмат",
           description: "Шахмат ойынының негіздері, тактика және стратегия үйрену",
-          image: "https://images.unsplash.com/photo-1528819622765-d6bcf132f793?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250",
+          image: "/gallery/chess.jpg",
           schedule: "Сейсенбі, Бейсенбі: 15:00-16:30",
           age: "6-16 жас",
           teacher: "Байшоинова Сания Тузельбаевна"
@@ -142,7 +142,7 @@ export default function KruzhkiPage() {
               </h2>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {category.clubs.map((club, clubIndex) => (
                 <Card key={clubIndex} className="overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 bg-white dark:bg-[#1e293b] border dark:border-gray-700">
                   <div className="relative h-48 overflow-hidden">

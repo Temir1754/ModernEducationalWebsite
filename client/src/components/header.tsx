@@ -18,32 +18,32 @@ export default function Header() {
     {
       title: "Мектеп туралы",
       items: [
-        { title: "Мектеп тарихы", href: "#" },
-        { title: "Мектеп миссиясы", href: "#" },
-        { title: "Мектеп құрылымы", href: "#" },
+        { title: "Мектеп тарихы", href: "/about-school" },
+        { title: "Мектеп миссиясы", href: "/about-school#mission" },
+        { title: "Мектеп құрылымы", href: "/about-school#structure" },
       ],
     },
     {
       title: "Мектеп төлқұжаты",
       items: [
-        { title: "Мектеп Жарғысы", href: "#" },
-        { title: "Ұжымдық келісім шарт", href: "#" },
-        { title: "Білім беру мекемесіне дейінгі қауіпсіз жол қозғалысының схемасы", href: "#" },
+        { title: "Мектеп Жарғысы", href: "/school-documents" },
+        { title: "Ұжымдық келісім шарт", href: "/school-documents" },
+        { title: "Білім беру мекемесіне дейінгі қауіпсіз жол қозғалысының схемасы", href: "/school-documents" },
       ],
     },
     {
       title: "Мемлекеттік аттестаттау",
       items: [
-        { title: "Аттестаттау құжаттары", href: "#" },
-        { title: "Бағалау критерийлері", href: "#" },
+        { title: "Аттестаттау құжаттары", href: "/state-attestation" },
+        { title: "Бағалау критерийлері", href: "/state-attestation" },
       ],
     },
     {
       title: "Әкімшілік",
       items: [
-        { title: "Әкімшілік құрамы", href: "#" },
-        { title: "Педагогикалық құрам", href: "#" },
-        { title: "Ардагер ұстаздар", href: "#" },
+        { title: "Әкімшілік құрамы", href: "/administration" },
+        { title: "Педагогикалық құрам", href: "/subject-teachers" },
+        { title: "Ардагер ұстаздар", href: "/administration#veterans" },
       ],
     },
     {
@@ -59,11 +59,12 @@ export default function Header() {
     {
       title: "Қызметтер",
       items: [
-        { title: "Оқу үдерісі", href: "#" },
-        { title: "Мектеп тынысы", href: "#" },
+        { title: "Оқу үдерісі", href: "/education-process" },
+        { title: "Мектеп тынысы", href: "/upbringing-work" },
+        { title: "Іс-шаралар", href: "/events" },
         { title: "Мұғалімдер үшін", href: "#" },
         { title: "Ата-аналар үшін", href: "#" },
-        { title: "Оқушылар үшін", href: "#" },
+        { title: "Оқушылар үшін", href: "/students" },
         { title: "Бос орындар", href: "#" },
       ],
     },

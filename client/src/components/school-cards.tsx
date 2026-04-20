@@ -321,10 +321,12 @@ export default function SchoolCards({
 
             {/* Section 3: Last 1 card centered */}
             <div className="flex-none w-full snap-center">
-              <div className="flex justify-center max-w-md mx-auto">
-                {items.slice(6, 7).map((item, index) => (
-                  <SchoolCard key={item.id} item={item} index={index + 6} />
-                ))}
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <div className="lg:col-start-2">
+                  {items.slice(6, 7).map((item, index) => (
+                    <SchoolCard key={item.id} item={item} index={index + 6} />
+                  ))}
+                </div>
               </div>
             </div>
 

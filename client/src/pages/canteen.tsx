@@ -19,11 +19,35 @@ import {
   ChefHat,
   Heart,
   AlertTriangle,
-  ArrowLeft
+  ArrowLeft,
+  X,
+  Loader2
 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { Dialog, DialogContent, DialogClose, DialogTitle } from "@/components/ui/dialog";
+import type { Media } from "@shared/schema";
 
 const CanteenPage = () => {
   const [selectedWeek, setSelectedWeek] = useState(1);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  const { data: canteenMedia = [], isLoading } = useQuery<Media[]>({
+    queryKey: ["/api/media", "canteen"],
+    queryFn: async () => {
+      const res = await fetch("/api/media?section=canteen");
+      if (!res.ok) return [];
+      return res.json();
+    }
+  });
+
+  // Fallback images if database is empty
+  const defaultMedia = [
+    { url: "/canteen-hall.png", caption: "Асхана залы" },
+    { url: "/canteen-kitchen.png", caption: "Тамақ дайындау" },
+    { url: "/canteen-lunch.png", caption: "Дайын тағамдар" }
+  ];
+
+  const displayMedia = canteenMedia.length > 0 ? canteenMedia : defaultMedia;
 
   // 4 weeks menu data
   const menuByWeek = {
@@ -324,38 +348,30 @@ const CanteenPage = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid md:grid-cols-3 gap-4">
-                <div className="relative rounded-lg overflow-hidden">
-                  <img 
-                    src="https://images.unsplash.com/photo-1567521464027-f127ff144326?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" 
-                    alt="Асхана залы"
-                    className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2">
-                    <p className="text-sm font-medium">Асхана залы</p>
-                  </div>
+              {isLoading ? (
+                <div className="flex justify-center py-12">
+                  <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
                 </div>
-                <div className="relative rounded-lg overflow-hidden">
-                  <img 
-                    src="https://images.unsplash.com/photo-1512058564366-18510be2db19?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" 
-                    alt="Тамақ дайындау"
-                    className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2">
-                    <p className="text-sm font-medium">Тамақ дайындау</p>
-                  </div>
+              ) : (
+                <div className="grid md:grid-cols-3 gap-4">
+                  {displayMedia.map((media, index) => (
+                    <div 
+                      key={index} 
+                      className="relative rounded-lg overflow-hidden cursor-pointer group"
+                      onClick={() => setSelectedImage(media.url)}
+                    >
+                      <img 
+                        src={media.url} 
+                        alt={media.caption || "Асхана фотосы"}
+                        className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
+                      />
+                      <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p className="text-sm font-medium">{media.caption || "Асхана фотосы"}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <div className="relative rounded-lg overflow-hidden">
-                  <img 
-                    src="https://images.unsplash.com/photo-1547592180-85f173990554?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" 
-                    alt="Дайын тағамдар"
-                    className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2">
-                    <p className="text-sm font-medium">Дайын тағамдар</p>
-                  </div>
-                </div>
-              </div>
+              )}
             </CardContent>
           </Card>
 
@@ -634,6 +650,25 @@ const CanteenPage = () => {
           </Card>
         </div>
       </div>
+
+      {/* Image Modal Dialog */}
+      <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
+        <DialogContent className="max-w-7xl w-full p-0 bg-transparent border-none" aria-describedby={undefined}>
+          <DialogTitle className="sr-only">Суретті толық көлемде көру</DialogTitle>
+          <div className="relative">
+            <DialogClose className="absolute -top-12 right-0 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full p-2 hover:bg-white dark:hover:bg-gray-700 transition-colors z-50">
+              <X className="w-6 h-6 text-gray-800 dark:text-gray-100" />
+            </DialogClose>
+            {selectedImage && (
+              <img
+                src={selectedImage}
+                alt="Үлкейтілген сурет"
+                className="w-full h-auto max-h-[90vh] object-contain rounded-lg shadow-2xl"
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

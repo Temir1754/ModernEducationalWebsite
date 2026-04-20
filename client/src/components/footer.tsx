@@ -85,27 +85,26 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-lg font-semibold mb-4">Мектеп туралы</h4>
             <ul className="space-y-2 text-gray-300">
               <li>
-                <a href="#" className="hover:text-white">
-                  Мектеп тарихы
-                </a>
+                <Link href="/about-school" className="hover:text-white">
+                  Мектеп туралы
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-white">
-                  Мектеп миссиясы
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white">
-                  Мектеп құрылымы
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white">
+                <Link href="/administration" className="hover:text-white">
                   Әкімшілік құрамы
-                </a>
+                </Link>
+              </li>
+              <li>
+                <Link href="/gallery" className="hover:text-white">
+                  Фотогалерея
+                </Link>
+              </li>
+              <li>
+                <Link href="/events" className="hover:text-white">
+                  Іс-шаралар
+                </Link>
               </li>
             </ul>
           </div>
@@ -114,24 +113,34 @@ export default function Footer() {
             <h4 className="text-lg font-semibold mb-4">Қызметтер</h4>
             <ul className="space-y-2 text-gray-300">
               <li>
-                <a href="#" className="hover:text-white">
+                <Link href="/education-process" className="hover:text-white">
                   Оқу үдерісі
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-white">
+                <Link href="/upbringing-work" className="hover:text-white">
                   Мектеп тынысы
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-white">
+                <Link href="/gallery" className="hover:text-white">
+                  Галерея
+                </Link>
+              </li>
+              <li>
+                <Link href="/events" className="hover:text-white">
+                  Іс-шаралар
+                </Link>
+              </li>
+              <li>
+                <Link href="/kruzhki" className="hover:text-white">
                   Үйірмелер
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-white">
-                  НИШ дайындық
-                </a>
+                <Link href="/canteen" className="hover:text-white">
+                  Асхана
+                </Link>
               </li>
             </ul>
           </div>
