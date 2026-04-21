@@ -20,7 +20,12 @@ async function sync() {
 
   console.log(`📸 Syncing ${media.length} media records...`);
   for (const item of media) {
-    await db.insert(schema.media).values(item).onConflictDoUpdate({
+    const cleanItem = {
+      ...item,
+      createdAt: item.createdAt ? new Date(item.createdAt) : new Date()
+    };
+
+    await db.insert(schema.media).values(cleanItem).onConflictDoUpdate({
       target: schema.media.id,
       set: {
         type: item.type,
