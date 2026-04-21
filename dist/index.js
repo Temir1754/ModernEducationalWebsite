@@ -35,123 +35,123 @@ __export(schema_exports, {
   teachers: () => teachers,
   users: () => users
 });
-import { mysqlTable, varchar, text, timestamp, boolean } from "drizzle-orm/mysql-core";
+import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 import { createInsertSchema } from "drizzle-zod";
-var users = mysqlTable("users", {
-  id: varchar("id", { length: 36 }).primaryKey(),
+var users = sqliteTable("users", {
+  id: text("id").primaryKey(),
   // UUIDs will be generated in app
-  username: varchar("username", { length: 255 }).notNull().unique(),
+  username: text("username").notNull().unique(),
   password: text("password").notNull(),
-  role: varchar("role", { length: 50 }).default("user")
+  role: text("role").default("user")
 });
 var insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
   role: true
 });
-var events = mysqlTable("events", {
-  id: varchar("id", { length: 36 }).primaryKey(),
-  month: varchar("month", { length: 50 }).notNull(),
+var events = sqliteTable("events", {
+  id: text("id").primaryKey(),
+  month: text("month").notNull(),
   title: text("title").notNull(),
   dateText: text("date_text").notNull(),
   description: text("description").notNull(),
   mediaUrl: text("media_url"),
-  mediaType: varchar("media_type", { length: 20 }),
-  createdAt: timestamp("created_at").defaultNow()
+  mediaType: text("media_type"),
+  createdAt: integer("created_at", { mode: "timestamp" }).default(/* @__PURE__ */ new Date())
 });
 var insertEventSchema = createInsertSchema(events).omit({
   id: true,
   createdAt: true
 });
-var media = mysqlTable("media", {
-  id: varchar("id", { length: 36 }).primaryKey(),
-  type: varchar("type", { length: 20 }).notNull(),
+var media = sqliteTable("media", {
+  id: text("id").primaryKey(),
+  type: text("type").notNull(),
   url: text("url").notNull(),
   thumbnailUrl: text("thumbnail_url"),
   caption: text("caption"),
-  eventId: varchar("event_id", { length: 36 }).references(() => events.id),
-  section: varchar("section", { length: 100 }),
-  createdAt: timestamp("created_at").defaultNow()
+  eventId: text("event_id").references(() => events.id),
+  section: text("section"),
+  createdAt: integer("created_at", { mode: "timestamp" }).default(/* @__PURE__ */ new Date())
 });
 var insertMediaSchema = createInsertSchema(media).omit({
   id: true,
   createdAt: true
 });
-var documents = mysqlTable("documents", {
-  id: varchar("id", { length: 36 }).primaryKey(),
-  section: varchar("section", { length: 100 }).notNull(),
+var documents = sqliteTable("documents", {
+  id: text("id").primaryKey(),
+  section: text("section").notNull(),
   title: text("title").notNull(),
   description: text("description"),
   url: text("url").notNull(),
   scanUrl: text("scan_url"),
-  color: varchar("color", { length: 50 }),
-  icon: varchar("icon", { length: 50 }),
-  createdAt: timestamp("created_at").defaultNow()
+  color: text("color"),
+  icon: text("icon"),
+  createdAt: integer("created_at", { mode: "timestamp" }).default(/* @__PURE__ */ new Date())
 });
 var insertDocumentSchema = createInsertSchema(documents).omit({
   id: true,
   createdAt: true
 });
-var teachers = mysqlTable("teachers", {
-  id: varchar("id", { length: 36 }).primaryKey(),
-  name: varchar("name", { length: 255 }).notNull(),
-  position: varchar("position", { length: 255 }).notNull(),
-  phone: varchar("phone", { length: 50 }),
-  email: varchar("email", { length: 255 }),
+var teachers = sqliteTable("teachers", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  position: text("position").notNull(),
+  phone: text("phone"),
+  email: text("email"),
   photoUrl: text("photo_url"),
-  department: varchar("department", { length: 100 }),
-  createdAt: timestamp("created_at").defaultNow()
+  department: text("department"),
+  createdAt: integer("created_at", { mode: "timestamp" }).default(/* @__PURE__ */ new Date())
 });
 var insertTeacherSchema = createInsertSchema(teachers).omit({
   id: true,
   createdAt: true
 });
-var news = mysqlTable("news", {
-  id: varchar("id", { length: 36 }).primaryKey(),
+var news = sqliteTable("news", {
+  id: text("id").primaryKey(),
   title: text("title").notNull(),
   body: text("body").notNull(),
   coverUrl: text("cover_url"),
   dateText: text("date_text").notNull(),
-  createdAt: timestamp("created_at").defaultNow()
+  createdAt: integer("created_at", { mode: "timestamp" }).default(/* @__PURE__ */ new Date())
 });
 var insertNewsSchema = createInsertSchema(news).omit({
   id: true,
   createdAt: true
 });
-var siteContent = mysqlTable("site_content", {
-  id: varchar("id", { length: 36 }).primaryKey(),
-  key: varchar("key", { length: 255 }).notNull().unique(),
-  lang: varchar("lang", { length: 10 }).notNull().default("kz"),
+var siteContent = sqliteTable("site_content", {
+  id: text("id").primaryKey(),
+  key: text("key").notNull().unique(),
+  lang: text("lang").notNull().default("kz"),
   value: text("value").notNull(),
-  type: varchar("type", { length: 50 }).default("text"),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow()
+  type: text("type").default("text"),
+  createdAt: integer("created_at", { mode: "timestamp" }).default(/* @__PURE__ */ new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).default(/* @__PURE__ */ new Date())
 });
 var insertSiteContentSchema = createInsertSchema(siteContent).omit({
   id: true,
   createdAt: true,
   updatedAt: true
 });
-var sections = mysqlTable("sections", {
-  id: varchar("id", { length: 36 }).primaryKey(),
-  page: varchar("page", { length: 100 }).notNull(),
-  slug: varchar("slug", { length: 100 }).notNull(),
-  order: varchar("order", { length: 10 }).notNull(),
-  isVisible: boolean("is_visible").default(true),
+var sections = sqliteTable("sections", {
+  id: text("id").primaryKey(),
+  page: text("page").notNull(),
+  slug: text("slug").notNull(),
+  order: text("order").notNull(),
+  isVisible: integer("is_visible", { mode: "boolean" }).default(true),
   config: text("config"),
-  createdAt: timestamp("created_at").defaultNow()
+  createdAt: integer("created_at", { mode: "timestamp" }).default(/* @__PURE__ */ new Date())
 });
 var insertSectionSchema = createInsertSchema(sections).omit({
   id: true,
   createdAt: true
 });
-var documentFolders = mysqlTable("document_folders", {
-  id: varchar("id", { length: 100 }).primaryKey(),
-  name: varchar("name", { length: 255 }).notNull(),
-  parentId: varchar("parent_id", { length: 100 }),
-  isCategory: boolean("is_category").default(false),
-  order: varchar("order", { length: 10 }).default("0"),
-  createdAt: timestamp("created_at").defaultNow()
+var documentFolders = sqliteTable("document_folders", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  parentId: text("parent_id"),
+  isCategory: integer("is_category", { mode: "boolean" }).default(false),
+  order: text("order").default("0"),
+  createdAt: integer("created_at", { mode: "timestamp" }).default(/* @__PURE__ */ new Date())
 });
 var insertDocumentFolderSchema = createInsertSchema(documentFolders).omit({
   id: true,
@@ -159,17 +159,10 @@ var insertDocumentFolderSchema = createInsertSchema(documentFolders).omit({
 });
 
 // server/db.ts
-import { drizzle } from "drizzle-orm/mysql2";
-import mysql from "mysql2/promise";
-var pool = mysql.createPool({
-  uri: process.env.DATABASE_URL,
-  waitForConnections: true,
-  connectionLimit: 10,
-  maxIdle: 10,
-  idleTimeout: 6e4,
-  queueLimit: 0
-});
-var db = drizzle(pool, { mode: "default", schema: schema_exports });
+import { drizzle } from "drizzle-orm/better-sqlite3";
+import Database from "better-sqlite3";
+var sqlite = new Database("sqlite.db");
+var db = drizzle(sqlite, { schema: schema_exports });
 
 // server/storage.ts
 import { eq } from "drizzle-orm";
@@ -957,11 +950,9 @@ import { createServer as createViteServer, createLogger } from "vite";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path2 from "path";
-import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 var vite_config_default = defineConfig({
   plugins: [
     react(),
-    runtimeErrorOverlay(),
     ...process.env.NODE_ENV !== "production" && process.env.REPL_ID !== void 0 ? [
       await import("@replit/vite-plugin-cartographer").then(
         (m) => m.cartographer()
