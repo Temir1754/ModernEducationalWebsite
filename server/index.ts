@@ -48,6 +48,7 @@ app.use((req, res, next) => {
 
 // Serve static files from attached_assets directory
 app.use('/attached_assets', express.static(path.resolve(import.meta.dirname, '..', 'attached_assets')));
+app.use('/uploads', express.static(path.resolve(import.meta.dirname, '..', 'uploads')));
 
 // Serve static files from client/public directory (logo, favicons, etc.)
 app.use(express.static(path.resolve(import.meta.dirname, '..', 'client', 'public')));
