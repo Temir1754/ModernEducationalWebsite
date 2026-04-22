@@ -183,7 +183,7 @@ function DocRow({
             >
               <Pencil className="w-3.5 h-3.5" />
             </Button>
-            
+
             {isDeleting ? (
               <div className="flex items-center gap-1 bg-red-500/10 rounded-md p-0.5">
                 <Button
@@ -582,9 +582,8 @@ function SearchSection({
     <div className="rounded-xl border border-gray-200 dark:border-white/10 overflow-hidden bg-white dark:bg-[#1e293b] shadow-sm">
       <button
         onClick={() => setOpen((o) => !o)}
-        className={`flex items-center gap-3 w-full px-4 py-3 transition-colors text-left ${
-          open ? "bg-blue-50 dark:bg-blue-600/10" : "bg-white dark:bg-white/5 hover:bg-gray-50 dark:hover:bg-white/8"
-        }`}
+        className={`flex items-center gap-3 w-full px-4 py-3 transition-colors text-left ${open ? "bg-blue-50 dark:bg-blue-600/10" : "bg-white dark:bg-white/5 hover:bg-gray-50 dark:hover:bg-white/8"
+          }`}
       >
         <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center shrink-0">
           {open ? (
@@ -650,17 +649,16 @@ function FolderSelection({
       <div className="flex items-center gap-1 group/row">
         <motion.div
           whileHover={{ x: 2 }}
-          className={`flex-1 flex items-center gap-2 px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-200 ${
-            isSelected
+          className={`flex-1 flex items-center gap-2 px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-200 ${isSelected
               ? "bg-blue-600 text-white shadow-lg shadow-blue-900/40"
               : "hover:bg-white/10 text-gray-400 hover:text-white"
-          }`}
+            }`}
           style={{ marginLeft: `${level * 16}px` }}
           onClick={() => {
             onSelect(folder.id, folder.label);
           }}
         >
-          <div 
+          <div
             className="shrink-0 w-5 flex items-center justify-center cursor-pointer hover:bg-white/20 rounded"
             onClick={(e) => {
               if (hasChildren) {
@@ -686,15 +684,14 @@ function FolderSelection({
             </motion.div>
           )}
         </motion.div>
-        
+
         {hasChildren && (
           <Button
             type="button"
             variant="ghost"
             size="sm"
-            className={`h-9 px-2 text-[10px] uppercase font-bold tracking-tighter transition-all ${
-              isSelected ? "text-blue-400 bg-white/10" : "text-gray-600 hover:text-blue-400 opacity-0 group-hover/row:opacity-100"
-            }`}
+            className={`h-9 px-2 text-[10px] uppercase font-bold tracking-tighter transition-all ${isSelected ? "text-blue-400 bg-white/10" : "text-gray-600 hover:text-blue-400 opacity-0 group-hover/row:opacity-100"
+              }`}
             onClick={(e) => {
               e.stopPropagation();
               onSelect(folder.id, folder.label);
@@ -740,7 +737,7 @@ function NestedSectionSelector({
   selectedId: string;
   onSelect: (id: string, label: string) => void;
   categories: CategoryDef[];
-  allSections: {id: string, label: string}[];
+  allSections: { id: string, label: string }[];
 }) {
   const [openCategory, setOpenCategory] = useState<string | null>(null);
 
@@ -759,11 +756,10 @@ function NestedSectionSelector({
           {breadcrumbs.length > 0 ? (
             breadcrumbs.map((crumb, idx) => (
               <React.Fragment key={idx}>
-                <span className={`px-2 py-1 rounded-md text-xs transition-colors ${
-                  idx === breadcrumbs.length - 1 
-                    ? "bg-blue-600 text-white font-bold shadow-sm" 
+                <span className={`px-2 py-1 rounded-md text-xs transition-colors ${idx === breadcrumbs.length - 1
+                    ? "bg-blue-600 text-white font-bold shadow-sm"
                     : "bg-white/5 text-gray-400 font-medium"
-                }`}>
+                  }`}>
                   {crumb}
                 </span>
                 {idx < breadcrumbs.length - 1 && (
@@ -784,20 +780,17 @@ function NestedSectionSelector({
             <button
               type="button"
               onClick={() => setOpenCategory(openCategory === cat.id ? null : cat.id)}
-              className={`w-full flex items-center justify-between px-5 py-4 text-left transition-all ${
-                openCategory === cat.id ? "bg-blue-600/10" : ""
-              }`}
+              className={`w-full flex items-center justify-between px-5 py-4 text-left transition-all ${openCategory === cat.id ? "bg-blue-600/10" : ""
+                }`}
             >
               <div className="flex items-center gap-4 min-w-0">
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
-                  openCategory === cat.id ? "bg-blue-600 text-white shadow-lg shadow-blue-900/40" : "bg-white/5 text-gray-500 group-hover:text-gray-300"
-                }`}>
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${openCategory === cat.id ? "bg-blue-600 text-white shadow-lg shadow-blue-900/40" : "bg-white/5 text-gray-500 group-hover:text-gray-300"
+                  }`}>
                   <Folder className="w-5 h-5" />
                 </div>
                 <div className="min-w-0">
-                  <span className={`block text-xs font-black truncate uppercase tracking-widest ${
-                    openCategory === cat.id ? "text-blue-400" : "text-gray-400 group-hover:text-gray-300"
-                  }`}>
+                  <span className={`block text-xs font-black truncate uppercase tracking-widest ${openCategory === cat.id ? "text-blue-400" : "text-gray-400 group-hover:text-gray-300"
+                    }`}>
                     {cat.label}
                   </span>
                   <span className="text-[10px] text-gray-600 mt-0.5 block">Разделдерді көру</span>
@@ -819,11 +812,10 @@ function NestedSectionSelector({
                   <div className="p-3 pb-4 space-y-2 border-t border-white/5 shadow-inner">
                     {cat.type === "simple" ? (
                       <div
-                        className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all ${
-                          selectedId === cat.section
+                        className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all ${selectedId === cat.section
                             ? "bg-blue-600 text-white shadow-lg shadow-blue-900/40"
                             : "hover:bg-white/10 text-gray-400"
-                        }`}
+                          }`}
                         onClick={() => onSelect(cat.section!, cat.label)}
                       >
                         <div className={`w-2 h-2 rounded-full border ${selectedId === cat.section ? "bg-white border-white scale-110" : "bg-blue-500/20 border-blue-500/50"}`} />
@@ -867,11 +859,11 @@ export default function SchoolDocumentsPage() {
   });
 
   const categories: CategoryDef[] = React.useMemo(() => {
-    const rootFolders = dbFolders.filter((f) => f.isCategory).sort((a,b) => Number(a.order) - Number(b.order));
+    const rootFolders = dbFolders.filter((f) => f.isCategory).sort((a, b) => Number(a.order) - Number(b.order));
     const buildSubfolders = (parentId: string): SubFolder[] => {
       return dbFolders
         .filter((f) => f.parentId === parentId)
-        .sort((a,b) => Number(a.order) - Number(b.order))
+        .sort((a, b) => Number(a.order) - Number(b.order))
         .map(f => ({
           id: f.id,
           label: f.name,
@@ -935,7 +927,7 @@ export default function SchoolDocumentsPage() {
   const folderUploadMutation = useMutation({
     mutationFn: async (e: React.FormEvent) => {
       e.preventDefault();
-      
+
       const payload1: any = {
         name: newFolder.name,
         order: "0",
@@ -1137,7 +1129,7 @@ export default function SchoolDocumentsPage() {
     onError: (err: Error) =>
       toast({ title: "Қате", description: err.message, variant: "destructive" }),
   });
-  
+
   const updateFolderMutation = useMutation({
     mutationFn: async ({ id, name }: { id: string; name: string }) => {
       const res = await fetch(`/api/folders/${id}`, {
@@ -1183,10 +1175,12 @@ export default function SchoolDocumentsPage() {
                 <div className="relative flex-1 max-w-md">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <Input
-                    placeholder="Құжаттарды іздеу..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 bg-gray-50 dark:bg-[#0d1117] border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-blue-500 transition-all text-gray-900 dark:text-white"
+                    id="document-search"
+                    name="searchTerm"
+                  placeholder="Құжаттарды іздеу..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 bg-gray-50 dark:bg-[#0d1117] border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-blue-500 transition-all text-gray-900 dark:text-white"
                   />
                   {searchTerm && (
                     <button
@@ -1222,18 +1216,16 @@ export default function SchoolDocumentsPage() {
                           {/* Folder Section Selector */}
                           <div className="space-y-3">
                             <Label className="text-xs uppercase tracking-widest text-gray-500 font-bold">Орналасатын жері</Label>
-                            
+
                             <div
                               onClick={() => setNewFolder({ ...newFolder, parentId: "null" })}
-                              className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all border ${
-                                newFolder.parentId === "null"
+                              className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all border ${newFolder.parentId === "null"
                                   ? "bg-blue-600/20 border-blue-500/50"
                                   : "bg-white/5 border-white/10 hover:bg-white/10"
-                              }`}
+                                }`}
                             >
-                              <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                                newFolder.parentId === "null" ? "border-blue-400" : "border-gray-500"
-                              }`}>
+                              <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${newFolder.parentId === "null" ? "border-blue-400" : "border-gray-500"
+                                }`}>
                                 {newFolder.parentId === "null" && <div className="w-2 h-2 rounded-full bg-blue-400" />}
                               </div>
                               <span className={`text-sm font-medium ${newFolder.parentId === "null" ? "text-blue-400" : "text-gray-300"}`}>
@@ -1254,6 +1246,8 @@ export default function SchoolDocumentsPage() {
                           <div className="space-y-2">
                             <Label className="text-gray-300">Папка атауы</Label>
                             <Input
+                              id="new-folder-name"
+                              name="folderName"
                               value={newFolder.name}
                               onChange={(e) => setNewFolder({ ...newFolder, name: e.target.value })}
                               required
@@ -1261,28 +1255,30 @@ export default function SchoolDocumentsPage() {
                               placeholder="Атауын енгізіңіз..."
                             />
                           </div>
-                          
+
                           <div className="space-y-2">
                             <Label className="text-gray-300">Ішкі папка атауы (Міндетті емес)</Label>
                             <Input
+                              id="new-subfolder-name"
+                              name="subFolderName"
                               value={newFolder.subName}
                               onChange={(e) => setNewFolder({ ...newFolder, subName: e.target.value })}
                               className="bg-[#0d1117] border-white/20 text-white h-11"
                               placeholder="Егер ішкі папка қосқыңыз келсе жазыңыз..."
                             />
                           </div>
-                          
+
                           <div className="flex items-center gap-3 mt-4 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
-                            <input 
-                              type="checkbox" 
-                              id="autoCreateYears" 
+                            <input
+                              type="checkbox"
+                              id="autoCreateYears"
                               checked={newFolder.autoCreateYears}
                               onChange={(e) => setNewFolder(f => ({ ...f, autoCreateYears: e.target.checked }))}
                               className="w-5 h-5 rounded border-blue-500/30 text-blue-600 focus:ring-blue-500/50 bg-[#0d1117]"
                             />
                             <Label htmlFor="autoCreateYears" className="text-sm font-medium text-blue-100 cursor-pointer flex-1">
-                              {isParentYear 
-                                ? "Басқа оқу жылдарында да дәл осы папканы жасау (Дубликат)" 
+                              {isParentYear
+                                ? "Басқа оқу жылдарында да дәл осы папканы жасау (Дубликат)"
                                 : "Оқу жылдарын автоматты түрде қосу (2024-2027)"}
                             </Label>
                           </div>
@@ -1312,97 +1308,103 @@ export default function SchoolDocumentsPage() {
                       }
                     }}
                   >
-                  <DialogTrigger asChild>
-                    <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white border-0">
-                      <Plus className="w-4 h-4 mr-2" />
-                      Құжат қосу
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="bg-[#111827] border-white/10 text-white max-w-lg max-h-[90vh] overflow-hidden flex flex-col p-0">
-                    <DialogHeader className="p-6 pb-2">
-                      <DialogTitle className="text-xl font-bold text-white">
-                        {editingDocId ? "Құжатты өңдеу" : "Жаңа құжат жүктеу"}
-                      </DialogTitle>
-                      <DialogDescription className="text-gray-400">
-                        {editingDocId ? "Құжат мәліметтерін өзгертіңіз." : "Керекті бөлімді таңдап, құжат файлын жүктеңіз."}
-                      </DialogDescription>
-                    </DialogHeader>
-                    
-                    <div className="flex-1 overflow-y-auto p-6 pt-2 custom-scrollbar space-y-6">
-                      <form
-                        onSubmit={(e) => {
-                          e.preventDefault();
-                          if (editingDocId) {
-                            updateMutation.mutate({ id: editingDocId, data: newDoc });
-                          } else {
-                            uploadMutation.mutate(e);
-                          }
-                        }}
-                        className="space-y-6"
-                      >
-                        {/* Combined Section Selector */}
-                        <div className="space-y-3">
-                          <Label className="text-xs uppercase tracking-widest text-gray-500 font-bold">Бөлім таңдау</Label>
-                          <NestedSectionSelector
-                            selectedId={newDoc.section}
-                            onSelect={(id) => setNewDoc({ ...newDoc, section: id })}
-                            categories={categories}
-                            allSections={allSections}
-                          />
-                        </div>
+                    <DialogTrigger asChild>
+                      <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white border-0">
+                        <Plus className="w-4 h-4 mr-2" />
+                        Құжат қосу
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="bg-[#111827] border-white/10 text-white max-w-lg max-h-[90vh] overflow-hidden flex flex-col p-0">
+                      <DialogHeader className="p-6 pb-2">
+                        <DialogTitle className="text-xl font-bold text-white">
+                          {editingDocId ? "Құжатты өңдеу" : "Жаңа құжат жүктеу"}
+                        </DialogTitle>
+                        <DialogDescription className="text-gray-400">
+                          {editingDocId ? "Құжат мәліметтерін өзгертіңіз." : "Керекті бөлімді таңдап, құжат файлын жүктеңіз."}
+                        </DialogDescription>
+                      </DialogHeader>
 
-                        {/* Title */}
-                        <div className="space-y-2">
-                          <Label className="text-gray-300">Атауы</Label>
-                          <Input
-                            value={newDoc.title}
-                            onChange={(e) => setNewDoc({ ...newDoc, title: e.target.value })}
-                            required
-                            className="bg-[#0d1117] border-white/20 text-white h-11"
-                            placeholder="Құжат атауын енгізіңіз..."
-                          />
-                        </div>
-
-                        {/* Description */}
-                        <div className="space-y-2">
-                          <Label className="text-gray-300">Сипаттамасы</Label>
-                          <Textarea
-                            value={newDoc.description}
-                            onChange={(e) => setNewDoc({ ...newDoc, description: e.target.value })}
-                            className="bg-[#0d1117] border-white/20 text-white min-h-[100px]"
-                            placeholder="Қосымша мәліметтер (міндетті емес)..."
-                          />
-                        </div>
-
-                        {/* File (only on create) */}
-                        {!editingDocId && (
-                          <div className="space-y-2">
-                            <Label className="text-gray-300">Файл</Label>
-                            <Input
-                              type="file"
-                              onChange={(e) => setUploadFile(e.target.files?.[0] || null)}
-                              required
-                              className="bg-[#0d1117] border-white/20 text-white h-11 py-2"
+                      <div className="flex-1 overflow-y-auto p-6 pt-2 custom-scrollbar space-y-6">
+                        <form
+                          onSubmit={(e) => {
+                            e.preventDefault();
+                            if (editingDocId) {
+                              updateMutation.mutate({ id: editingDocId, data: newDoc });
+                            } else {
+                              uploadMutation.mutate(e);
+                            }
+                          }}
+                          className="space-y-6"
+                        >
+                          {/* Combined Section Selector */}
+                          <div className="space-y-3">
+                            <Label className="text-xs uppercase tracking-widest text-gray-500 font-bold">Бөлім таңдау</Label>
+                            <NestedSectionSelector
+                              selectedId={newDoc.section}
+                              onSelect={(id) => setNewDoc({ ...newDoc, section: id })}
+                              categories={categories}
+                              allSections={allSections}
                             />
                           </div>
-                        )}
 
-                        <div className="pt-2 sticky bottom-0 bg-[#111827] pb-2">
-                          <Button
-                            type="submit"
-                            className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-lg shadow-blue-900/20"
-                            disabled={uploadMutation.isPending || updateMutation.isPending}
-                          >
-                            {(uploadMutation.isPending || updateMutation.isPending) && (
-                              <Loader2 className="animate-spin mr-2" />
-                            )}
-                            {editingDocId ? "Жаңарту" : "Жүктеу"}
-                          </Button>
-                        </div>
-                      </form>
-                    </div>
-                  </DialogContent>
-                </Dialog>
+                          {/* Title */}
+                          <div className="space-y-2">
+                            <Label className="text-gray-300">Атауы</Label>
+                            <Input
+                              id="new-doc-title"
+                              name="docTitle"
+                              value={newDoc.title}
+                              onChange={(e) => setNewDoc({ ...newDoc, title: e.target.value })}
+                              required
+                              className="bg-[#0d1117] border-white/20 text-white h-11"
+                              placeholder="Құжат атауын енгізіңіз..."
+                            />
+                          </div>
+
+                          {/* Description */}
+                          <div className="space-y-2">
+                            <Label className="text-gray-300">Сипаттамасы</Label>
+                            <Textarea
+                              id="new-doc-description"
+                              name="docDescription"
+                              value={newDoc.description}
+                              onChange={(e) => setNewDoc({ ...newDoc, description: e.target.value })}
+                              className="bg-[#0d1117] border-white/20 text-white min-h-[100px]"
+                              placeholder="Қосымша мәліметтер (міндетті емес)..."
+                            />
+                          </div>
+
+                          {/* File (only on create) */}
+                          {!editingDocId && (
+                            <div className="space-y-2">
+                              <Label className="text-gray-300">Файл</Label>
+                              <Input
+                                id="new-doc-file"
+                                name="docFile"
+                                type="file"
+                                onChange={(e) => setUploadFile(e.target.files?.[0] || null)}
+                                required
+                                className="bg-[#0d1117] border-white/20 text-white h-11 py-2"
+                              />
+                            </div>
+                          )}
+
+                          <div className="pt-2 sticky bottom-0 bg-[#111827] pb-2">
+                            <Button
+                              type="submit"
+                              className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-lg shadow-blue-900/20"
+                              disabled={uploadMutation.isPending || updateMutation.isPending}
+                            >
+                              {(uploadMutation.isPending || updateMutation.isPending) && (
+                                <Loader2 className="animate-spin mr-2" />
+                              )}
+                              {editingDocId ? "Жаңарту" : "Жүктеу"}
+                            </Button>
+                          </div>
+                        </form>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               )}
             </div>
@@ -1442,7 +1444,7 @@ export default function SchoolDocumentsPage() {
                     d.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                     d.description?.toLowerCase().includes(searchTerm.toLowerCase())
                   );
-                  
+
                   // Group by section
                   const groups: Record<string, Document[]> = {};
                   filtered.forEach(d => {

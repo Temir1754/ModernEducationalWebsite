@@ -1108,6 +1108,8 @@ export default function UpbringingWorkPage() {
                       <div className="space-y-2">
                         <Label className="text-gray-300">Фото файл</Label>
                         <Input
+                          id="admin-gallery-photo"
+                          name="photo"
                           type="file"
                           accept="image/*"
                           onChange={e => setGalleryUploadFile(e.target.files?.[0] || null)}
@@ -1144,6 +1146,8 @@ export default function UpbringingWorkPage() {
                       <div className="space-y-2">
                         <Label className="text-gray-300">Атауы</Label>
                         <Input
+                          id="admin-scan-title"
+                          name="title"
                           value={scansTitle}
                           onChange={e => setScansTitle(e.target.value)}
                           placeholder="Скан атауы..."
@@ -1153,6 +1157,8 @@ export default function UpbringingWorkPage() {
                       <div className="space-y-2">
                         <Label className="text-gray-300">Файл (PDF немесе сурет)</Label>
                         <Input
+                          id="admin-scan-file"
+                          name="file"
                           type="file"
                           accept=".pdf,image/*"
                           onChange={e => setScansUploadFile(e.target.files?.[0] || null)}
@@ -1264,6 +1270,8 @@ export default function UpbringingWorkPage() {
                     <div className="space-y-2">
                       <Label className="text-gray-300">Атауы (міндетті)</Label>
                       <Input
+                        id="admin-program-title"
+                        name="title"
                         value={scansTitle}
                         onChange={e => setScansTitle(e.target.value)}
                         placeholder="Әзірші атау..."
@@ -1273,6 +1281,8 @@ export default function UpbringingWorkPage() {
                     <div className="space-y-2">
                       <Label className="text-gray-300">Файл (PDF немесе сурет)</Label>
                       <Input
+                        id="admin-program-file"
+                        name="file"
                         type="file"
                         accept=".pdf,image/*"
                         onChange={e => setScansUploadFile(e.target.files?.[0] || null)}
@@ -1885,6 +1895,8 @@ export default function UpbringingWorkPage() {
               <div className="space-y-2">
                 <Label className="text-gray-300">Сурет таңдау</Label>
                 <Input
+                  id="gallery-photo-upload"
+                  name="photo"
                   type="file"
                   accept="image/*"
                   onChange={e => setGalleryUploadFile(e.target.files?.[0] || null)}
@@ -2053,6 +2065,8 @@ export default function UpbringingWorkPage() {
               <div className="space-y-2">
                 <Label className="text-gray-300">Айы</Label>
                 <select
+                  id="edit-event-month"
+                  name="month"
                   className="w-full bg-[#0d1117] border border-white/20 text-white rounded-md p-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none"
                   value={editingEvent?.month || "Тамыз"}
                   onChange={(e) => setEditingEvent({ ...editingEvent, month: e.target.value })}
@@ -2063,6 +2077,8 @@ export default function UpbringingWorkPage() {
               <div className="space-y-2">
                 <Label className="text-gray-300">Сипаттамасы</Label>
                 <textarea
+                  id="edit-event-description"
+                  name="description"
                   className="w-full bg-[#0d1117] border border-white/20 text-white rounded-md p-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none min-h-[100px]"
                   value={editingEvent?.description || ""}
                   onChange={(e) => setEditingEvent({ ...editingEvent, description: e.target.value })}
@@ -2131,6 +2147,8 @@ export default function UpbringingWorkPage() {
               <div className="space-y-2">
                 <Label className="text-gray-300">Айы</Label>
                 <select
+                  id="new-event-month"
+                  name="month"
                   className="w-full bg-[#0d1117] border border-white/20 text-white rounded-md p-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none"
                   value={newEvent.month}
                   onChange={(e) => setNewEvent({ ...newEvent, month: e.target.value })}
@@ -2141,6 +2159,8 @@ export default function UpbringingWorkPage() {
               <div className="space-y-2">
                 <Label className="text-gray-300">Сипаттамасы</Label>
                 <textarea
+                  id="new-event-description"
+                  name="description"
                   placeholder="Іс-шара туралы қысқаша мәлімет..."
                   className="w-full bg-[#0d1117] border border-white/20 text-white rounded-md p-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none min-h-[100px] placeholder:text-gray-500"
                   value={newEvent.description}
