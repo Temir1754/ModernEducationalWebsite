@@ -78,7 +78,7 @@ function DocRow({
   };
 
   return (
-    <div className="flex items-center justify-between px-4 py-3 rounded-lg bg-gray-50 border border-gray-100 dark:border-transparent hover:bg-white dark:bg-white/5 dark:hover:bg-white/10 transition-all group shadow-sm hover:shadow-md">
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between px-4 py-3 rounded-lg bg-gray-50 border border-gray-100 dark:border-transparent hover:bg-white dark:bg-white/5 dark:hover:bg-white/10 transition-all group shadow-sm hover:shadow-md gap-3">
       {/* Left: icon + title */}
       <div className="flex items-center gap-3 flex-1 min-w-0">
         <FileText className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
@@ -91,7 +91,7 @@ function DocRow({
       </div>
 
       {/* Right: action buttons */}
-      <div className="flex items-center gap-1 shrink-0 ml-4">
+      <div className="flex flex-wrap items-center gap-1 shrink-0">
         <Button
           variant="ghost"
           size="sm"
@@ -120,10 +120,12 @@ function DocRow({
               asChild
               className="text-violet-400 hover:text-violet-300 hover:bg-violet-500/10 h-7 px-2 text-xs relative overflow-hidden"
             >
-              <label className="cursor-pointer flex items-center">
+              <label htmlFor={`admin-scan-${doc.id}`} className="cursor-pointer flex items-center">
                 <Plus className="w-3.5 h-3.5 mr-1" />
                 Скан
                 <input
+                  id={`admin-scan-${doc.id}`}
+                  name={`admin-scan-${doc.id}`}
                   type="file"
                   className="hidden"
                   accept=".pdf,image/*"

@@ -70,7 +70,7 @@ export default function Footer() {
             <p className="text-gray-300 mb-4">
               Балаларыңыздың болашағына инвестиция жасау үшін дұрыс таңдау - FGS мектебі.
             </p>
-            <div className="flex space-x-3">
+            <div className="flex flex-wrap gap-3">
               {socialLinks.map((link, index) => (
                 <a
                   key={index}

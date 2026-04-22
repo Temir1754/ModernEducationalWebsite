@@ -92,7 +92,7 @@ const ResponsiveNavbar = () => {
           : 'bg-gradient-to-r from-blue-600 via-blue-700 to-purple-700 dark:from-blue-800 dark:via-purple-800 dark:to-indigo-800'
           }`}
       >
-        <div className="container mx-auto px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-20">
 
             {/* Logo with Poppins font */}
@@ -171,9 +171,9 @@ const ResponsiveNavbar = () => {
                 transition={{ duration: 0.5, delay: 0.2 }}
                 data-testid="mobile-menu-button"
                 onClick={toggleMobileMenu}
-                className={`p-2.5 rounded-xl transition-all duration-300 ${isScrolled
-                  ? 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
-                  : 'text-white hover:bg-white/10'
+                className={`p-2.5 rounded-xl transition-all duration-300 shadow-sm ${isScrolled
+                    ? 'text-primary dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50'
+                    : 'text-white bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/30'
                   }`}
                 aria-label={isMobileMenuOpen ? "Закрыть меню" : "Открыть меню"}
               >
@@ -330,11 +330,11 @@ const ResponsiveNavbar = () => {
               </div>
 
               {/* Mobile Contact Section */}
-              <div className="pt-6 border-t border-gray-200 dark:border-gray-700">
+              <div className="pt-6 pb-20 border-t border-gray-200 dark:border-gray-700">
                 <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">
                   Байланыс
                 </h3>
-                <div className="flex items-center justify-around gap-3">
+                <div className="grid grid-cols-2 gap-3">
 
                   <motion.a
                     initial={{ scale: 0 }}
@@ -342,11 +342,11 @@ const ResponsiveNavbar = () => {
                     transition={{ duration: 0.3, delay: 0.55 }}
                     href="tel:+77757906363"
                     data-testid="mobile-contact-phone"
-                    className="flex flex-col items-center gap-2 p-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500 hover:text-white transition-all duration-300 hover:scale-110"
+                    className="flex flex-col items-center gap-2 p-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500 hover:text-white transition-all duration-300 hover:scale-105"
                     title="Телефон"
                   >
-                    <Phone className="w-6 h-6" />
-                    <span className="text-xs font-medium">Телефон</span>
+                    <Phone className="w-5 h-5" />
+                    <span className="text-[10px] font-medium">Телефон</span>
                   </motion.a>
 
                   <motion.a
@@ -355,11 +355,11 @@ const ResponsiveNavbar = () => {
                     transition={{ duration: 0.3, delay: 0.6 }}
                     href="https://wa.me/77757906363"
                     data-testid="mobile-contact-whatsapp"
-                    className="flex flex-col items-center gap-2 p-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-green-500 hover:text-white transition-all duration-300 hover:scale-110"
+                    className="flex flex-col items-center gap-2 p-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-green-500 hover:text-white transition-all duration-300 hover:scale-105"
                     title="WhatsApp"
                   >
-                    <MessageCircle className="w-6 h-6" />
-                    <span className="text-xs font-medium">WhatsApp</span>
+                    <MessageCircle className="w-5 h-5" />
+                    <span className="text-[10px] font-medium">WhatsApp</span>
                   </motion.a>
 
                   <motion.a
@@ -368,11 +368,11 @@ const ResponsiveNavbar = () => {
                     transition={{ duration: 0.3, delay: 0.65 }}
                     href="https://t.me/fgs_school"
                     data-testid="mobile-contact-telegram"
-                    className="flex flex-col items-center gap-2 p-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-blue-500 hover:text-white transition-all duration-300 hover:scale-110"
+                    className="flex flex-col items-center gap-2 p-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-blue-500 hover:text-white transition-all duration-300 hover:scale-105"
                     title="Telegram"
                   >
-                    <Send className="w-6 h-6" />
-                    <span className="text-xs font-medium">Telegram</span>
+                    <Send className="w-5 h-5" />
+                    <span className="text-[10px] font-medium">Telegram</span>
                   </motion.a>
 
                   <motion.a
@@ -381,11 +381,11 @@ const ResponsiveNavbar = () => {
                     transition={{ duration: 0.3, delay: 0.7 }}
                     href="https://www.facebook.com/people/Fgs-School/pfbid0b3bkVb2Vz1B59RdK3PfLQR7DcKwJ92XaxfMXdB5kK7wv1AwTBBUbtUZ5uj1oAN7ul/"
                     data-testid="mobile-contact-facebook"
-                    className="flex flex-col items-center gap-2 p-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-blue-600 hover:text-white transition-all duration-300 hover:scale-110"
+                    className="flex flex-col items-center gap-2 p-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-blue-600 hover:text-white transition-all duration-300 hover:scale-105"
                     title="Facebook"
                   >
-                    <Facebook className="w-6 h-6" />
-                    <span className="text-xs font-medium">Facebook</span>
+                    <Facebook className="w-5 h-5" />
+                    <span className="text-[10px] font-medium">Facebook</span>
                   </motion.a>
                 </div>
               </div>

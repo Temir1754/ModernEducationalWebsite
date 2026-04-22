@@ -355,7 +355,7 @@ export default function Home() {
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center">
               <div>
-                <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-6">
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 mb-6">
                   НИШ және РФМШ дайындық бағдарламалары
                 </h2>
                 <p className="text-lg text-gray-600 dark:text-gray-300 mb-6 max-w-2xl mx-auto">
@@ -364,7 +364,7 @@ export default function Home() {
 
                 {/* Mathematical Olympiad Results - Mobile/Desktop Responsive */}
                 <div className="mt-8">
-                  <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-6">
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-100 mb-6">
                     Математикалық олимпиада нәтижелері
                   </h3>
 
@@ -446,7 +446,7 @@ export default function Home() {
         <section className="py-8 bg-white dark:bg-[#1e293b] grid-background relative overflow-hidden min-h-[450px]">
           <div className="container mx-auto px-4">
             <div className="text-center mb-6">
-              <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4">
                 Үш бағыт арқылы жеке тұлғаны дамыту
               </h2>
               <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
@@ -624,32 +624,40 @@ export default function Home() {
                         }
                       }} className="space-y-4">
                         <div className="space-y-2">
-                          <Label className="text-gray-900">Тақырып</Label>
+                          <Label htmlFor="news-title" className="text-gray-900">Тақырып</Label>
                           <Input
+                            id="news-title"
+                            name="title"
                             value={newNews.title}
                             onChange={e => setNewNews({ ...newNews, title: e.target.value })}
                             required
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label className="text-gray-900">Мәтін (Сипаттама)</Label>
+                          <Label htmlFor="news-body" className="text-gray-900">Мәтін (Сипаттама)</Label>
                           <Textarea
+                            id="news-body"
+                            name="body"
                             value={newNews.body}
                             onChange={e => setNewNews({ ...newNews, body: e.target.value })}
                             required
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label>Күні (Мәтін түрінде, мыс: 15 Тамыз)</Label>
+                          <Label htmlFor="news-date">Күні (Мәтін түрінде, мыс: 15 Тамыз)</Label>
                           <Input
+                            id="news-date"
+                            name="dateText"
                             value={newNews.dateText}
                             onChange={e => setNewNews({ ...newNews, dateText: e.target.value })}
                             required
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label>Сурет URL</Label>
+                          <Label htmlFor="news-image">Сурет URL</Label>
                           <Input
+                            id="news-image"
+                            name="coverUrl"
                             value={newNews.coverUrl}
                             onChange={e => setNewNews({ ...newNews, coverUrl: e.target.value })}
                           />
@@ -930,7 +938,7 @@ export default function Home() {
         {/* Contact Section */}
         <section id="apply" className="py-16">
           <div className="container mx-auto px-4">
-            <div className="grid md:grid-cols-2 gap-12">
+            <div className="flex flex-col md:grid md:grid-cols-2 gap-12">
               <div>
                 <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-6">
                   Бізбен байланысыңыз
@@ -964,7 +972,7 @@ export default function Home() {
                     </div>
                     <div>
                       <h4 className="font-semibold text-gray-800 dark:text-gray-100">Әлеуметтік желілер</h4>
-                      <div className="flex space-x-4 mt-3">
+                      <div className="flex flex-wrap gap-4 mt-3">
                         <button
                           onClick={(e) => {
                             e.preventDefault();
@@ -1055,39 +1063,47 @@ export default function Home() {
                 </div>
               </div>
 
-              <Card className="bg-transparent dark:bg-transparent border-gray-300 dark:border-gray-700">
-                <CardContent className="p-8">
+              <Card className="w-full bg-transparent dark:bg-transparent border-gray-300 dark:border-gray-700">
+                <CardContent className="p-4 sm:p-8">
                   <h3 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-6">
                     Сұрақ қойыңыз
                   </h3>
                   <form className="space-y-6">
                     <div>
-                      <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">
+                      <label htmlFor="contact-name" className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">
                         Аты-жөні *
                       </label>
                       <input
+                        id="contact-name"
+                        name="name"
                         type="text"
+                        autoComplete="name"
                         className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-[#0f172a] dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                         required
                       />
                     </div>
 
                     <div>
-                      <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">
+                      <label htmlFor="contact-phone" className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">
                         Телефон номері *
                       </label>
                       <input
+                        id="contact-phone"
+                        name="phone"
                         type="tel"
+                        autoComplete="tel"
                         className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-[#0f172a] dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                         required
                       />
                     </div>
 
                     <div>
-                      <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">
+                      <label htmlFor="contact-message" className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">
                         Сұрақ немесе хабарлама *
                       </label>
                       <textarea
+                        id="contact-message"
+                        name="message"
                         rows={4}
                         className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-[#0f172a] dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                         required

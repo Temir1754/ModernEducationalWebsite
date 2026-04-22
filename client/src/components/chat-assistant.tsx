@@ -3,6 +3,7 @@ import { MessageCircle, X, Send, User, Bot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { useLocation } from "wouter";
 
@@ -148,7 +149,7 @@ export default function ChatAssistant() {
       {/* Chat Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 w-14 h-14 md:w-16 md:h-16 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-[#00bfff] dark:to-[#a855f7] rounded-full shadow-lg hover:shadow-xl dark:shadow-[#00bfff]/20 transition-all duration-300 flex items-center justify-center group hover:scale-110 active:scale-95"
+        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-[60] w-14 h-14 md:w-16 md:h-16 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-[#00bfff] dark:to-[#a855f7] rounded-full shadow-lg hover:shadow-xl dark:shadow-[#00bfff]/20 transition-all duration-300 flex items-center justify-center group hover:scale-110 active:scale-95"
         style={{
           animation: isOpen ? 'none' : 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
         }}
@@ -164,7 +165,7 @@ export default function ChatAssistant() {
 
       {/* Chat Window */}
       {isOpen && (
-        <Card className="fixed bottom-24 right-4 md:right-6 z-50 w-[calc(100vw-2rem)] md:w-[380px] h-[500px] max-h-[calc(100vh-120px)] bg-gray-50 dark:bg-[#181a20] shadow-2xl dark:shadow-[#00bfff]/10 rounded-2xl flex flex-col animate-in slide-in-from-bottom-5 duration-300 border border-gray-200 dark:border-gray-800" data-testid="chat-window">
+        <Card className="fixed bottom-24 right-4 md:right-6 z-[60] w-[calc(100vw-2rem)] md:w-[380px] h-[500px] max-h-[calc(100vh-120px)] bg-gray-50 dark:bg-[#181a20] shadow-2xl dark:shadow-[#00bfff]/10 rounded-2xl flex flex-col animate-in slide-in-from-bottom-5 duration-300 border border-gray-200 dark:border-gray-800" data-testid="chat-window">
           {/* Header */}
           <div className="bg-gradient-to-r from-blue-600 to-purple-600 dark:from-[#00bfff] dark:to-[#a855f7] text-white p-4 rounded-t-2xl flex items-center space-x-3">
             <div className="w-10 h-10 bg-white dark:bg-[#1a1c23] rounded-full flex items-center justify-center">
@@ -199,28 +200,47 @@ export default function ChatAssistant() {
           {/* Request Form */}
           {showRequestForm ? (
             <div className="p-4 bg-white dark:bg-[#1a1c23] border-t border-gray-200 dark:border-gray-800 space-y-3">
-              <Input
-                placeholder="Атыңыз"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                data-testid="input-request-name"
-                className="dark:bg-[#0f1116] dark:border-gray-700 dark:text-[#e5e7eb] dark:placeholder-gray-500"
-              />
-              <Input
-                placeholder="Класс / Рөл (оқушы, ата-ана, ұстаз)"
-                value={formData.role}
-                onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                data-testid="input-request-role"
-                className="dark:bg-[#0f1116] dark:border-gray-700 dark:text-[#e5e7eb] dark:placeholder-gray-500"
-              />
-              <Textarea
-                placeholder="Сұрағыңыз немесе хабарламаңыз"
-                value={formData.question}
-                onChange={(e) => setFormData({ ...formData, question: e.target.value })}
-                rows={3}
-                data-testid="textarea-request-question"
-                className="dark:bg-[#0f1116] dark:border-gray-700 dark:text-[#e5e7eb] dark:placeholder-gray-500"
-              />
+              <div className="space-y-1">
+                <Label htmlFor="chat-request-name" className="text-xs font-semibold text-gray-700 dark:text-gray-300">Атыңыз</Label>
+                <Input
+                  id="chat-request-name"
+                  name="name"
+                  autoComplete="name"
+                  aria-label="Атыңыз"
+                  placeholder="Атыңыз"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  data-testid="input-request-name"
+                  className="dark:bg-[#0f1116] dark:border-gray-700 dark:text-[#e5e7eb] dark:placeholder-gray-500"
+                />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="chat-request-role" className="text-xs font-semibold text-gray-700 dark:text-gray-300">Класс / Рөл</Label>
+                <Input
+                  id="chat-request-role"
+                  name="role"
+                  aria-label="Класс / Рөл"
+                  placeholder="Класс / Рөл (оқушы, ата-ана, ұстаз)"
+                  value={formData.role}
+                  onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                  data-testid="input-request-role"
+                  className="dark:bg-[#0f1116] dark:border-gray-700 dark:text-[#e5e7eb] dark:placeholder-gray-500"
+                />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="chat-request-question" className="text-xs font-semibold text-gray-700 dark:text-gray-300">Сұрағыңыз</Label>
+                <Textarea
+                  id="chat-request-question"
+                  name="question"
+                  aria-label="Сұрағыңыз"
+                  placeholder="Сұрағыңыз немесе хабарламаңыз"
+                  value={formData.question}
+                  onChange={(e) => setFormData({ ...formData, question: e.target.value })}
+                  rows={3}
+                  data-testid="textarea-request-question"
+                  className="dark:bg-[#0f1116] dark:border-gray-700 dark:text-[#e5e7eb] dark:placeholder-gray-500"
+                />
+              </div>
               <div className="flex space-x-2">
                 <Button
                   onClick={handleSubmitRequest}
@@ -262,6 +282,9 @@ export default function ChatAssistant() {
               <div className="p-3 bg-white dark:bg-[#1a1c23] border-t border-gray-200 dark:border-gray-800">
                 <div className="flex space-x-2">
                   <Input
+                    id="chat-message-input"
+                    name="chatMessage"
+                    aria-label="Сұрақ жазу"
                     placeholder="Сұрағыңызды жазыңыз..."
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}

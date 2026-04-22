@@ -6,9 +6,9 @@ export default function CuratorsPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-[#0f172a]">
       {/* Top Contact Bar - Fixed/Sticky */}
-      <section className="fixed top-0 left-0 md:left-64 right-0 bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-800 dark:to-blue-900 text-white py-4 z-50 shadow-sm border-b border-blue-500/20 dark:border-blue-700/20">
+      <section className="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-800 dark:to-blue-900 text-white py-4 shadow-sm border-b border-blue-500/20 dark:border-blue-700/20">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center justify-center md:justify-end md:space-x-6">
+          <div className="flex flex-col md:flex-row items-center justify-center md:justify-between">
             {/* Phone Number - positioned first */}
             <button 
               className="flex items-center hover:bg-blue-500/30 transition-colors duration-200 rounded px-2 py-1"

@@ -53,7 +53,7 @@ const MobileOlympiadAccordion = () => {
 
   return (
     <div className="space-y-4 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border border-yellow-200">
-      <h3 className="text-xl font-bold text-gray-800 mb-4 text-center">
+      <h3 className="text-lg font-bold text-gray-800 mb-4 text-center">
         НИШ және РФМШ дайындық бағдарламалары
       </h3>
       

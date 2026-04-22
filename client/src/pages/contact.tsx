@@ -167,7 +167,7 @@ export default function ContactPage() {
             <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 text-center mb-4">
               Әлеуметтік желілер
             </h2>
-            <div className="flex justify-center space-x-8">
+            <div className="flex flex-wrap justify-center gap-4 sm:gap-8">
               {socialMedia.map((social, index) => (
                 <a
                   key={index}

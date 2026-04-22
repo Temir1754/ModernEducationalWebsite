@@ -598,20 +598,26 @@ const CanteenPage = () => {
               <form className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label htmlFor="parent-name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Ата-ананың аты-жөні
                     </label>
                     <Input 
+                      id="parent-name"
+                      name="parentName"
+                      autoComplete="name"
                       placeholder="Мысалы: Иванов Иван Иванович"
                       data-testid="input-parent-name"
                       className="dark:bg-[#0f172a] dark:text-gray-100 dark:border-gray-600"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Телефон номері
                     </label>
                     <Input 
+                      id="phone"
+                      name="phone"
+                      autoComplete="tel"
                       placeholder="+7‒775‒790‒63‒63"
                       data-testid="input-phone"
                       className="dark:bg-[#0f172a] dark:text-gray-100 dark:border-gray-600"
@@ -619,20 +625,24 @@ const CanteenPage = () => {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label htmlFor="child-info" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Баланың аты-жөні және сыныбы
                   </label>
                   <Input 
+                    id="child-info"
+                    name="childInfo"
                     placeholder="Мысалы: Иванов Алан, 3А сынып"
                     data-testid="input-child-info"
                     className="dark:bg-[#0f172a] dark:text-gray-100 dark:border-gray-600"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label htmlFor="canteen-feedback" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Ұсыныс немесе пікір
                   </label>
                   <Textarea 
+                    id="canteen-feedback"
+                    name="feedback"
                     placeholder="Асхана жұмысы туралы пікіріңізді жазыңыз..."
                     rows={4}
                     data-testid="textarea-feedback"

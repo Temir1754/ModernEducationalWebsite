@@ -68,8 +68,10 @@ function AdminDocActions({ doc, updateMutation, scansDeleteMutation, onEdit }: {
       </Button>
 
       {/* 4. Қосу (Add/Upload scan) */}
-      <label className="cursor-pointer">
+      <label htmlFor="admin-scan-upload" className="cursor-pointer">
         <input
+          id="admin-scan-upload"
+          name="admin-scan-upload"
           type="file"
           className="hidden"
           accept=".pdf,image/*"
@@ -1806,10 +1808,12 @@ export default function UpbringingWorkPage() {
             <CardContent className="p-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label htmlFor="feedback-name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Аты-жөніңіз
                   </label>
                   <input
+                    id="feedback-name"
+                    name="name"
                     type="text"
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Толық аты-жөніңізді енгізіңіз"
@@ -1818,10 +1822,12 @@ export default function UpbringingWorkPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label htmlFor="feedback-email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Электрондық пошта
                   </label>
                   <input
+                    id="feedback-email"
+                    name="email"
                     type="email"
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="example@email.com"
@@ -1830,10 +1836,12 @@ export default function UpbringingWorkPage() {
                   />
                 </div>
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label htmlFor="feedback-subject" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Тақырып
                   </label>
                   <input
+                    id="feedback-subject"
+                    name="subject"
                     type="text"
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Хат тақырыбы"
@@ -1842,10 +1850,12 @@ export default function UpbringingWorkPage() {
                   />
                 </div>
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label htmlFor="feedback-message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Хабарлама
                   </label>
                   <textarea
+                    id="feedback-message"
+                    name="message"
                     rows={4}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Пікіріңіз бен ұсыныстарыңызды жазыңыз..."
@@ -1908,8 +1918,10 @@ export default function UpbringingWorkPage() {
             </DialogHeader>
             <form onSubmit={(e) => programUploadMutation.mutate(e)} className="space-y-4 pt-4">
               <div className="space-y-2">
-                <Label className="text-gray-300">Құжат атауы</Label>
+                <Label htmlFor="program-doc-title" className="text-gray-300">Құжат атауы</Label>
                 <Input
+                  id="program-doc-title"
+                  name="title"
                   placeholder="Мәселен: Іс-шара жоспары"
                   value={scansTitle}
                   onChange={e => setScansTitle(e.target.value)}
@@ -1918,8 +1930,10 @@ export default function UpbringingWorkPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-gray-300">Файл (PDF/Сурет)</Label>
+                <Label htmlFor="program-doc-file" className="text-gray-300">Файл (PDF/Сурет)</Label>
                 <Input
+                  id="program-doc-file"
+                  name="file"
                   type="file"
                   accept=".pdf,image/*"
                   onChange={e => setScansUploadFile(e.target.files?.[0] || null)}
@@ -1966,8 +1980,10 @@ export default function UpbringingWorkPage() {
               setIsEditDialogOpen(false);
             }} className="space-y-4 pt-4">
               <div className="space-y-2">
-                <Label className="text-gray-300">Құжат атауы</Label>
+                <Label htmlFor="edit-doc-title" className="text-gray-300">Құжат атауы</Label>
                 <Input
+                  id="edit-doc-title"
+                  name="title"
                   value={editingDoc?.title || ""}
                   onChange={e => setEditingDoc({ ...editingDoc, title: e.target.value })}
                   className="bg-[#0d1117] border-white/20 text-white"
@@ -1975,8 +1991,10 @@ export default function UpbringingWorkPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-gray-300">Сілтеме (URL)</Label>
+                <Label htmlFor="edit-doc-url" className="text-gray-300">Сілтеме (URL)</Label>
                 <Input
+                  id="edit-doc-url"
+                  name="url"
                   value={editingDoc?.url || ""}
                   onChange={e => setEditingDoc({ ...editingDoc, url: e.target.value })}
                   className="bg-[#0d1117] border-white/20 text-white"
@@ -2013,16 +2031,20 @@ export default function UpbringingWorkPage() {
           </DialogHeader>
             <div className="space-y-4 pt-4">
               <div className="space-y-2">
-                <Label className="text-gray-300">Тақырыбы</Label>
+                <Label htmlFor="edit-event-title" className="text-gray-300">Тақырыбы</Label>
                 <Input
+                  id="edit-event-title"
+                  name="title"
                   value={editingEvent?.title || ""}
                   onChange={(e) => setEditingEvent({ ...editingEvent, title: e.target.value })}
                   className="bg-[#0d1117] border-white/20 text-white"
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-gray-300">Күні</Label>
+                <Label htmlFor="edit-event-date" className="text-gray-300">Күні</Label>
                 <Input
+                  id="edit-event-date"
+                  name="date"
                   value={editingEvent?.dateText || editingEvent?.date || ""}
                   onChange={(e) => setEditingEvent({ ...editingEvent, dateText: e.target.value })}
                   className="bg-[#0d1117] border-white/20 text-white"
@@ -2085,8 +2107,10 @@ export default function UpbringingWorkPage() {
           </DialogHeader>
             <div className="space-y-4 pt-4">
               <div className="space-y-2">
-                <Label className="text-gray-300">Тақырыбы</Label>
+                <Label htmlFor="new-event-title" className="text-gray-300">Тақырыбы</Label>
                 <Input
+                  id="new-event-title"
+                  name="title"
                   placeholder="Мәселен: Білім күні"
                   value={newEvent.title}
                   onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
@@ -2094,8 +2118,10 @@ export default function UpbringingWorkPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-gray-300">Күні</Label>
+                <Label htmlFor="new-event-date" className="text-gray-300">Күні</Label>
                 <Input
+                  id="new-event-date"
+                  name="date"
                   placeholder="Мәселен: 1 қыркүйек"
                   value={newEvent.dateText}
                   onChange={(e) => setNewEvent({ ...newEvent, dateText: e.target.value })}
