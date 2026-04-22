@@ -19,6 +19,9 @@ import {
   Star,
   Users,
   Award,
+  Trophy,
+  HelpCircle,
+  ChevronDown,
 } from "lucide-react";
 import logoImage from "@assets/WhatsApp Image 2025-08-01 at 14.18.59_1754990832045.jpeg";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -289,7 +292,7 @@ export default function Home() {
           {/* Background Overlay - Enhanced for mobile visibility */}
           <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-900/90 via-blue-800/85 to-purple-900/90 md:from-blue-900/80 md:via-blue-800/70 md:to-purple-900/80"></div>
 
-          <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
             <div className="text-center max-w-4xl mx-auto">
               {/* Text Content - Enhanced for mobile */}
               <div className="px-4 sm:px-0">
@@ -351,100 +354,159 @@ export default function Home() {
 
         </section>
         {/* Preparation Programs */}
-        <section className="py-16 bg-white dark:bg-[#0f172a]">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto text-center">
-              <div>
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 mb-6">
-                  НИШ және РФМШ дайындық бағдарламалары
-                </h2>
-                <p className="text-lg text-gray-600 dark:text-gray-300 mb-6 max-w-2xl mx-auto">
-                  Балаларыңызды Назарбаев интеллектуалды мектептеріне және республикалық физика-математика мектебіне түсуге дайындаймыз.
-                </p>
+        <section className="py-24 bg-slate-50 dark:bg-[#0b1120] relative overflow-hidden">
+          {/* Decorative elements */}
+          <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl -mr-48 -mt-48"></div>
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl -ml-48 -mb-48"></div>
 
-                {/* Mathematical Olympiad Results - Mobile/Desktop Responsive */}
-                <div className="mt-8">
-                  <h3 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-100 mb-6">
-                    Математикалық олимпиада нәтижелері
-                  </h3>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+            <div className="text-center mb-16 animate-fade-in-up">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-6 tracking-tight">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">
+                  НИШ және РФМШ
+                </span> дайындық бағдарламалары
+              </h2>
+              <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
+                Балаларыңызды Назарбаев интеллектуалды мектептеріне және республикалық физика-математика мектебіне түсуге дайындаймыз. Біздің нәтижелер — біздің мақтанышымыз.
+              </p>
 
-                  {/* Mobile Version - Accordion */}
-                  <div className="md:hidden">
-                    <MobileOlympiadAccordion />
+              {/* Program Features */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+                {[
+                  { icon: <BookOpen className="w-6 h-6" />, title: "Авторлық әдістеме", desc: "Көпжылдық тәжірибе негізінде жасалған бағдарлама" },
+                  { icon: <Users className="w-6 h-6" />, title: "Шағын топтар", desc: "Әр оқушыға жеке көңіл бөлу мүмкіндігі" },
+                  { icon: <Clock className="w-6 h-6" />, title: "Тұрақты мониторинг", desc: "Апта сайынғы сынақ тесттері және нәтиже талдау" }
+                ].map((feat, i) => (
+                  <div key={i} className="flex flex-col items-center p-6 bg-white dark:bg-slate-800/50 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+                    <div className="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl mb-4">
+                      {feat.icon}
+                    </div>
+                    <h4 className="font-bold text-gray-900 dark:text-white mb-2">{feat.title}</h4>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 text-center">{feat.desc}</p>
                   </div>
+                ))}
+              </div>
+            </div>
 
-                  {/* Desktop Version - Original Layout */}
-                  <div className="hidden md:block p-6 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-xl border border-yellow-200 dark:border-yellow-700 text-left">
+            {/* Mathematical Olympiad Results Header */}
+            <div className="text-center mb-8">
+              <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100">
+                Математикалық олимпиада нәтижелері
+              </h3>
+            </div>
+
+            {/* Mobile Version - Accordion */}
+            <div className="md:hidden">
+              <MobileOlympiadAccordion />
+            </div>
+
+                  {/* Desktop Version - Modern Grid Layout */}
+                  <div className="hidden md:grid grid-cols-1 lg:grid-cols-3 gap-8 mt-10">
                     {/* 5th Grade - Белов Вячеслав */}
-                    <div className="mb-6 p-4 bg-white dark:bg-[#1e293b] rounded-lg shadow-sm border-l-4 border-yellow-500">
-                      <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-3">5 сынып, Белов Вячеслав</h4>
-                      <div className="space-y-2">
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-700 dark:text-gray-300">1 орын - "Дарын" олимпиада (аудандық)</span>
+                    <div className="group relative bg-white dark:bg-[#1e293b] rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-gray-800 hover:-translate-y-2">
+                      <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-t-3xl"></div>
+                      <div className="flex items-center gap-4 mb-6">
+                        <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-2xl text-yellow-600 dark:text-yellow-400">
+                          <Trophy className="w-8 h-8" />
                         </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-700 dark:text-gray-300">2 орын - "Алтын сақа" (аудандық)</span>
+                        <div>
+                          <h4 className="text-xl font-bold text-gray-800 dark:text-white">Белов Вячеслав</h4>
+                          <span className="text-sm font-medium text-blue-600 dark:text-blue-400 uppercase tracking-wider">5 сынып</span>
                         </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-700 dark:text-gray-300">3 орын - "Алтын сақа" (облыстық)</span>
-                        </div>
+                      </div>
+                      <div className="space-y-4">
+                        {[
+                          { place: "1 орын", name: "\"Дарын\" олимпиада (аудандық)", color: "text-yellow-600 bg-yellow-50" },
+                          { place: "2 орын", name: "\"Алтын сақа\" (аудандық)", color: "text-gray-600 bg-gray-50" },
+                          { place: "3 орын", name: "\"Алтын сақа\" (облыстық)", color: "text-orange-600 bg-orange-50" }
+                        ].map((item, idx) => (
+                          <div key={idx} className="flex items-start gap-3 group/item">
+                            <div className={`mt-1 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase ${item.color} dark:bg-opacity-10 whitespace-nowrap`}>
+                              {item.place}
+                            </div>
+                            <span className="text-gray-600 dark:text-gray-300 text-sm leading-tight">{item.name}</span>
+                          </div>
+                        ))}
                       </div>
                     </div>
 
                     {/* 6th Grade - Ермаханұлы Мардан */}
-                    <div className="mb-6 p-4 bg-white dark:bg-[#1e293b] rounded-lg shadow-sm border-l-4 border-green-500">
-                      <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-3">6 сынып, Ермаханұлы Мардан</h4>
-                      <div className="space-y-2">
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-700 dark:text-gray-300">1 орын - "Алтын сақа" (аудандық)</span>
+                    <div className="group relative bg-white dark:bg-[#1e293b] rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-gray-800 hover:-translate-y-2">
+                      <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-green-400 to-emerald-500 rounded-t-3xl"></div>
+                      <div className="flex items-center gap-4 mb-6">
+                        <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-2xl text-green-600 dark:text-green-400">
+                          <Award className="w-8 h-8" />
                         </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-700 dark:text-gray-300">1 орын - "Алтын сақа" (облыстық)</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-700 dark:text-gray-300">3 орын - "Алтын сақа" (республикалық)</span>
+                        <div>
+                          <h4 className="text-xl font-bold text-gray-800 dark:text-white">Ермаханұлы Мардан</h4>
+                          <span className="text-sm font-medium text-blue-600 dark:text-blue-400 uppercase tracking-wider">6 сынып</span>
                         </div>
                       </div>
-                      <div className="mt-3 p-2 bg-blue-50 dark:bg-blue-900/30 rounded">
-                        <span className="text-blue-700 dark:text-blue-300 font-medium">НИШ - 1251 балл</span>
+                      <div className="space-y-4 mb-8">
+                        {[
+                          { place: "1 орын", name: "\"Алтын сақа\" (аудандық)", color: "text-yellow-600 bg-yellow-50" },
+                          { place: "1 орын", name: "\"Алтын сақа\" (облыстық)", color: "text-yellow-600 bg-yellow-50" },
+                          { place: "3 орын", name: "\"Алтын сақа\" (республикалық)", color: "text-orange-600 bg-orange-50" }
+                        ].map((item, idx) => (
+                          <div key={idx} className="flex items-start gap-3">
+                            <div className={`mt-1 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase ${item.color} dark:bg-opacity-10 whitespace-nowrap`}>
+                              {item.place}
+                            </div>
+                            <span className="text-gray-600 dark:text-gray-300 text-sm leading-tight">{item.name}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="p-4 bg-blue-600 rounded-2xl shadow-lg shadow-blue-500/20 flex justify-between items-center group-hover:scale-105 transition-transform">
+                        <span className="text-white font-bold text-sm">НИШ</span>
+                        <span className="text-white font-black text-xl">1251 балл</span>
                       </div>
                     </div>
 
                     {/* 6th Grade - Жаксыбек Ерхан */}
-                    <div className="mb-6 p-4 bg-white dark:bg-[#1e293b] rounded-lg shadow-sm border-l-4 border-blue-500">
-                      <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-3">6 сынып, Жаксыбек Ерхан</h4>
-                      <div className="space-y-2">
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-700 dark:text-gray-300">1 орын - "Алтын сақа" (аудандық)</span>
+                    <div className="group relative bg-white dark:bg-[#1e293b] rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-gray-800 hover:-translate-y-2">
+                      <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-t-3xl"></div>
+                      <div className="flex items-center gap-4 mb-6">
+                        <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-2xl text-blue-600 dark:text-blue-400">
+                          <Star className="w-8 h-8" />
                         </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-700 dark:text-gray-300">1 орын - "Дарын" (аудандық)</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-700 dark:text-gray-300">1 орын - "Алтын сақа" (облыстық)</span>
+                        <div>
+                          <h4 className="text-xl font-bold text-gray-800 dark:text-white">Жаксыбек Ерхан</h4>
+                          <span className="text-sm font-medium text-blue-600 dark:text-blue-400 uppercase tracking-wider">6 сынып</span>
                         </div>
                       </div>
-                      <div className="mt-3 space-y-1">
-                        <div className="p-2 bg-green-50 dark:bg-green-900/30 rounded">
-                          <span className="text-green-700 dark:text-green-300 font-medium">НИШ - 1324 балл</span>
-                        </div>
-                        <div className="p-2 bg-purple-50 dark:bg-purple-900/30 rounded">
-                          <span className="text-purple-700 dark:text-purple-300 font-medium">РФМШ - 115 балл</span>
-                        </div>
-                        <div className="p-2 bg-yellow-50 dark:bg-yellow-900/30 rounded">
-                          <span className="text-yellow-700 dark:text-yellow-300 font-medium">БИЛ - 213 балл</span>
-                        </div>
+                      <div className="space-y-4 mb-6">
+                        {[
+                          { place: "1 орын", name: "\"Алтын сақа\" (аудандық)", color: "text-yellow-600 bg-yellow-50" },
+                          { place: "1 орын", name: "\"Дарын\" (аудандық)", color: "text-yellow-600 bg-yellow-50" },
+                          { place: "1 орын", name: "\"Алтын сақа\" (облыстық)", color: "text-yellow-600 bg-yellow-50" }
+                        ].map((item, idx) => (
+                          <div key={idx} className="flex items-start gap-3">
+                            <div className={`mt-1 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase ${item.color} dark:bg-opacity-10 whitespace-nowrap`}>
+                              {item.place}
+                            </div>
+                            <span className="text-gray-600 dark:text-gray-300 text-sm leading-tight">{item.name}</span>
+                          </div>
+                        ))}
                       </div>
+                      <div className="space-y-2 mt-auto">
+                        {[
+                          { label: "НИШ", val: "1324 балл", bg: "bg-emerald-500" },
+                          { label: "РФМШ", val: "115 балл", bg: "bg-purple-500" },
+                          { label: "БИЛ", val: "213 балл", bg: "bg-amber-500" }
+                        ].map((res, i) => (
+                          <div key={i} className={`p-3 ${res.bg} rounded-xl text-white flex justify-between items-center shadow-md`}>
+                            <span className="text-xs font-bold">{res.label}</span>
+                            <span className="font-black text-sm">{res.val}</span>
+                          </div>
+                        ))}
                     </div>
-                  </div>
                 </div>
               </div>
             </div>
-          </div>
         </section>
         {/* Three Directions Section - Mobile/Desktop Responsive */}
         <section className="py-8 bg-white dark:bg-[#1e293b] grid-background relative overflow-hidden min-h-[450px]">
-          <div className="container mx-auto px-4">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="text-center mb-6">
               <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4">
                 Үш бағыт арқылы жеке тұлғаны дамыту
@@ -460,7 +522,7 @@ export default function Home() {
             </div>
 
             {/* Desktop Version - Three Cards Layout */}
-            <div className="hidden md:grid lg:grid-cols-3 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            <div className="hidden md:grid lg:grid-cols-3 md:grid-cols-2 gap-8 max-w-7xl mx-auto">
 
               {/* Creative Direction Card */}
               <div className="text-center animate-fade-in-up">
@@ -473,6 +535,7 @@ export default function Home() {
                         src={creativePhoto}
                         alt="Шығармашылық бағыт - балалар домбырада ойнап жатыр"
                         className="w-full h-full object-cover"
+                        loading="lazy"
                       />
                     </div>
 
@@ -503,6 +566,7 @@ export default function Home() {
                         src={intellectualPhoto}
                         alt="Интеллектуалды бағыт - робототехника және LEGO роботтар"
                         className="w-full h-full object-cover"
+                        loading="lazy"
                       />
                     </div>
 
@@ -529,10 +593,11 @@ export default function Home() {
                   {/* Student Photo Circle - Responsive within grid cell */}
                   <div className="relative w-full max-w-[320px] aspect-square mx-auto">
                     <div className="w-full h-full rounded-full overflow-hidden border-4 border-white dark:border-gray-600 shadow-2xl bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30">
-                      <img
+                  <img
                         src={sportsPhoto}
                         alt="Спорттық бағыт - балалар гимнастикалық обручтармен жаттығады"
                         className="w-full h-full object-cover"
+                        loading="lazy"
                       />
                     </div>
 
@@ -572,8 +637,8 @@ export default function Home() {
           </div>
         </section>
         {/* Modern School Facts Section - Mobile/Desktop Responsive */}
-        <section className="py-16">
-          <div className="container mx-auto px-4">
+        <section className="py-0">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
 
             {/* Mobile Version - Slides */}
             <div className="md:hidden">
@@ -587,316 +652,192 @@ export default function Home() {
           </div>
         </section>
         {/* Teachers Section - Hidden from home page, moved to separate pages */}
-        {/* News Section - Mobile/Desktop Responsive */}
-        <section className="py-16">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12 relative">
-              <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4">
-                Жаңалықтар мен хабарландырулар
-              </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-300">
-                Мектептің соңғы оқиғалары мен маңызды хабарлар
-              </p>
-
-              {/* Admin Add News Button */}
-              {user?.role === "admin" && (
-                <div className="absolute top-0 right-0">
-                  <Dialog open={isAddNewsOpen} onOpenChange={setIsAddNewsOpen}>
-                    <DialogTrigger asChild>
-                      <Button>
-                        <Plus className="w-4 h-4 mr-2" />
-                        Жаңалық қосу
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="bg-white">
-                      <DialogHeader>
-                        <DialogTitle className="text-gray-900">{editingNewsId ? "Жаңалықты өңдеу" : "Жаңалық қосу"}</DialogTitle>
-                        <DialogDescription className="text-gray-500">
-                          {editingNewsId ? "Жаңалық мәліметтерін өзгертіңіз." : "Жаңа оқиға немесе хабарландыру қосыңыз."}
-                        </DialogDescription>
-                      </DialogHeader>
-                      <form onSubmit={(e) => {
-                        e.preventDefault();
-                        if (editingNewsId) {
-                          updateNewsMutation.mutate({ id: editingNewsId, data: newNews });
-                        } else {
-                          addNewsMutation.mutate(e);
-                        }
-                      }} className="space-y-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="news-title" className="text-gray-900">Тақырып</Label>
-                          <Input
-                            id="news-title"
-                            name="title"
-                            value={newNews.title}
-                            onChange={e => setNewNews({ ...newNews, title: e.target.value })}
-                            required
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="news-body" className="text-gray-900">Мәтін (Сипаттама)</Label>
-                          <Textarea
-                            id="news-body"
-                            name="body"
-                            value={newNews.body}
-                            onChange={e => setNewNews({ ...newNews, body: e.target.value })}
-                            required
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="news-date">Күні (Мәтін түрінде, мыс: 15 Тамыз)</Label>
-                          <Input
-                            id="news-date"
-                            name="dateText"
-                            value={newNews.dateText}
-                            onChange={e => setNewNews({ ...newNews, dateText: e.target.value })}
-                            required
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="news-image">Сурет URL</Label>
-                          <Input
-                            id="news-image"
-                            name="coverUrl"
-                            value={newNews.coverUrl}
-                            onChange={e => setNewNews({ ...newNews, coverUrl: e.target.value })}
-                          />
-                        </div>
-                        <Button type="submit" className="w-full" disabled={addNewsMutation.isPending}>
-                          {addNewsMutation.isPending && <Loader2 className="animate-spin mr-2" />}
-                          Сақтау
-                        </Button>
-                      </form>
-                    </DialogContent>
-                  </Dialog>
-                </div>
-              )}
-            </div>
-
-            {/* Mobile Version - Slides */}
-            <div className="md:hidden">
-              <MobileNewsSlides items={formattedNews} />
-            </div>
-
-            {/* Desktop Version - Grid Layout */}
-            <div className="hidden md:block">
-              <div className="grid md:grid-cols-3 gap-8">
-                {formattedNews.map((article) => (
-                  <Card key={article.id} className="bg-white dark:bg-[#1e293b] border-2 border-blue-100 dark:border-blue-700 hover:border-blue-300 dark:hover:border-blue-500 overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-3 rounded-2xl relative group">
-                    <img
-                      src={article.image}
-                      alt={article.title}
-                      className="w-full h-48 object-cover transition-transform duration-300 hover:scale-110"
-                    />
-                    {user?.role === "admin" && (
-                      <>
-                        <Button
-                          variant="secondary"
-                          size="icon"
-                          className="absolute top-2 right-14 opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleEditNews(article);
-                          }}
-                        >
-                          <Pencil className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          variant="destructive"
-                          size="icon"
-                          className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (confirm("Delete news?")) deleteNewsMutation.mutate(article.id);
-                          }}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </>
-                    )}
-                    <CardContent className="p-6">
-                      <div className="text-sm text-primary dark:text-blue-400 font-semibold mb-2">
-                        {article.date}
-                      </div>
-                      <h3 className="text-xl font-semibold mb-3 dark:text-gray-100">{article.title}</h3>
-                      <p className="text-gray-600 dark:text-gray-300 line-clamp-3">{article.description}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-              {formattedNews.length === 0 && (
-                <div className="text-center py-10 text-gray-500">Жаңалықтар жоқ</div>
-              )}
-            </div>
-          </div>
-        </section>
+        {/* News Section removed as requested */}
 
         {/* Instagram Section */}
         <InstagramFeed widgetId={instagramWidgetId} />
 
         {/* FAQ Section */}
-        <section className="py-16">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4">
-                Жиі қойылатын сұрақтар
+        <section className="py-24 bg-white dark:bg-[#0f172a]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-16 animate-fade-in-up">
+              <div className="inline-flex items-center justify-center p-3 mb-4 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
+                <HelpCircle className="w-8 h-8" />
+              </div>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-6 tracking-tight">
+                Жиі қойылатын <span className="text-blue-600 dark:text-blue-400">сұрақтар</span>
               </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-300">
-                Ата-аналардан келетін ең көп қойылатын сұрақтарға жауаптар
-              </p>
             </div>
 
-            <div className="max-w-6xl mx-auto space-y-4">
-              <Card className="hover:shadow-lg transition-all duration-300 dark:bg-[#1e293b] dark:border-gray-700">
-                <CardContent className="p-6">
+            <div className="max-w-4xl mx-auto space-y-4">
+              {/* Question 1 */}
+              <Card className="border-none shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl overflow-hidden dark:bg-slate-800/50">
+                <CardContent className="p-0">
                   <details className="group">
-                    <summary className="flex justify-between items-center cursor-pointer text-lg font-semibold text-gray-800 dark:text-gray-100 hover:text-primary dark:hover:text-blue-400 transition-colors duration-200">
+                    <summary className="flex justify-between items-center cursor-pointer p-6 text-lg font-bold text-gray-800 dark:text-gray-100 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
                       Мектепке қабылдау үшін қандай құжаттар керек?
-                      <span className="transform group-open:rotate-180 transition-transform duration-200">
-                        ▼
-                      </span>
+                      <ChevronDown className="w-5 h-5 transform group-open:rotate-180 transition-transform duration-300 text-blue-500" />
                     </summary>
-                    <div className="mt-4 text-gray-600 dark:text-gray-300">
-                      <p>Мектепке қабылдау үшін келесі құжаттар қажет:</p>
-                      <ul className="list-disc ml-6 mt-2 space-y-1">
-                        <li>Баланың туу туралы куәлігі</li>
-                        <li>Ата-ананың жеке куәліктері</li>
-                        <li>Баланың медициналық карточкасы</li>
-                        <li>3x4 фотосуреттер (4 дана)</li>
-                        <li>Егер бар болса, алдыңғы мектептен анықтама</li>
-                      </ul>
-                    </div>
-                  </details>
-                </CardContent>
-              </Card>
-
-              <Card className="hover:shadow-lg transition-all duration-300 dark:bg-[#1e293b] dark:border-gray-700">
-                <CardContent className="p-6">
-                  <details className="group">
-                    <summary className="flex justify-between items-center cursor-pointer text-lg font-semibold text-gray-800 dark:text-gray-100 hover:text-primary dark:hover:text-blue-400 transition-colors duration-200">
-                      FGS - жеке мектебі: төлем және шарттар
-                      <span className="transform group-open:rotate-180 transition-transform duration-200">
-                        ▼
-                      </span>
-                    </summary>
-                    <div className="mt-4 text-gray-600 dark:text-gray-300">
-                      <div className="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg border-l-4 border-blue-500 mb-4">
-                        <p className="font-semibold text-blue-800 dark:text-blue-300 mb-2">FGS - жеке мектебі</p>
-                        <p className="text-blue-700 dark:text-blue-300">Айлық оқу ақысы: <strong>70,000 теңге</strong></p>
+                    <div className="px-6 pb-6 text-gray-600 dark:text-gray-300 animate-in fade-in slide-in-from-top-2 duration-300">
+                      <div className="pt-2 space-y-2 leading-relaxed">
+                        <p>Баланы мектепке қабылдау үшін келесі құжаттар қажет:</p>
+                        <ul className="list-disc ml-6 space-y-2 mt-2">
+                          <li>Баланың туу туралы куәлігі</li>
+                          <li>Ата-ананың жеке куәліктері</li>
+                          <li>Баланың медициналық карточкасы (026/у формасы)</li>
+                          <li>3x4 фотосуреттер (4 дана)</li>
+                        </ul>
                       </div>
-                      <p className="mb-3">Оқу ақысына кіреді:</p>
-                      <ul className="list-disc ml-6 mt-2 space-y-1">
-                        <li><strong>Толық оқу бағдарламасы</strong> (0-9 сыныптар)</li>
-                        <li><strong>3 рет тамақ:</strong> таңғы ас, түскі ас, бесін ас</li>
-                        <li><strong>Оқушы тасымалы</strong> (Hyundai Starex H2)</li>
-                        <li><strong>Барлық оқу материалдары</strong> мен кітаптар</li>
-                        <li><strong>Үйірмелерге қатысу</strong></li>
-                        <li><strong>НИШ/РФМШ дайындық курстары</strong></li>
-                      </ul>
-                      <p className="mt-3 text-sm bg-green-50 dark:bg-green-900/30 p-3 rounded dark:text-gray-300">Икемді төлем жүйесі: ай сайынғы, жартыжылдық және жылдық төлем мүмкіндігі бар</p>
                     </div>
                   </details>
                 </CardContent>
               </Card>
 
-              <Card className="hover:shadow-lg transition-all duration-300 dark:bg-[#1e293b] dark:border-gray-700">
-                <CardContent className="p-6">
+              {/* Question 2 */}
+              <Card className="border-none shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl overflow-hidden dark:bg-slate-800/50">
+                <CardContent className="p-0">
                   <details className="group">
-                    <summary className="flex justify-between items-center cursor-pointer text-lg font-semibold text-gray-800 dark:text-gray-100 hover:text-primary dark:hover:text-blue-400 transition-colors duration-200">
+                    <summary className="flex justify-between items-center cursor-pointer p-6 text-lg font-bold text-gray-800 dark:text-gray-100 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+                      FGS - жеке мектебі: төлем және шарттар
+                      <ChevronDown className="w-5 h-5 transform group-open:rotate-180 transition-transform duration-300 text-blue-500" />
+                    </summary>
+                    <div className="px-6 pb-6 text-gray-600 dark:text-gray-300 animate-in fade-in slide-in-from-top-2 duration-300">
+                      <div className="bg-blue-50 dark:bg-blue-900/30 p-6 rounded-2xl border-l-4 border-blue-500 mb-6">
+                        <p className="font-bold text-blue-800 dark:text-blue-300 mb-2">Оқу ақысы</p>
+                        <p className="text-2xl text-blue-700 dark:text-blue-200 font-black">70,000 теңге <span className="text-sm font-normal">/ айына</span></p>
+                      </div>
+                      <p className="mb-3 font-bold">Оқу ақысына кіреді:</p>
+                      <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+                        {[
+                          "Толық оқу бағдарламасы",
+                          "3 рет сапалы тамақ",
+                          "Оқушы тасымалы (Hyundai Starex)",
+                          "Барлық оқу материалдары",
+                          "Үйірмелерге қатысу",
+                          "НИШ/РФМШ дайындық курстары"
+                        ].map((item, i) => (
+                          <li key={i} className="flex items-center gap-2 text-sm">
+                            <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                      <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-xl text-sm border border-green-100 dark:border-green-800">
+                        <span className="font-bold text-green-700 dark:text-green-400">Икемді төлем жүйесі:</span> ай сайынғы, жартыжылдық және жылдық төлем мүмкіндігі бар.
+                      </div>
+                    </div>
+                  </details>
+                </CardContent>
+              </Card>
+
+              {/* Question 3 */}
+              <Card className="border-none shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl overflow-hidden dark:bg-slate-800/50">
+                <CardContent className="p-0">
+                  <details className="group">
+                    <summary className="flex justify-between items-center cursor-pointer p-6 text-lg font-bold text-gray-800 dark:text-gray-100 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
                       Сыныптарда неше бала оқиды?
-                      <span className="transform group-open:rotate-180 transition-transform duration-200">
-                        ▼
-                      </span>
+                      <ChevronDown className="w-5 h-5 transform group-open:rotate-180 transition-transform duration-300 text-blue-500" />
                     </summary>
-                    <div className="mt-4 text-gray-600 dark:text-gray-300">
-                      {/* ======================================== */}
-                      {/* ИЗМЕНИТЬ ДИАПАЗОН КОЛИЧЕСТВА ДЕТЕЙ В КЛАССЕ */}
-                      {/* Текущее значение: 12-18 */}
-                      {/* Чтобы изменить, замените "12-18" на новое значение */}
-                      {/* ======================================== */}
-                      <p>Біздің мектепте әр сыныпта 12-18 бала оқиды. Бұл мұғалімнің әр балаға жеке көңіл бөлуіне және сапалы білім беруге мүмкіндік береді. Кішігірім сыныптар балалардың дамуын жақсы бақылауға және олардың жеке қабілеттерін ашуға көмектеседі.</p>
+                    <div className="px-6 pb-6 text-gray-600 dark:text-gray-300 animate-in fade-in slide-in-from-top-2 duration-300">
+                      <p className="leading-relaxed">Біздің мектепте әр сыныпта <span className="font-bold text-blue-600 dark:text-blue-400 text-lg">12-18 бала</span> оқиды. Бұл мұғалімнің әр балаға жеке көңіл бөлуіне және сапалы білім беруге мүмкіндік береді. Кішігірім сыныптар балалардың дамуын жақсы бақылауға және олардың жеке қабілеттерін ашуға көмектеседі.</p>
                     </div>
                   </details>
                 </CardContent>
               </Card>
 
-              <Card className="hover:shadow-lg transition-all duration-300 dark:bg-[#1e293b] dark:border-gray-700">
-                <CardContent className="p-6">
+              {/* Question 4 */}
+              <Card className="border-none shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl overflow-hidden dark:bg-slate-800/50">
+                <CardContent className="p-0">
                   <details className="group">
-                    <summary className="flex justify-between items-center cursor-pointer text-lg font-semibold text-gray-800 dark:text-gray-100 hover:text-primary dark:hover:text-blue-400 transition-colors duration-200">
+                    <summary className="flex justify-between items-center cursor-pointer p-6 text-lg font-bold text-gray-800 dark:text-gray-100 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
                       Мектепте тамақтану қалай ұйымдастырылған?
-                      <span className="transform group-open:rotate-180 transition-transform duration-200">
-                        ▼
-                      </span>
+                      <ChevronDown className="w-5 h-5 transform group-open:rotate-180 transition-transform duration-300 text-blue-500" />
                     </summary>
-                    <div className="mt-4 text-gray-600 dark:text-gray-300">
-                      <p>Мектепте толыққанды тамақтану қамтамасыз етілген:</p>
-                      <ul className="list-disc ml-6 mt-2 space-y-1">
-                        <li>Таңғы ас, түскі ас және бесін ас</li>
-                        <li>Диетикпен дайындалған мәзір</li>
-                        <li>Жаңа және сапалы өнімдер</li>
-                        <li>Аллергиясы бар балаларға арнайы мәзір</li>
-
+                    <div className="px-6 pb-6 text-gray-600 dark:text-gray-300 animate-in fade-in slide-in-from-top-2 duration-300">
+                      <p className="mb-4">Мектепте толыққанды тамақтану қамтамасыз етілген:</p>
+                      <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                        {[
+                          { title: "3 реттік тамақ", desc: "Таңғы, түскі және бесін ас" },
+                          { title: "Диетикалық мәзір", desc: "Диетолог мамандармен жасалған" },
+                          { title: "Сапалы өнімдер", desc: "Күнделікті жаңа піскен тағам" },
+                          { title: "Жеке тәсіл", desc: "Аллергиясы бар балаларға арнайы мәзір" }
+                        ].map((item, i) => (
+                          <div key={i} className="p-3 bg-slate-50 dark:bg-slate-900/50 rounded-xl">
+                            <p className="font-bold text-sm text-gray-800 dark:text-gray-200">{item.title}</p>
+                            <p className="text-xs text-gray-500">{item.desc}</p>
+                          </div>
+                        ))}
                       </ul>
                     </div>
                   </details>
                 </CardContent>
               </Card>
 
-              <Card className="hover:shadow-lg transition-all duration-300 dark:bg-[#1e293b] dark:border-gray-700">
-                <CardContent className="p-6">
+              {/* Question 5 */}
+              <Card className="border-none shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl overflow-hidden dark:bg-slate-800/50">
+                <CardContent className="p-0">
                   <details className="group">
-                    <summary className="flex justify-between items-center cursor-pointer text-lg font-semibold text-gray-800 dark:text-gray-100 hover:text-primary dark:hover:text-blue-400 transition-colors duration-200">
+                    <summary className="flex justify-between items-center cursor-pointer p-6 text-lg font-bold text-gray-800 dark:text-gray-100 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
                       Оқу тілі қандай? Орыс тілді сынып бар ма?
-                      <span className="transform group-open:rotate-180 transition-transform duration-200">
-                        ▼
-                      </span>
+                      <ChevronDown className="w-5 h-5 transform group-open:rotate-180 transition-transform duration-300 text-blue-500" />
                     </summary>
-                    <div className="mt-4 text-gray-600 dark:text-gray-300">
-                      <p>Мектепте екі бөлім жұмыс істейді:</p>
-                      <ul className="list-disc ml-6 mt-2 space-y-1">
-                        <li><strong>Қазақ бөлімі:</strong> Барлық пәндер қазақ тілінде</li>
-                        <li><strong>Орыс бөлімі:</strong> Барлық пәндер орыс тілінде</li>
-                      </ul>
-                      <p className="mt-2">Екі бөлімде де қазақ, орыс және ағылшын тілдері міндетті түрде оқытылады. Ата-аналар балаларының тілдік ерекшеліктеріне сәйкес бөлімді таңдай алады.</p>
+                    <div className="px-6 pb-6 text-gray-600 dark:text-gray-300 animate-in fade-in slide-in-from-top-2 duration-300">
+                      <div className="flex flex-col md:flex-row gap-4 mb-4">
+                        <div className="flex-1 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-2xl border border-blue-100 dark:border-blue-800">
+                          <p className="font-bold text-blue-700 dark:text-blue-400 mb-1">Қазақ бөлімі</p>
+                          <p className="text-sm">Барлық пәндер қазақ тілінде</p>
+                        </div>
+                        <div className="flex-1 p-4 bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl border border-indigo-100 dark:border-indigo-800">
+                          <p className="font-bold text-indigo-700 dark:text-indigo-400 mb-1">Орыс бөлімі</p>
+                          <p className="text-sm">Барлық пәндер орыс тілінде</p>
+                        </div>
+                      </div>
+                      <p className="text-sm italic">Екі бөлімде де қазақ, орыс және ағылшын тілдері міндетті түрде оқытылады.</p>
                     </div>
                   </details>
                 </CardContent>
               </Card>
 
-              <Card className="hover:shadow-lg transition-all duration-300 dark:bg-[#1e293b] dark:border-gray-700">
-                <CardContent className="p-6">
+              {/* Question 6 */}
+              <Card className="border-none shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl overflow-hidden dark:bg-slate-800/50">
+                <CardContent className="p-0">
                   <details className="group">
-                    <summary className="flex justify-between items-center cursor-pointer text-lg font-semibold text-gray-800 dark:text-gray-100 hover:text-primary dark:hover:text-blue-400 transition-colors duration-200">
+                    <summary className="flex justify-between items-center cursor-pointer p-6 text-lg font-bold text-gray-800 dark:text-gray-100 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
                       НИШ пен РФМШ дайындық бағдарламасы туралы көбірек ақпарат
-                      <span className="transform group-open:rotate-180 transition-transform duration-200">
-                        ▼
-                      </span>
+                      <ChevronDown className="w-5 h-5 transform group-open:rotate-180 transition-transform duration-300 text-blue-500" />
                     </summary>
-                    <div className="mt-4 text-gray-600 dark:text-gray-300">
-                      <p>Біздің дайындық бағдарламасы:</p>
-                      <ul className="list-disc ml-6 mt-2 space-y-1">
-                        <li>6-8 сыныптар үшін арнайы дайындық курсы</li>
-                        <li>Математика, физика, химия, биология пәндерінен күшейтілген дайындық</li>
-                        <li>Сынақ тестілері мен олимпиадаларға дайындық</li>
-                        <li>Жеке және топтық сабақтар</li>
-                        <li>Өткен жылдары студенттердің &lt; 50% НИШ пен РФМШ-қа түсті</li>
-                      </ul>
+                    <div className="px-6 pb-6 text-gray-600 dark:text-gray-300 animate-in fade-in slide-in-from-top-2 duration-300">
+                      <div className="space-y-4 pt-2">
+                        <p className="font-bold text-gray-800 dark:text-gray-200 leading-relaxed">Біздің дайындық бағдарламасы 6-8 сыныптар үшін арнайы жасалған және келесілерді қамтиды:</p>
+                        <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          {[
+                            "Математика мен физикадан күшейтілген сабақтар",
+                            "Химия және биология пәндерін тереңдетіп оқыту",
+                            "Апта сайынғы сынақ тестілері",
+                            "Олимпиадалық есептерді шығару әдістері",
+                            "Жеке және топтық консультациялар"
+                          ].map((item, i) => (
+                            <li key={i} className="flex items-start gap-2 text-sm">
+                              <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5 flex-shrink-0"></div>
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
                     </div>
                   </details>
                 </CardContent>
               </Card>
 
-              <Card className="hover:shadow-lg transition-all duration-300 dark:bg-[#1e293b] dark:border-gray-700">
-                <CardContent className="p-6">
+              {/* Question 7 */}
+              <Card className="border-none shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl overflow-hidden dark:bg-slate-800/50">
+                <CardContent className="p-0">
                   <details className="group">
-                    <summary className="flex justify-between items-center cursor-pointer text-lg font-semibold text-gray-800 dark:text-gray-100 hover:text-primary dark:hover:text-blue-400 transition-colors duration-200">
+                    <summary className="flex justify-between items-center cursor-pointer p-6 text-lg font-bold text-gray-800 dark:text-gray-100 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
                       Үйірмелерге қатысу міндетті ме?
-                      <span className="transform group-open:rotate-180 transition-transform duration-200">
-                        ▼
-                      </span>
+                      <ChevronDown className="w-5 h-5 transform group-open:rotate-180 transition-transform duration-300 text-blue-500" />
                     </summary>
-                    <div className="mt-4 text-gray-600 dark:text-gray-300">
+                    <div className="px-6 pb-6 text-gray-600 dark:text-gray-300 animate-in fade-in slide-in-from-top-2 duration-300">
                       <p>Үйірмелерге қатысу міндетті емес, бірақ балалардың жан-жақты дамуы үшін өте пайдалы. Біз ұсынамыз:</p>
                       <ul className="list-disc ml-6 mt-2 space-y-1">
                         <li>Әр бала кемінде 1-2 үйірмені таңдау</li>
@@ -909,24 +850,30 @@ export default function Home() {
                 </CardContent>
               </Card>
 
-              <Card className="hover:shadow-lg transition-all duration-300 dark:bg-[#1e293b] dark:border-gray-700">
-                <CardContent className="p-6">
+              {/* Question 8 */}
+              <Card className="border-none shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl overflow-hidden dark:bg-slate-800/50">
+                <CardContent className="p-0">
                   <details className="group">
-                    <summary className="flex justify-between items-center cursor-pointer text-lg font-semibold text-gray-800 dark:text-gray-100 hover:text-primary dark:hover:text-blue-400 transition-colors duration-200">
+                    <summary className="flex justify-between items-center cursor-pointer p-6 text-lg font-bold text-gray-800 dark:text-gray-100 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
                       Ата-аналармен байланыс қалай жүзеге асырылады?
-                      <span className="transform group-open:rotate-180 transition-transform duration-200">
-                        ▼
-                      </span>
+                      <ChevronDown className="w-5 h-5 transform group-open:rotate-180 transition-transform duration-300 text-blue-500" />
                     </summary>
-                    <div className="mt-4 text-gray-600 dark:text-gray-300">
-                      <p>Біз ата-аналармен тығыз байланыс орнатамыз:</p>
-                      <ul className="list-disc ml-6 mt-2 space-y-1">
-                        <li>Әр сыныпта жеке куратор бар</li>
-                        <li>Ай сайын баланың үлгерімі туралы толық есеп</li>
-                        <li>WhatsApp топтары арқылы күнделікті хабарлар</li>
-                        <li>Ата-аналар жиналысы айына 1 рет</li>
-                        <li>Қажет болған жағдайда кез келген уақытта кездесу</li>
-                        <li>UPay қосымшасы арқылы балаңыздың белсенділігін бақылау</li>
+                    <div className="px-6 pb-6 text-gray-600 dark:text-gray-300 animate-in fade-in slide-in-from-top-2 duration-300">
+                      <p className="mb-4">Біз ата-аналармен тығыз байланыс орнатамыз:</p>
+                      <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                        {[
+                          "Әр сыныпта жеке куратор",
+                          "Ай сайын үлгерім туралы есеп",
+                          "WhatsApp топтары арқылы байланыс",
+                          "Ай сайын ата-аналар жиналысы",
+                          "Жеке кездесулер мүмкіндігі",
+                          "UPay қосымшасымен бақылау"
+                        ].map((item, i) => (
+                          <li key={i} className="flex items-center gap-2 text-sm">
+                            <Check className="w-4 h-4 text-blue-500" />
+                            {item}
+                          </li>
+                        ))}
                       </ul>
                     </div>
                   </details>
@@ -936,189 +883,7 @@ export default function Home() {
           </div>
         </section>
         {/* Contact Section */}
-        <section id="apply" className="py-16">
-          <div className="container mx-auto px-4">
-            <div className="flex flex-col md:grid md:grid-cols-2 gap-12">
-              <div>
-                <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-6">
-                  Бізбен байланысыңыз
-                </h2>
-                <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
-                  Мектеп туралы қосымша ақпарат алу немесе мектепке баруға келу үшін бізбен хабарласыңыз.
-                </p>
-
-                <div className="space-y-6">
-                  <div className="flex items-start">
-                    <div className="bg-blue-100 dark:bg-blue-900/30 text-primary dark:text-blue-400 w-12 h-12 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                      <MapPin className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-800 dark:text-gray-100">Мекенжай</h4>
-                      <button
-                        className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors duration-200 hover:underline text-left"
-                        onClick={() => {
-                          // Open in 2GIS
-                          window.open('https://go.2gis.com/DoFle', '_blank');
-                        }}
-                      >
-                        Шымкент қаласы, Өтегенова көшесі 43А
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start">
-                    <div className="bg-blue-100 dark:bg-blue-900/30 text-primary dark:text-blue-400 w-12 h-12 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                      <Share2 className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-800 dark:text-gray-100">Әлеуметтік желілер</h4>
-                      <div className="flex flex-wrap gap-4 mt-3">
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            // Try to open Instagram app first, fallback to web
-                            window.location.href = 'instagram://user?username=fgs.schoolkz';
-                            setTimeout(() => {
-                              window.open('https://www.instagram.com/fgs.schoolkz/', '_blank');
-                            }, 1000);
-                          }}
-                          className="flex items-center bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full hover:from-purple-600 hover:to-pink-600 transform hover:scale-105 transition-all duration-200 text-sm font-medium shadow-md"
-                        >
-                          <Instagram className="w-5 h-5 mr-2" />
-                          Instagram
-                        </button>
-
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            // Ask user for Telegram channel/group link
-                            const telegramLink = prompt('Телеграм каналы немесе топ сілтемесін енгізіңіз (мысалы: https://t.me/fgs_school):');
-                            if (telegramLink) {
-                              // Extract username from link and try app first
-                              const username = telegramLink.replace('https://t.me/', '');
-                              window.location.href = `tg://resolve?domain=${username}`;
-                              setTimeout(() => {
-                                window.open(telegramLink, '_blank');
-                              }, 1000);
-                            }
-                          }}
-                          className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transform hover:scale-105 transition-all duration-200 text-sm font-medium shadow-md"
-                        >
-                          <Send className="w-5 h-5 mr-2" />
-                          Telegram
-                        </button>
-
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            window.open('https://wa.me/77757906363', '_blank');
-                          }}
-                          className="flex items-center bg-green-500 text-white px-4 py-2 rounded-full hover:bg-green-600 transform hover:scale-105 transition-all duration-200 text-sm font-medium shadow-md"
-                        >
-                          <MessageCircle className="w-5 h-5 mr-2" />
-                          WhatsApp
-                        </button>
-
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            window.open('https://www.facebook.com/people/Fgs-School/pfbid0b3bkVb2Vz1B59RdK3PfLQR7DcKwJ92XaxfMXdB5kK7wv1AwTBBUbtUZ5uj1oAN7ul/', '_blank');
-                          }}
-                          className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transform hover:scale-105 transition-all duration-200 text-sm font-medium shadow-md"
-                        >
-                          <Facebook className="w-5 h-5 mr-2" />
-                          Facebook
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start">
-                    <div className="bg-blue-100 dark:bg-blue-900/30 text-primary dark:text-blue-400 w-12 h-12 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                      <Phone className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-800 dark:text-gray-100">Телефон</h4>
-                      <button
-                        className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors duration-200 hover:underline text-left"
-                        onClick={() => {
-                          // Initiate phone call
-                          window.location.href = 'tel:+77757906363';
-                        }}
-                      >
-                        +7‒775‒790‒63‒63
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start">
-                    <div className="bg-blue-100 dark:bg-blue-900/30 text-primary dark:text-blue-400 w-12 h-12 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                      <Clock className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-800 dark:text-gray-100">Жұмыс уақыты</h4>
-                      <p className="text-gray-600 dark:text-gray-300">Дүйсенбі - жұма: 08:00 - 18:00</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <Card className="w-full bg-transparent dark:bg-transparent border-gray-300 dark:border-gray-700">
-                <CardContent className="p-4 sm:p-8">
-                  <h3 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-6">
-                    Сұрақ қойыңыз
-                  </h3>
-                  <form className="space-y-6">
-                    <div>
-                      <label htmlFor="contact-name" className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">
-                        Аты-жөні *
-                      </label>
-                      <input
-                        id="contact-name"
-                        name="name"
-                        type="text"
-                        autoComplete="name"
-                        className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-[#0f172a] dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label htmlFor="contact-phone" className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">
-                        Телефон номері *
-                      </label>
-                      <input
-                        id="contact-phone"
-                        name="phone"
-                        type="tel"
-                        autoComplete="tel"
-                        className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-[#0f172a] dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label htmlFor="contact-message" className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">
-                        Сұрақ немесе хабарлама *
-                      </label>
-                      <textarea
-                        id="contact-message"
-                        name="message"
-                        rows={4}
-                        className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-[#0f172a] dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
-                        required
-                      ></textarea>
-                    </div>
-
-                    <Button type="submit" className="w-full transform hover:scale-105 transition-all duration-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:text-white">
-                      Хабарлама жіберу
-                    </Button>
-                  </form>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
+        {/* Contact Section removed as requested */}
       </div>
     </>
   );

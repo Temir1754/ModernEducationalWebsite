@@ -8,6 +8,8 @@ var __export = (target, all) => {
 import "dotenv/config";
 import express3 from "express";
 import path4 from "path";
+import fs3 from "fs";
+import compression from "compression";
 
 // server/routes.ts
 import { createServer } from "http";
@@ -1051,8 +1053,19 @@ function serveStatic(app2) {
 
 // server/index.ts
 var app = express3();
+app.use(compression());
 app.use(express3.json({ limit: "1024mb" }));
 app.use(express3.urlencoded({ limit: "1024mb", extended: false }));
+app.use((req, res, next) => {
+  if (req.header("Accept")?.includes("image/webp") && /\.(jpg|jpeg|png)$/i.test(req.path)) {
+    const webpPath = req.path.replace(/\.(jpg|jpeg|png)$/i, ".webp");
+    const fullPath = path4.join(process.cwd(), webpPath);
+    if (fs3.existsSync(fullPath)) {
+      req.url = webpPath;
+    }
+  }
+  next();
+});
 app.use((req, res, next) => {
   if (req.path.includes(".env") || req.path.includes(".git")) {
     return res.status(403).json({ message: "Access forbidden" });
@@ -1061,17 +1074,17 @@ app.use((req, res, next) => {
 });
 app.use((req, res, next) => {
   const start = Date.now();
-  const path5 = req.path;
+  const requestPath = req.path;
   let capturedJsonResponse = void 0;
   const originalResJson = res.json;
-  res.json = function(bodyJson, ...args) {
+  res.json = function(bodyJson) {
     capturedJsonResponse = bodyJson;
-    return originalResJson.apply(res, [bodyJson, ...args]);
+    return originalResJson.call(res, bodyJson);
   };
   res.on("finish", () => {
     const duration = Date.now() - start;
-    if (path5.startsWith("/api")) {
-      let logLine = `${req.method} ${path5} ${res.statusCode} in ${duration}ms`;
+    if (requestPath.startsWith("/api")) {
+      let logLine = `${req.method} ${requestPath} ${res.statusCode} in ${duration}ms`;
       if (capturedJsonResponse) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
@@ -1084,6 +1097,7 @@ app.use((req, res, next) => {
   next();
 });
 app.use("/attached_assets", express3.static(path4.resolve(import.meta.dirname, "..", "attached_assets")));
+app.use("/uploads", express3.static(path4.resolve(import.meta.dirname, "..", "uploads")));
 app.use(express3.static(path4.resolve(import.meta.dirname, "..", "client", "public")));
 (async () => {
   const server = await registerRoutes(app);

@@ -14,12 +14,12 @@
     },
     {
       "src": "/favicon.png",
-      "sizes": "192x192",
+      "sizes": "32x32",
       "type": "image/png"
     },
     {
       "src": "/apple-touch-icon.png",
-      "sizes": "180x180",
+      "sizes": "32x32",
       "type": "image/png"
     }
   ],

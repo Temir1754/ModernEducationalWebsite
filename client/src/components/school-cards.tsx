@@ -279,7 +279,7 @@ export default function SchoolCards({
 
   return (
     <section className="py-16 bg-gray-50 dark:bg-[#0f172a]" ref={sectionRef}>
-      <div className="container mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
         <div className={`
           text-center mb-12 transform transition-all duration-700
@@ -303,7 +303,7 @@ export default function SchoolCards({
             
             {/* Section 1: First 3 cards */}
             <div className="flex-none w-full snap-center">
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
                 {items.slice(0, 3).map((item, index) => (
                   <SchoolCard key={item.id} item={item} index={index} />
                 ))}
@@ -312,7 +312,7 @@ export default function SchoolCards({
 
             {/* Section 2: Next 3 cards */}
             <div className="flex-none w-full snap-center">
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
                 {items.slice(3, 6).map((item, index) => (
                   <SchoolCard key={item.id} item={item} index={index + 3} />
                 ))}
@@ -321,7 +321,7 @@ export default function SchoolCards({
 
             {/* Section 3: Last 1 card centered */}
             <div className="flex-none w-full snap-center">
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
                 <div className="lg:col-start-2">
                   {items.slice(6, 7).map((item, index) => (
                     <SchoolCard key={item.id} item={item} index={index + 6} />

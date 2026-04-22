@@ -78,8 +78,8 @@ export default function InstagramFeed({ widgetId }: InstagramFeedProps) {
   }, []);
 
   return (
-    <section className="py-16 bg-gray-50 dark:bg-[#0f172a]/50">
-      <div className="container mx-auto px-4">
+    <section className="pt-8 pb-16 bg-gray-50 dark:bg-[#0f172a]/50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center p-3 mb-4 rounded-full bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 text-white shadow-lg shadow-pink-500/20">
             <Instagram className="w-8 h-8" />
@@ -92,7 +92,7 @@ export default function InstagramFeed({ widgetId }: InstagramFeedProps) {
           </p>
         </div>
 
-        <div className="max-w-6xl mx-auto relative group">
+        <div className="max-w-7xl mx-auto relative group">
           {user?.role === "admin" && (
             <div className="absolute -top-10 right-0 z-20">
               {isEditing ? (

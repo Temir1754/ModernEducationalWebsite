@@ -1,12 +1,27 @@
 import "dotenv/config";
 import express, { type Request, Response, NextFunction } from "express";
 import path from "path";
+import fs from "fs";
+import compression from "compression";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
+app.use(compression());
 app.use(express.json({ limit: "1024mb" }));
 app.use(express.urlencoded({ limit: "1024mb", extended: false }));
+
+// WebP auto-serving middleware
+app.use((req, res, next) => {
+  if (req.header('Accept')?.includes('image/webp') && /\.(jpg|jpeg|png)$/i.test(req.path)) {
+    const webpPath = req.path.replace(/\.(jpg|jpeg|png)$/i, '.webp');
+    const fullPath = path.join(process.cwd(), webpPath);
+    if (fs.existsSync(fullPath)) {
+      req.url = webpPath;
+    }
+  }
+  next();
+});
 
 // Security middleware to block access to sensitive files
 app.use((req, res, next) => {
@@ -16,21 +31,22 @@ app.use((req, res, next) => {
   next();
 });
 
+// Request logging middleware
 app.use((req, res, next) => {
   const start = Date.now();
-  const path = req.path;
+  const requestPath = req.path;
   let capturedJsonResponse: Record<string, any> | undefined = undefined;
 
   const originalResJson = res.json;
-  res.json = function (bodyJson, ...args) {
+  res.json = function (bodyJson: any) {
     capturedJsonResponse = bodyJson;
-    return originalResJson.apply(res, [bodyJson, ...args]);
-  };
+    return originalResJson.call(res, bodyJson);
+  } as any;
 
   res.on("finish", () => {
     const duration = Date.now() - start;
-    if (path.startsWith("/api")) {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
+    if (requestPath.startsWith("/api")) {
+      let logLine = `${req.method} ${requestPath} ${res.statusCode} in ${duration}ms`;
       if (capturedJsonResponse) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }

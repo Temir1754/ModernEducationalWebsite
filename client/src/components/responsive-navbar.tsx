@@ -86,77 +86,65 @@ const ResponsiveNavbar = () => {
       <motion.nav
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         className={`navbar fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
-          ? 'bg-white/70 dark:bg-[#0f172a]/70 backdrop-blur-xl shadow-2xl border-b border-gray-200/20 dark:border-blue-500/20'
-          : 'bg-gradient-to-r from-blue-600 via-blue-700 to-purple-700 dark:from-blue-800 dark:via-purple-800 dark:to-indigo-800'
+          ? 'bg-white/70 dark:bg-[#0f172a]/70 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] border-b border-white/20 dark:border-blue-500/10'
+          : 'bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 dark:from-blue-800 dark:via-indigo-800 dark:to-blue-900 shadow-lg'
           }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-20">
+          <div className="flex items-center justify-between h-20 sm:h-24">
 
-            {/* Logo with Poppins font */}
-            {/* Logo area with strict hover reset */}
-            <style>
-              {`
-                #logo-link, #logo-link *, #logo-link:hover, #logo-link:hover * {
-                  filter: none !important;
-                  -webkit-filter: none !important;
-                  box-shadow: none !important;
-                  text-shadow: none !important;
-                  brightness: 100% !important;
-                }
-              `}
-            </style>
+            {/* Logo area */}
             <Link href="/" id="logo-link">
               <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
+                initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                className="cursor-pointer flex-shrink-0 transition-transform active:scale-95"
+                whileHover={{ scale: 1.05, filter: "brightness(1.1)" }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="cursor-pointer flex-shrink-0 transition-all active:scale-95"
               >
                 <img
                   src="/logo.png"
                   alt="FGS Logo"
-                  className="h-10 sm:h-12 lg:h-16 w-auto max-w-[150px] sm:max-w-none object-contain"
+                  className="h-12 sm:h-14 lg:h-20 w-auto object-contain drop-shadow-md"
                   data-testid="nav-logo"
                 />
               </motion.div>
             </Link>
 
-            {/* Desktop Navigation Links with staggered animation */}
-            <div className="hidden lg:flex items-center justify-center gap-2 flex-1 px-8">
+            {/* Desktop Navigation Links */}
+            <div className="hidden lg:flex items-center justify-center gap-1 flex-1 px-8">
               {visibleNavigation.map((item, index) => (
                 <motion.div
                   key={item.href}
-                  initial={{ y: -20, opacity: 0 }}
+                  initial={{ y: -10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{
                     duration: 0.4,
-                    delay: 0.1 + (index * 0.05),
-                    ease: "easeOut"
+                    delay: 0.1 + (index * 0.03),
                   }}
                 >
                   <Link href={item.href}>
                     <span
                       data-testid={`nav-link-${item.label.toLowerCase().replace(/ /g, '-')}`}
-                      className={`group relative px-4 py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 cursor-pointer whitespace-nowrap block ${isActiveRoute(item.href)
+                      className={`group relative px-4 py-2 font-bold text-[13px] tracking-wide transition-all duration-300 cursor-pointer whitespace-nowrap block rounded-full ${isActiveRoute(item.href)
                         ? isScrolled
-                          ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg scale-105'
-                          : 'bg-white/20 text-white backdrop-blur-sm shadow-lg scale-105'
+                          ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 shadow-sm'
+                          : 'text-white bg-white/20 backdrop-blur-md shadow-md ring-1 ring-white/30'
                         : isScrolled
-                          ? 'text-gray-700 dark:text-gray-300 hover:scale-110'
-                          : 'text-white/90 hover:scale-110'
+                          ? 'text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100/50 dark:hover:bg-slate-800/50'
+                          : 'text-white/80 hover:text-white hover:bg-white/10'
                         }`}
                     >
-                      {/* Gradient hover effect */}
-                      {!isActiveRoute(item.href) && (
-                        <span className={`absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${isScrolled
-                          ? 'bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30'
-                          : 'bg-white/10 backdrop-blur-sm'
-                          }`} />
-                      )}
                       <span className="relative z-10">{item.label}</span>
+                      {/* Active indicator dot */}
+                      {isActiveRoute(item.href) && (
+                        <motion.span 
+                          layoutId="nav-dot"
+                          className={`absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full ${isScrolled ? 'bg-blue-600 dark:bg-blue-400' : 'bg-white'}`}
+                        />
+                      )}
                     </span>
                   </Link>
                 </motion.div>
