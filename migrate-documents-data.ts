@@ -27,7 +27,7 @@ async function migrate() {
     // 2. \N (nulls)
     // Separated by tabs
     const parts: string[] = [];
-    const regex = /"([^"]*)"|\\N/g;
+    const regex = /"((?:\\.|[^"\\])*)"|\\N/g;
     let match;
     while ((match = regex.exec(line)) !== null) {
       if (match[1] !== undefined) {
