@@ -12,9 +12,10 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
 import { queryClient } from "@/lib/queryClient";
 import type { Media } from "@shared/schema";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function GalleryPage() {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: false,
     align: "start",
@@ -34,7 +35,6 @@ export default function GalleryPage() {
     queryKey: ["/api/media", "gallery"],
     queryFn: async () => {
       const res = await fetch("/api/media?section=gallery");
-      // Fallback if section filtering isn't strict yet or if we want all
       if (!res.ok) return [];
       const data = await res.json();
       return data.filter((m: any) => m.section === "gallery" || !m.section);
@@ -79,10 +79,25 @@ export default function GalleryPage() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      await fetch(`/api/media/${id}`, { method: "DELETE" });
+      console.log("Attempting to delete media with ID:", id);
+      const res = await fetch(`/api/media/${id}`, { method: "DELETE" });
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message || "Удаление не удалось");
+      }
+      return res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/media"] });
+      console.log("Media deleted successfully");
+    },
+    onError: (error: Error) => {
+      console.error("Delete error:", error);
+      if (error.message.includes("Unauthorized")) {
+        alert("Қате: Сессияңыз аяқталды. Қайта кіру үшін /admin бетіне өтіңіз.");
+      } else {
+        alert("Қате: " + error.message);
+      }
     }
   });
 
@@ -107,6 +122,27 @@ export default function GalleryPage() {
     setEditingMediaId(media.id);
     setEditCaption(media.caption || "");
   };
+
+  const handleNext = useCallback(() => {
+    if (selectedIndex === null || mediaItems.length === 0) return;
+    setSelectedIndex((selectedIndex + 1) % mediaItems.length);
+  }, [selectedIndex, mediaItems]);
+
+  const handlePrev = useCallback(() => {
+    if (selectedIndex === null || mediaItems.length === 0) return;
+    setSelectedIndex((selectedIndex - 1 + mediaItems.length) % mediaItems.length);
+  }, [selectedIndex, mediaItems]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (selectedIndex === null) return;
+      if (e.key === "ArrowRight") handleNext();
+      if (e.key === "ArrowLeft") handlePrev();
+      if (e.key === "Escape") setSelectedIndex(null);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedIndex, handleNext, handlePrev]);
 
   const [prevBtnEnabled, setPrevBtnEnabled] = useState(false);
   const [nextBtnEnabled, setNextBtnEnabled] = useState(false);
@@ -157,26 +193,44 @@ export default function GalleryPage() {
                       Фото қосу
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="bg-white">
+                  <DialogContent className="bg-white dark:bg-slate-900 border-none shadow-2xl max-w-md w-[95vw]">
                     <DialogHeader>
-                      <DialogTitle className="text-gray-900">Фото жүктеу</DialogTitle>
-                      <DialogDescription className="text-gray-500">
+                      <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-white">Фото жүктеу</DialogTitle>
+                      <DialogDescription className="text-gray-500 dark:text-gray-400">
                         Галереяға жаңа фотосурет жүктеңіз.
                       </DialogDescription>
                     </DialogHeader>
-                    <form onSubmit={(e) => uploadMutation.mutate(e)} className="space-y-4">
-                      <div className="space-y-2">
-                        <Label className="text-gray-900">Фото таңдау</Label>
-                        <Input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => setUploadFile(e.target.files?.[0] || null)}
-                          required
-                        />
+                    <form onSubmit={(e) => uploadMutation.mutate(e)} className="space-y-6 pt-4">
+                      <div className="space-y-3">
+                        <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Фото таңдау</Label>
+                        <div className="relative">
+                          <Input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => setUploadFile(e.target.files?.[0] || null)}
+                            required
+                            className="bg-gray-50 dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-900 dark:text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer h-12 flex items-center"
+                          />
+                        </div>
+                        {uploadFile && (
+                          <p className="text-xs text-blue-500 font-medium animate-pulse">
+                            Файл таңдалды: {uploadFile.name}
+                          </p>
+                        )}
                       </div>
-                      <Button type="submit" disabled={uploadMutation.isPending || !uploadFile} className="w-full">
-                        {uploadMutation.isPending && <Loader2 className="animate-spin mr-2" />}
-                        Жүктеу
+                      <Button 
+                        type="submit" 
+                        disabled={uploadMutation.isPending || !uploadFile} 
+                        className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-500/20 transition-all active:scale-[0.98]"
+                      >
+                        {uploadMutation.isPending ? (
+                          <>
+                            <Loader2 className="animate-spin mr-2 h-5 w-5" />
+                            Жүктелуде...
+                          </>
+                        ) : (
+                          "Жүктеу"
+                        )}
                       </Button>
                     </form>
                   </DialogContent>
@@ -243,7 +297,7 @@ export default function GalleryPage() {
                     >
                       <div
                         className="relative group cursor-pointer h-[400px] lg:h-[350px]"
-                        onClick={() => setSelectedImage(media.url)}
+                        onClick={() => setSelectedIndex(index)}
                       >
                         <img
                           src={media.url}
@@ -258,8 +312,9 @@ export default function GalleryPage() {
                             <Button
                               variant="secondary"
                               size="icon"
-                              className="absolute top-2 right-14 z-20 opacity-0 group-hover:opacity-100 transition-opacity"
+                              className="absolute top-2 right-14 z-30 opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110 active:scale-90"
                               onClick={(e) => {
+                                e.preventDefault();
                                 e.stopPropagation();
                                 handleEditCaption(media);
                               }}
@@ -269,10 +324,14 @@ export default function GalleryPage() {
                             <Button
                               variant="destructive"
                               size="icon"
-                              className="absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity"
+                              className="absolute top-2 right-2 z-30 opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110 active:scale-90"
                               onClick={(e) => {
+                                e.preventDefault();
                                 e.stopPropagation();
-                                if (confirm("Өшіру керек пе?")) deleteMutation.mutate(media.id);
+                                console.log("Delete button clicked for media:", media.id);
+                                if (window.confirm("Бұл суретті өшіруді растайсыз ба? (Confirm delete?)")) {
+                                  deleteMutation.mutate(media.id);
+                                }
                               }}
                             >
                               <Trash2 className="w-4 h-4" />
@@ -313,7 +372,7 @@ export default function GalleryPage() {
             {mediaItems.length > 0 && (
               <div className="lg:hidden text-center mt-6">
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  ← Свайпните для просмотра →
+                  ← Көру үшін сырғытыңыз →
                 </p>
               </div>
             )}
@@ -329,21 +388,65 @@ export default function GalleryPage() {
         </div>
       </div>
 
-      {/* Image Modal Dialog */}
-      <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
-        <DialogContent className="max-w-7xl w-full p-0 bg-transparent border-none" aria-describedby={undefined}>
+      {/* Image Modal Dialog (Lightbox) */}
+      <Dialog open={selectedIndex !== null} onOpenChange={() => setSelectedIndex(null)}>
+        <DialogContent className="max-w-[100vw] w-screen h-screen p-0 bg-black/95 border-none flex flex-col items-center justify-center" aria-describedby={undefined}>
           <DialogTitle className="sr-only">Суретті толық көлемде көру</DialogTitle>
-          <div className="relative">
-            <DialogClose className="absolute -top-12 right-0 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full p-2 hover:bg-white dark:hover:bg-gray-700 transition-colors z-50">
-              <X className="w-6 h-6 text-gray-800 dark:text-gray-100" />
+          
+          <div className="relative w-full h-full flex items-center justify-center">
+            {/* Close Button */}
+            <DialogClose className="absolute top-6 right-6 bg-white/10 backdrop-blur-md rounded-full p-3 text-white hover:bg-white/20 transition-all z-50">
+              <X className="w-8 h-8" />
             </DialogClose>
-            {selectedImage && (
-              <img
-                src={selectedImage}
-                alt="Үлкейтілген сурет"
-                className="w-full h-auto max-h-[90vh] object-contain rounded-lg"
-              />
-            )}
+
+            {/* Previous Arrow */}
+            <button
+              onClick={(e) => { e.stopPropagation(); handlePrev(); }}
+              className="absolute left-4 sm:left-10 z-50 p-4 rounded-full bg-white/5 hover:bg-white/10 text-white transition-all transform hover:scale-110 active:scale-95"
+            >
+              <ChevronLeft className="w-10 h-10" />
+            </button>
+
+            {/* Image Container */}
+            <div className="w-full h-full p-4 flex flex-col items-center justify-center select-none">
+              <AnimatePresence mode="wait">
+                {selectedIndex !== null && mediaItems[selectedIndex] && (
+                  <motion.div 
+                    key={selectedIndex}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.2 }}
+                    className="relative max-w-5xl max-h-[85vh] group flex flex-col items-center"
+                  >
+                    <img
+                      src={mediaItems[selectedIndex].url}
+                      alt={mediaItems[selectedIndex].caption || "Үлкейтілген сурет"}
+                      className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
+                    />
+                    {mediaItems[selectedIndex].caption && (
+                      <div className="absolute -bottom-16 left-0 right-0 text-center">
+                        <p className="text-white text-lg font-medium drop-shadow-md">
+                          {mediaItems[selectedIndex].caption}
+                        </p>
+                      </div>
+                    )}
+                    {/* Counter */}
+                    <div className="absolute -top-10 left-1/2 -translate-x-1/2 text-white/60 font-mono text-sm">
+                      {selectedIndex + 1} / {mediaItems.length}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Next Arrow */}
+            <button
+              onClick={(e) => { e.stopPropagation(); handleNext(); }}
+              className="absolute right-4 sm:right-10 z-50 p-4 rounded-full bg-white/5 hover:bg-white/10 text-white transition-all transform hover:scale-110 active:scale-95"
+            >
+              <ChevronRight className="w-10 h-10" />
+            </button>
           </div>
         </DialogContent>
       </Dialog>

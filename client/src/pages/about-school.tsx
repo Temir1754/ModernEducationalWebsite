@@ -16,9 +16,25 @@ import {
   Utensils,
   Laptop,
   Star,
-  CheckCircle2
+  CheckCircle2,
+  Plus,
+  Trash2,
+  Loader2,
+  X,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 import SEOHead from "@/components/seo-head";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { useAuth } from "@/hooks/use-auth";
+import { queryClient } from "@/lib/queryClient";
+import type { Media } from "@shared/schema";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription, DialogClose } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 // Animated Number Component
 function AnimatedNumber({ end, duration = 2000 }: { end: number; duration?: number }) {
@@ -96,32 +112,85 @@ export default function AboutSchoolPage() {
 
     return () => observer.disconnect();
   }, []);
-  const schoolPhotos = [
-    {
-      url: "/gallery/school-life.jpg",
-      title: "Мектеп өмірі"
-    },
-    {
-      url: "/gallery/nis-prep.jpg",
-      title: "НИШ дайындық сабақтары"
-    },
-    {
-      url: "/gallery/untitled-2318_1760366037457.jpg",
-      title: "Салтанатты іс-шаралар"
-    },
-    {
-      url: "/gallery/untitled-2321_1760368464143.jpg",
-      title: "Жетістіктеріміз"
-    },
-    {
-      url: "/gallery/chess.jpg",
-      title: "Шахмат үйірмесі"
-    },
-    {
-      url: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800",
-      title: "Робототехника"
+  const { user } = useAuth();
+  const [isUploadOpen, setIsUploadOpen] = useState(false);
+  const [uploadFile, setUploadFile] = useState<File | null>(null);
+  const [uploadTitle, setUploadTitle] = useState("");
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
+
+  const { data: schoolPhotos = [], isLoading: isGalleryLoading } = useQuery<Media[]>({
+    queryKey: ["/api/media", "about-school"],
+    queryFn: async () => {
+      const res = await fetch("/api/media?section=about-school");
+      if (!res.ok) return [];
+      return res.json();
     }
-  ];
+  });
+
+  const uploadMutation = useMutation({
+    mutationFn: async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!uploadFile) return;
+
+      const formData = new FormData();
+      formData.append("file", uploadFile);
+
+      const uploadRes = await fetch("/api/upload", { method: "POST", body: formData });
+      if (!uploadRes.ok) throw new Error("Жүктеу сәтсіз аяқталды");
+      const { url } = await uploadRes.json();
+
+      const mediaRes = await fetch("/api/media", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "image",
+          url,
+          caption: uploadTitle,
+          section: "about-school"
+        }),
+      });
+
+      if (!mediaRes.ok) throw new Error("Сақтау мүмкін болмады");
+      return mediaRes.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/media", "about-school"] });
+      setIsUploadOpen(false);
+      setUploadFile(null);
+      setUploadTitle("");
+    }
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const res = await fetch(`/api/media/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Өшіру мүмкін болмады");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/media", "about-school"] });
+    }
+  });
+
+  const handleNext = useCallback(() => {
+    if (selectedImageIndex === null || schoolPhotos.length === 0) return;
+    setSelectedImageIndex((selectedImageIndex + 1) % schoolPhotos.length);
+  }, [selectedImageIndex, schoolPhotos]);
+
+  const handlePrev = useCallback(() => {
+    if (selectedImageIndex === null || schoolPhotos.length === 0) return;
+    setSelectedImageIndex((selectedImageIndex - 1 + schoolPhotos.length) % schoolPhotos.length);
+  }, [selectedImageIndex, schoolPhotos]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (selectedImageIndex === null) return;
+      if (e.key === "ArrowRight") handleNext();
+      if (e.key === "ArrowLeft") handlePrev();
+      if (e.key === "Escape") setSelectedImageIndex(null);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedImageIndex, handleNext, handlePrev]);
 
   return (
     <>
@@ -185,49 +254,155 @@ export default function AboutSchoolPage() {
           </div>
         </div>
 
-        {/* Main Content */}
+        {/* Photo Gallery with Animation */}
         <div id="gallery" className="container mx-auto px-4 pt-12 pb-12 scroll-mt-24">
           
-        {/* Page Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-3xl md:text-5xl font-bold text-center mb-6 text-gray-800 dark:text-gray-100" style={{ fontFamily: "'Poppins', sans-serif" }}>
-            Мектеп <span className="text-blue-500">туралы</span>
-          </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
-            FGS мектебінің тарихы, құндылықтары мен заманауи мүмкіндіктері
-          </p>
-        </div>
-
-        {/* Photo Gallery with Animation */}
-        <div className="mb-16 fade-in-delay-100">
-
+          {/* Page Header */}
+          <div className="text-center mb-16">
+            <h1 className="text-3xl md:text-5xl font-bold text-center mb-6 text-gray-800 dark:text-gray-100" style={{ fontFamily: "'Poppins', sans-serif" }}>
+              Мектеп <span className="text-blue-500">туралы</span>
+            </h1>
+            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
+              FGS мектебінің тарихы, құндылықтары мен заманауи мүмкіндіктері
+            </p>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              {schoolPhotos.map((photo, index) => (
-                <div
-                  key={index}
-                  className="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2"
-                  data-testid={`photo-${index}`}
-                >
-                  <div className="aspect-[4/3] overflow-hidden bg-gray-200 dark:bg-gray-700">
-                    <img
-                      src={photo.url}
-                      alt={photo.title}
-                      className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
-                    />
-                  </div>
-                  
-                  {/* Caption on hover */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
-                    <div className="p-6 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                      <h3 className="text-white font-semibold text-lg" style={{ fontFamily: "'Inter', sans-serif" }}>
-                        {photo.title}
-                      </h3>
+            {/* Admin Upload Button */}
+            {user && (
+              <div className="mt-8">
+                <Dialog open={isUploadOpen} onOpenChange={setIsUploadOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="bg-blue-600 hover:bg-blue-700">
+                      <Plus className="w-4 h-4 mr-2" />
+                      Фото қосу
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="bg-white dark:bg-[#0f172a] border-none shadow-[0_0_50px_rgba(0,0,0,0.3)] max-w-md w-[95vw] rounded-[2rem] overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500" />
+                    <DialogHeader className="pt-6">
+                      <DialogTitle className="text-2xl font-black text-gray-900 dark:text-white text-center">Фото жүктеу</DialogTitle>
+                      <DialogDescription className="text-center text-gray-500 dark:text-gray-400">
+                        Бөлімге жаңа фотосурет қосыңыз
+                      </DialogDescription>
+                    </DialogHeader>
+                    <form onSubmit={(e) => uploadMutation.mutate(e)} className="space-y-6 pt-4 pb-4">
+                      <div className="space-y-3">
+                        <Label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Фото таңдаңыз</Label>
+                        <div className="relative group/input">
+                          <Input
+                            type="file"
+                            id="school-photo-upload"
+                            accept="image/*"
+                            onChange={(e) => setUploadFile(e.target.files?.[0] || null)}
+                            required
+                            className="hidden"
+                          />
+                          <label 
+                            htmlFor="school-photo-upload"
+                            className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 dark:border-blue-500/30 rounded-2xl bg-gray-50 dark:bg-blue-900/10 hover:bg-gray-100 dark:hover:bg-blue-900/20 hover:border-blue-500 transition-all cursor-pointer group"
+                          >
+                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                              <Plus className="w-8 h-8 text-gray-400 group-hover:text-blue-500 transition-colors mb-2" />
+                              <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                                {uploadFile ? uploadFile.name : "Файлды таңдау үшін басыңыз"}
+                              </p>
+                              <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                                PNG, JPG немесе WEBP (макс. 10MB)
+                              </p>
+                            </div>
+                          </label>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <Label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Тақырыбы (міндетті емес)</Label>
+                        <Input
+                          value={uploadTitle}
+                          onChange={(e) => setUploadTitle(e.target.value)}
+                          placeholder="Мысалы: Робототехника сабағы"
+                          className="h-12 bg-gray-50 dark:bg-blue-900/10 border-gray-200 dark:border-blue-500/20 rounded-xl focus:ring-2 focus:ring-blue-500 transition-all text-gray-900 dark:text-white"
+                        />
+                      </div>
+
+                      <Button 
+                        type="submit" 
+                        disabled={uploadMutation.isPending || !uploadFile} 
+                        className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-blue-500/20 transform active:scale-[0.98] transition-all"
+                      >
+                        {uploadMutation.isPending ? (
+                          <>
+                            <Loader2 className="animate-spin mr-2 h-5 w-5" />
+                            Жүктелуде...
+                          </>
+                        ) : (
+                          "Жүктеу"
+                        )}
+                      </Button>
+                    </form>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            )}
+          </div>
+
+          <div className="mb-16 fade-in-delay-100">
+            {isGalleryLoading ? (
+              <div className="flex justify-center py-20">
+                <Loader2 className="w-10 h-10 animate-spin text-blue-500" />
+              </div>
+            ) : schoolPhotos.length === 0 ? (
+              <div className="text-center py-20 text-gray-500">
+                Суреттер әзірге жоқ. Админ панель арқылы қосыңыз.
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                {schoolPhotos.map((photo, index) => (
+                  <div
+                    key={photo.id}
+                    className="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2"
+                  >
+                    <div 
+                      className="aspect-[4/3] overflow-hidden bg-gray-200 dark:bg-gray-700 cursor-pointer"
+                      onClick={() => setSelectedImageIndex(index)}
+                    >
+                      <img
+                        src={photo.url}
+                        alt={photo.caption || "Мектеп суреті"}
+                        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                      />
+                    </div>
+                    
+                    {/* Admin Delete Button */}
+                    {user && (
+                      <Button
+                        variant="destructive"
+                        size="icon"
+                        className="absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (confirm("Өшіруді растайсыз ба?")) {
+                            deleteMutation.mutate(photo.id);
+                          }
+                        }}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    )}
+
+                    {/* Caption on hover */}
+                    <div 
+                      className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end cursor-pointer"
+                      onClick={() => setSelectedImageIndex(index)}
+                    >
+                      <div className="p-6 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                        <h3 className="text-white font-semibold text-lg" style={{ fontFamily: "'Inter', sans-serif" }}>
+                          {photo.caption}
+                        </h3>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* School Statistics Section - Moved from Students Page with Premium Style */}
@@ -428,6 +603,68 @@ export default function AboutSchoolPage() {
 
         </div>
       </div>
+      {/* Image Modal Dialog (Lightbox) */}
+      <Dialog open={selectedImageIndex !== null} onOpenChange={() => setSelectedImageIndex(null)}>
+        <DialogContent className="max-w-[100vw] w-screen h-screen p-0 bg-black/95 border-none flex flex-col items-center justify-center" aria-describedby={undefined}>
+          <DialogTitle className="sr-only">Суретті толық көлемде көру</DialogTitle>
+          
+          <div className="relative w-full h-full flex items-center justify-center">
+            {/* Close Button */}
+            <DialogClose className="absolute top-6 right-6 bg-white/10 backdrop-blur-md rounded-full p-3 text-white hover:bg-white/20 transition-all z-50">
+              <X className="w-8 h-8" />
+            </DialogClose>
+
+            {/* Previous Arrow */}
+            <button
+              onClick={(e) => { e.stopPropagation(); handlePrev(); }}
+              className="absolute left-4 sm:left-10 z-50 p-4 rounded-full bg-white/5 hover:bg-white/10 text-white transition-all transform hover:scale-110 active:scale-95"
+            >
+              <ChevronLeft className="w-10 h-10" />
+            </button>
+
+            {/* Image Container */}
+            <div className="w-full h-full p-4 flex flex-col items-center justify-center select-none">
+              <AnimatePresence mode="wait">
+                {selectedImageIndex !== null && schoolPhotos[selectedImageIndex] && (
+                  <motion.div 
+                    key={selectedImageIndex}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.2 }}
+                    className="relative max-w-5xl max-h-[85vh] group flex flex-col items-center"
+                  >
+                    <img
+                      src={schoolPhotos[selectedImageIndex].url}
+                      alt={schoolPhotos[selectedImageIndex].caption || "Үлкейтілген сурет"}
+                      className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
+                    />
+                    {schoolPhotos[selectedImageIndex].caption && (
+                      <div className="absolute -bottom-16 left-0 right-0 text-center">
+                        <p className="text-white text-lg font-medium drop-shadow-md">
+                          {schoolPhotos[selectedImageIndex].caption}
+                        </p>
+                      </div>
+                    )}
+                    {/* Counter */}
+                    <div className="absolute -top-10 left-1/2 -translate-x-1/2 text-white/60 font-mono text-sm">
+                      {selectedImageIndex + 1} / {schoolPhotos.length}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Next Arrow */}
+            <button
+              onClick={(e) => { e.stopPropagation(); handleNext(); }}
+              className="absolute right-4 sm:right-10 z-50 p-4 rounded-full bg-white/5 hover:bg-white/10 text-white transition-all transform hover:scale-110 active:scale-95"
+            >
+              <ChevronRight className="w-10 h-10" />
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

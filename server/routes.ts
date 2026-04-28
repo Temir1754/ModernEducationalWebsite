@@ -77,6 +77,10 @@ declare module "express-session" {
 
 const requireAdmin = (req: Request, res: Response, next: NextFunction) => {
   if (!req.session.userId || !req.session.isAdmin) {
+    console.warn(`[Auth Warning] Unauthorized access attempt to ${req.method} ${req.path}. Session:`, {
+      hasUserId: !!req.session.userId,
+      isAdmin: req.session.isAdmin
+    });
     return res.status(401).json({ message: "Unauthorized" });
   }
   next();
@@ -324,10 +328,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.delete("/api/media/:id", requireAdmin, async (req, res) => {
     try {
-      await storage.deleteMedia(req.params.id);
+      const { id } = req.params;
+      console.log(`[Media Delete] Request to delete ID: ${id} by user: ${req.session.userId}`);
+      
+      const mediaItem = await storage.getMedia(undefined, undefined);
+      const exists = mediaItem.find(m => m.id === id);
+      
+      if (!exists) {
+        console.warn(`[Media Delete] Media with ID ${id} not found in database`);
+        return res.status(404).json({ message: "Media not found" });
+      }
+
+      await storage.deleteMedia(id);
+      console.log(`[Media Delete] Successfully deleted ID: ${id}`);
       res.json({ message: "Media deleted" });
     } catch (error) {
-      res.status(500).json({ message: "Failed to delete media" });
+      console.error(`[Media Delete] Error deleting ID ${req.params.id}:`, error);
+      res.status(500).json({ message: "Failed to delete media", error: String(error) });
     }
   });
 
