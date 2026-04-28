@@ -66,7 +66,7 @@ export default function AdministrationPage() {
       {/* Sub-Navigation Menu */}
       <div className="sticky top-[64px] sm:top-[80px] lg:top-[96px] z-30 bg-white/90 dark:bg-[#0f172a]/95 backdrop-blur-xl border-b border-gray-200 dark:border-blue-500/20 shadow-lg transition-all duration-500">
         <div className="container mx-auto px-4">
-          <nav className="flex items-center justify-start md:justify-center space-x-1 py-3 whitespace-nowrap overflow-x-auto scrollbar-hide w-full">
+          <nav className="flex items-center justify-start md:justify-center space-x-1 py-3 whitespace-nowrap overflow-x-auto scrollbar-hide w-full [&>*]:shrink-0">
             <button
               onClick={() => document.getElementById('directors')?.scrollIntoView({ behavior: 'smooth' })}
               className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
