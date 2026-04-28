@@ -202,6 +202,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     next();
   }, express.static(uploadDir));
 
+  // Serve static assets from client/public/attached_assets and client/public/gallery
+  const attachedAssetsDir = path.join(process.cwd(), "client", "public", "attached_assets");
+  const galleryDir = path.join(process.cwd(), "client", "public", "gallery");
+  
+  if (fs.existsSync(attachedAssetsDir)) {
+    app.use("/attached_assets", express.static(attachedAssetsDir));
+  }
+  if (fs.existsSync(galleryDir)) {
+    app.use("/gallery", express.static(galleryDir));
+  }
+
   app.post("/api/upload", requireAdmin, (req, res) => {
     console.log("[Upload API] Initiating upload...");
     upload.single("file")(req, res, (err: any) => {
