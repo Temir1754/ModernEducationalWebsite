@@ -49,10 +49,7 @@ body::-webkit-scrollbar {
   margin-bottom: 0 !important;
 }
 
-.main-container {
-  margin-top: 80px !important;
-  padding-top: 0 !important;
-}
+
 
 /* Custom Scrollbar Styles */
 @layer utilities {
