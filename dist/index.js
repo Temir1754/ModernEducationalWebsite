@@ -60,6 +60,7 @@ var events = sqliteTable("events", {
   title: text("title").notNull(),
   dateText: text("date_text").notNull(),
   description: text("description").notNull(),
+  academicYear: text("academic_year").notNull().default("2025-2026"),
   mediaUrl: text("media_url"),
   mediaType: text("media_type"),
   createdAt: integer("created_at", { mode: "timestamp" }).default(/* @__PURE__ */ new Date())
@@ -67,6 +68,8 @@ var events = sqliteTable("events", {
 var insertEventSchema = createInsertSchema(events).omit({
   id: true,
   createdAt: true
+}).extend({
+  academicYear: z.string().optional()
 });
 var media = sqliteTable("media", {
   id: text("id").primaryKey(),
@@ -91,11 +94,14 @@ var documents = sqliteTable("documents", {
   scanUrl: text("scan_url"),
   color: text("color"),
   icon: text("icon"),
+  academicYear: text("academic_year").default("2025-2026"),
   createdAt: integer("created_at", { mode: "timestamp" }).default(/* @__PURE__ */ new Date())
 });
 var insertDocumentSchema = createInsertSchema(documents).omit({
   id: true,
   createdAt: true
+}).extend({
+  academicYear: z.string().optional()
 });
 var teachers = sqliteTable("teachers", {
   id: text("id").primaryKey(),
@@ -578,6 +584,14 @@ async function registerRoutes(app2) {
     res.setHeader("Cache-Control", "public, max-age=31536000");
     next();
   }, express.static(uploadDir));
+  const attachedAssetsDir = path.join(process.cwd(), "client", "public", "attached_assets");
+  const galleryDir = path.join(process.cwd(), "client", "public", "gallery");
+  if (fs.existsSync(attachedAssetsDir)) {
+    app2.use("/attached_assets", express.static(attachedAssetsDir));
+  }
+  if (fs.existsSync(galleryDir)) {
+    app2.use("/gallery", express.static(galleryDir));
+  }
   app2.post("/api/upload", requireAdmin, (req, res) => {
     console.log("[Upload API] Initiating upload...");
     upload.single("file")(req, res, (err) => {
