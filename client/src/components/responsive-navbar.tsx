@@ -87,13 +87,13 @@ const ResponsiveNavbar = () => {
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className={`navbar fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
+        className={`navbar h-16 sm:h-20 lg:h-24 fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
           ? 'bg-white/70 dark:bg-[#0f172a]/70 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] border-b border-white/20 dark:border-blue-500/10'
           : 'bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 dark:from-blue-800 dark:via-indigo-800 dark:to-blue-900 shadow-lg'
           }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-20 sm:h-24">
+          <div className="flex items-center justify-between h-16 sm:h-20 lg:h-24">
 
             {/* Logo area */}
             <Link href="/" id="logo-link">
@@ -102,12 +102,12 @@ const ResponsiveNavbar = () => {
                 animate={{ scale: 1, opacity: 1 }}
                 whileHover={{ scale: 1.05, filter: "brightness(1.1)" }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
-                className="cursor-pointer flex-shrink-0 transition-all active:scale-95"
+                className="cursor-pointer flex-shrink-0 transition-all active:scale-95 flex items-center"
               >
                 <img
                   src="/logo.png"
                   alt="FGS Logo"
-                  className="h-12 sm:h-14 lg:h-20 w-auto object-contain drop-shadow-md"
+                  className="h-10 sm:h-12 lg:h-16 w-auto object-contain drop-shadow-md"
                   data-testid="nav-logo"
                 />
               </motion.div>
@@ -281,7 +281,7 @@ const ResponsiveNavbar = () => {
             exit={{ x: "100%", opacity: 0 }}
             transition={{ duration: 0.4, ease: "easeInOut" }}
             data-testid="mobile-contact-dropdown"
-            className="lg:hidden fixed top-20 right-0 bottom-0 w-80 max-w-[85vw] bg-white/95 dark:bg-[#1a1c23]/95 backdrop-blur-xl shadow-2xl z-50 overflow-y-auto"
+            className="lg:hidden fixed top-16 sm:top-20 right-0 bottom-0 w-80 max-w-[85vw] bg-white/95 dark:bg-[#1a1c23]/95 backdrop-blur-xl shadow-2xl z-50 overflow-y-auto"
           >
             {/* Mobile Menu Content */}
             <div className="p-6 space-y-6">

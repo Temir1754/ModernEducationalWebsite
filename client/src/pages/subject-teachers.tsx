@@ -83,19 +83,9 @@ export default function SubjectTeachersPage() {
       {/* Header */}
       <section className="bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 py-12 pt-20">
         <div className="container mx-auto px-4">
-          <div className="flex items-center mb-6">
-            <Link href="/">
-              <Button variant="outline" className="mr-4 border-gray-300 dark:border-gray-600 bg-white dark:bg-[#1e293b] text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Басты бетке қайту
-              </Button>
-            </Link>
-          </div>
+          
           
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-4">
-              Пән мұғалімдері
-            </h1>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
               Әртүрлі пәндер бойынша мамандандырылған тәжірибелі мұғалімдер
             </p>

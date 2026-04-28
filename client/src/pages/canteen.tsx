@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Link } from "wouter";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   Utensils, 
   Clock, 
@@ -21,8 +21,10 @@ import {
   AlertTriangle,
   ArrowLeft,
   X,
-  Loader2
+  Loader2,
+  ChevronDown
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogClose, DialogTitle } from "@/components/ui/dialog";
 import type { Media } from "@shared/schema";
@@ -30,6 +32,33 @@ import type { Media } from "@shared/schema";
 const CanteenPage = () => {
   const [selectedWeek, setSelectedWeek] = useState(1);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [activeSection, setActiveSection] = useState<string>("");
+
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: '-150px 0px -70% 0px',
+      threshold: 0
+    };
+
+    const handleIntersect = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(handleIntersect, observerOptions);
+    const sections = ['menu', 'schedule', 'gallery', 'norms', 'faq'];
+    
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   const { data: canteenMedia = [], isLoading } = useQuery<Media[]>({
     queryKey: ["/api/media", "canteen"],
@@ -209,33 +238,91 @@ const CanteenPage = () => {
 
       <div className="min-h-screen bg-gray-50 dark:bg-[#0f172a]">
         {/* Header with Back Button - Enhanced for mobile */}
-        <div className="bg-white dark:bg-[#1e293b] shadow-sm border-b dark:border-gray-700">
-          <div className="container mx-auto px-4 py-4">
-            <div className="flex items-center justify-between">
-              <Link 
-                href="/"
-                className="flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors duration-200 bg-blue-50 dark:bg-[#1e293b] hover:bg-blue-100 dark:hover:bg-slate-700 px-3 py-2 rounded-lg shadow-sm"
+        
+
+        {/* Sub-Navigation Menu */}
+        <div className="sticky top-[64px] sm:top-[80px] lg:top-[96px] z-30 bg-white/90 dark:bg-[#0f172a]/95 backdrop-blur-xl border-b border-gray-200 dark:border-blue-500/20 shadow-lg transition-all duration-500">
+          <div className="container mx-auto px-4">
+            <nav className="flex items-center justify-start md:justify-center space-x-1 py-3 whitespace-nowrap overflow-x-auto scrollbar-hide w-full">
+              <button
+                onClick={() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })}
+                className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
+                  activeSection === 'menu' 
+                  ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
+                  : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
+                }`}
               >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                <span className="hidden sm:inline">Басты бетке оралу</span>
-                <span className="sm:hidden">Басты бет</span>
-              </Link>
-              <h1 className="text-lg sm:text-2xl font-bold text-gray-800 dark:text-gray-100">Мектеп асханасы</h1>
-            </div>
+                Апталық мәзір
+                <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'menu' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
+              </button>
+
+              <button
+                onClick={() => document.getElementById('schedule')?.scrollIntoView({ behavior: 'smooth' })}
+                className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
+                  activeSection === 'schedule' 
+                  ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
+                  : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
+                }`}
+              >
+                Жұмыс кестесі
+                <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'schedule' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
+              </button>
+
+              <button
+                onClick={() => document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' })}
+                className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
+                  activeSection === 'gallery' 
+                  ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
+                  : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
+                }`}
+              >
+                Фотогалерея
+                <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'gallery' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
+              </button>
+
+              <button
+                onClick={() => document.getElementById('norms')?.scrollIntoView({ behavior: 'smooth' })}
+                className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
+                  activeSection === 'norms' 
+                  ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
+                  : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
+                }`}
+              >
+                Нормалар мен құрам
+                <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'norms' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
+              </button>
+
+              <button
+                onClick={() => document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' })}
+                className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
+                  activeSection === 'faq' 
+                  ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
+                  : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
+                }`}
+              >
+                Сұрақтар мен жаңалықтар
+                <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'faq' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
+              </button>
+            </nav>
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="container mx-auto px-4 pt-12 pb-6 sm:pt-16 sm:pb-8">
-          <div className="text-center mb-6">
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Оқушыларға дәмді әрі пайдалы тамақ беру арқылы олардың денсаулығы мен дамуын қамтамасыз етеміз
-            </p>
-          </div>
+        <div className="container mx-auto px-4 pt-12 pb-6 sm:pb-8">
+        {/* Page Header */}
+        <div className="text-center mb-16">
+          <h1 className="text-3xl md:text-5xl font-bold text-center mb-6 text-gray-800 dark:text-gray-100" style={{ fontFamily: "'Poppins', sans-serif" }}>
+            Мектеп <span className="text-blue-500">асханасы</span>
+          </h1>
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
+            Сапалы және пайдалы тамақтану – балалардың денсаулығының кепілі
+          </p>
+        </div>
+
 
           <div className="grid lg:grid-cols-2 gap-8 mb-6">
             {/* Weekly Menu */}
-            <Card className="lg:col-span-2 dark:bg-[#1e293b] dark:border-gray-700">
+            <Card id="menu" className="lg:col-span-2 dark:bg-[#1e293b] dark:border-gray-700 scroll-mt-24">
               <CardHeader>
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <CardTitle className="flex items-center space-x-2 dark:text-gray-100">
@@ -313,7 +400,7 @@ const CanteenPage = () => {
             </Card>
 
             {/* Work Schedule */}
-            <Card className="dark:bg-[#1e293b] dark:border-gray-700">
+            <Card id="schedule" className="dark:bg-[#1e293b] dark:border-gray-700 scroll-mt-24">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2 dark:text-gray-100">
                   <Clock className="w-6 h-6 text-blue-600 dark:text-blue-400" />
@@ -340,7 +427,7 @@ const CanteenPage = () => {
           </div>
 
           {/* Photos Section */}
-          <Card className="mb-6 dark:bg-[#1e293b] dark:border-gray-700">
+          <Card id="gallery" className="mb-6 dark:bg-[#1e293b] dark:border-gray-700 scroll-mt-24">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2 dark:text-gray-100">
                 <Camera className="w-6 h-6 text-blue-600 dark:text-blue-400" />
@@ -375,7 +462,7 @@ const CanteenPage = () => {
             </CardContent>
           </Card>
 
-          <div className="grid lg:grid-cols-2 gap-8 mb-6">
+          <div id="norms" className="grid lg:grid-cols-2 gap-8 mb-6 scroll-mt-24">
             {/* Sanitary Norms */}
             <Card className="dark:bg-[#1e293b] dark:border-gray-700">
               <CardHeader>
@@ -536,6 +623,7 @@ const CanteenPage = () => {
           </Card>
 
           {/* FAQ Section */}
+          <div id="faq" className="scroll-mt-24">
           <Card className="mb-6 dark:bg-[#1e293b] dark:border-gray-700">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2 dark:text-gray-100">
@@ -585,79 +673,9 @@ const CanteenPage = () => {
               </div>
             </CardContent>
           </Card>
+          </div>
 
-          {/* Feedback Form */}
-          <Card className="dark:bg-[#1e293b] dark:border-gray-700">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2 dark:text-gray-100">
-                <MessageSquare className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-                <span>Кері байланыс формасы</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="parent-name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Ата-ананың аты-жөні
-                    </label>
-                    <Input 
-                      id="parent-name"
-                      name="parentName"
-                      autoComplete="name"
-                      placeholder="Мысалы: Иванов Иван Иванович"
-                      data-testid="input-parent-name"
-                      className="dark:bg-[#0f172a] dark:text-gray-100 dark:border-gray-600"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Телефон номері
-                    </label>
-                    <Input 
-                      id="phone"
-                      name="phone"
-                      autoComplete="tel"
-                      placeholder="+7‒775‒790‒63‒63"
-                      data-testid="input-phone"
-                      className="dark:bg-[#0f172a] dark:text-gray-100 dark:border-gray-600"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label htmlFor="child-info" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Баланың аты-жөні және сыныбы
-                  </label>
-                  <Input 
-                    id="child-info"
-                    name="childInfo"
-                    placeholder="Мысалы: Иванов Алан, 3А сынып"
-                    data-testid="input-child-info"
-                    className="dark:bg-[#0f172a] dark:text-gray-100 dark:border-gray-600"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="canteen-feedback" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Ұсыныс немесе пікір
-                  </label>
-                  <Textarea 
-                    id="canteen-feedback"
-                    name="feedback"
-                    placeholder="Асхана жұмысы туралы пікіріңізді жазыңыз..."
-                    rows={4}
-                    data-testid="textarea-feedback"
-                    className="dark:bg-[#0f172a] dark:text-gray-100 dark:border-gray-600"
-                  />
-                </div>
-                <Button 
-                  className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 dark:text-white"
-                  data-testid="button-submit-feedback"
-                >
-                  Пікір жіберу
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+
         </div>
       </div>
 

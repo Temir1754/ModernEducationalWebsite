@@ -1,36 +1,127 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { ArrowLeft, BookOpen, ExternalLink, Award, TrendingUp, Users, Clock } from "lucide-react";
+import { useState, useMemo, useEffect } from "react";
+import { ArrowLeft, BookOpen, ExternalLink, Award, TrendingUp, Users, Clock, ChevronDown } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function EducationProcessPage() {
+  const [activeSection, setActiveSection] = useState<string>("");
+
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: '-150px 0px -70% 0px',
+      threshold: 0
+    };
+
+    const handleIntersect = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(handleIntersect, observerOptions);
+    const sections = ['quality', 'profile', 'literacy', 'it', 'kundelik'];
+    
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-[#0f172a]">
-      {/* Header with Back Button */}
-      <div className="bg-white dark:bg-[#1e293b] shadow-sm border-b dark:border-gray-700">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center space-x-4">
-            <Link 
-              href="/"
-              className="flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors duration-200 bg-blue-50 dark:bg-[#1e293b] hover:bg-blue-100 dark:hover:bg-slate-700 px-3 py-2 rounded-lg shadow-sm"
+
+
+      {/* Sub-Navigation Menu */}
+      <div className="sticky top-[64px] sm:top-[80px] lg:top-[96px] z-30 bg-white/90 dark:bg-[#0f172a]/95 backdrop-blur-xl border-b border-gray-200 dark:border-blue-500/20 shadow-lg transition-all duration-500">
+        <div className="container mx-auto px-4">
+          <nav className="flex items-center justify-start md:justify-center space-x-1 py-3 whitespace-nowrap overflow-x-auto scrollbar-hide w-full">
+            <button
+              onClick={() => document.getElementById('quality')?.scrollIntoView({ behavior: 'smooth' })}
+              className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
+                activeSection === 'quality' 
+                ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
+                : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
+              }`}
             >
-              <ArrowLeft className="w-5 h-5 mr-2" />
-              Басты бетке оралу
-            </Link>
-            <div className="flex items-center space-x-2">
-              <BookOpen className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-              <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Оқу үрдісі</h1>
-            </div>
-          </div>
+              Білім сапасы
+              <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'quality' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
+            </button>
+
+            <button
+              onClick={() => document.getElementById('profile')?.scrollIntoView({ behavior: 'smooth' })}
+              className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
+                activeSection === 'profile' 
+                ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
+                : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
+              }`}
+            >
+              Бейіндік оқыту
+              <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'profile' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
+            </button>
+
+            <button
+              onClick={() => document.getElementById('literacy')?.scrollIntoView({ behavior: 'smooth' })}
+              className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
+                activeSection === 'literacy' 
+                ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
+                : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
+              }`}
+            >
+              Функционалдық сауаттылық
+              <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'literacy' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
+            </button>
+
+            <button
+              onClick={() => document.getElementById('it')?.scrollIntoView({ behavior: 'smooth' })}
+              className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
+                activeSection === 'it' 
+                ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
+                : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
+              }`}
+            >
+              IT және цифрлық сауаттылық
+              <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'it' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
+            </button>
+
+            <button
+              onClick={() => document.getElementById('kundelik')?.scrollIntoView({ behavior: 'smooth' })}
+              className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
+                activeSection === 'kundelik' 
+                ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
+                : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
+              }`}
+            >
+              Күнделік
+              <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'kundelik' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
+            </button>
+          </nav>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 pt-12 pb-6 sm:pb-8">
+        {/* Page Header */}
+        <div className="text-center mb-16">
+          <h1 className="text-3xl md:text-5xl font-bold text-center mb-6 text-gray-800 dark:text-gray-100" style={{ fontFamily: "'Poppins', sans-serif" }}>
+            Оқу <span className="text-blue-500">процесі</span>
+          </h1>
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
+            FGS мектебіндегі оқу бағдарламалары мен білім беру стандарты
+          </p>
+        </div>
+
         <div className="grid gap-8">
+
           
           {/* Education Quality Section */}
-          <Card className="hover:shadow-lg transition-shadow duration-300 bg-white dark:bg-[#1e293b] border dark:border-gray-700">
+          <Card id="quality" className="hover:shadow-lg transition-shadow duration-300 bg-white dark:bg-[#1e293b] border dark:border-gray-700 scroll-mt-24">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2 text-gray-800 dark:text-gray-100">
                 <Award className="w-6 h-6 text-blue-600 dark:text-blue-400" />
@@ -62,7 +153,7 @@ export default function EducationProcessPage() {
           </Card>
 
           {/* Profile Education Section */}
-          <Card className="hover:shadow-lg transition-shadow duration-300 bg-white dark:bg-[#1e293b] border dark:border-gray-700">
+          <Card id="profile" className="hover:shadow-lg transition-shadow duration-300 bg-white dark:bg-[#1e293b] border dark:border-gray-700 scroll-mt-24">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2 text-gray-800 dark:text-gray-100">
                 <TrendingUp className="w-6 h-6 text-blue-600 dark:text-blue-400" />
@@ -103,7 +194,7 @@ export default function EducationProcessPage() {
           </Card>
 
           {/* Functional Literacy Section */}
-          <Card className="hover:shadow-lg transition-shadow duration-300 bg-white dark:bg-[#1e293b] border dark:border-gray-700">
+          <Card id="literacy" className="hover:shadow-lg transition-shadow duration-300 bg-white dark:bg-[#1e293b] border dark:border-gray-700 scroll-mt-24">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2 text-gray-800 dark:text-gray-100">
                 <Users className="w-6 h-6 text-blue-600 dark:text-blue-400" />
@@ -140,7 +231,7 @@ export default function EducationProcessPage() {
           </Card>
 
           {/* Digital Literacy & IT */}
-          <Card className="hover:shadow-lg transition-shadow duration-300 bg-white dark:bg-[#1e293b] border dark:border-gray-700">
+          <Card id="it" className="hover:shadow-lg transition-shadow duration-300 bg-white dark:bg-[#1e293b] border dark:border-gray-700 scroll-mt-24">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2 text-gray-800 dark:text-gray-100">
                 <Clock className="w-6 h-6 text-blue-600 dark:text-blue-400" />
@@ -172,12 +263,12 @@ export default function EducationProcessPage() {
           </Card>
 
           {/* Electronic Journal Link */}
-          <Card className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700">
+          <Card id="kundelik" className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700 scroll-mt-24">
             <CardHeader>
               <CardTitle className="text-green-800 dark:text-green-300">Күнделік ЭЖ (Электронды журнал)</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center">
                 <div>
                   <p className="text-green-700 dark:text-green-400 mb-2">
                     Оқушылардың үлгерімін, үй тапсырмаларын және кестені онлайн көру

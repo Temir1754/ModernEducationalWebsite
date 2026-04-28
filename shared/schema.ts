@@ -24,6 +24,7 @@ export const events = sqliteTable("events", {
   title: text("title").notNull(),
   dateText: text("date_text").notNull(),
   description: text("description").notNull(),
+  academicYear: text("academic_year").notNull().default("2025-2026"),
   mediaUrl: text("media_url"),
   mediaType: text("media_type"),
   createdAt: integer("created_at", { mode: 'timestamp' }).default(new Date()),
@@ -32,6 +33,8 @@ export const events = sqliteTable("events", {
 export const insertEventSchema = createInsertSchema(events).omit({
   id: true,
   createdAt: true,
+}).extend({
+  academicYear: z.string().optional(),
 });
 
 export type InsertEvent = z.infer<typeof insertEventSchema>;
@@ -65,12 +68,15 @@ export const documents = sqliteTable("documents", {
   scanUrl: text("scan_url"),
   color: text("color"),
   icon: text("icon"),
+  academicYear: text("academic_year").default("2025-2026"),
   createdAt: integer("created_at", { mode: 'timestamp' }).default(new Date()),
 });
 
 export const insertDocumentSchema = createInsertSchema(documents).omit({
   id: true,
   createdAt: true,
+}).extend({
+  academicYear: z.string().optional(),
 });
 
 export type InsertDocument = z.infer<typeof insertDocumentSchema>;
@@ -165,4 +171,24 @@ export const insertDocumentFolderSchema = createInsertSchema(documentFolders).om
 
 export type InsertDocumentFolder = z.infer<typeof insertDocumentFolderSchema>;
 export type DocumentFolder = typeof documentFolders.$inferSelect;
+
+export const reviews = sqliteTable("reviews", {
+  id: text("id").primaryKey(),
+  authorName: text("author_name").notNull(),
+  rating: integer("rating").notNull(),
+  content: text("content").notNull(),
+  source: text("source").notNull().default("site"), // site, 2gis, yandex
+  isApproved: integer("is_approved", { mode: 'boolean' }).default(false),
+  createdAt: integer("created_at", { mode: 'timestamp' }).default(new Date()),
+});
+
+export const insertReviewSchema = createInsertSchema(reviews).omit({
+  id: true,
+  createdAt: true,
+}).extend({
+  rating: z.number().min(1).max(5),
+});
+
+export type InsertReview = z.infer<typeof insertReviewSchema>;
+export type Review = typeof reviews.$inferSelect;
 

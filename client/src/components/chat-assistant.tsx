@@ -269,7 +269,7 @@ export default function ChatAssistant() {
                       key={action}
                       onClick={() => handleQuickAction(action)}
                       variant="outline"
-                      className="text-xs h-auto py-2 hover:bg-blue-50 dark:hover:bg-[#0f1116] hover:text-blue-600 dark:hover:text-[#00bfff] hover:border-blue-300 dark:hover:border-[#00bfff] dark:border-gray-700 dark:text-[#e5e7eb]"
+                      className="text-[10px] sm:text-xs h-auto py-2 px-1 whitespace-normal leading-tight hover:bg-blue-50 dark:hover:bg-[#0f1116] hover:text-blue-600 dark:hover:text-[#00bfff] hover:border-blue-300 dark:hover:border-[#00bfff] dark:border-gray-700 dark:text-[#e5e7eb]"
                       data-testid={`button-quick-${action.split(" ")[1]}`}
                     >
                       {action}

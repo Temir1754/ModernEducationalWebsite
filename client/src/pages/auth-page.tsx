@@ -70,6 +70,7 @@ export default function AuthPage() {
                                         <FormControl>
                                             <Input
                                                 {...field}
+                                                autoComplete="username"
                                                 className="bg-white/5 border-white/10 text-white placeholder:text-gray-500 focus:border-blue-500/50 focus:ring-blue-500/20 h-11"
                                                 placeholder="Enter username"
                                             />
@@ -87,6 +88,7 @@ export default function AuthPage() {
                                         <FormControl>
                                             <Input
                                                 type="password"
+                                                autoComplete="current-password"
                                                 {...field}
                                                 className="bg-white/5 border-white/10 text-white placeholder:text-gray-500 focus:border-blue-500/50 focus:ring-blue-500/20 h-11"
                                                 placeholder="••••••••"

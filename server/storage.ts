@@ -1,4 +1,4 @@
-import { users, events, media, documents, teachers, news, siteContent, sections, documentFolders, type User, type InsertUser, type Event, type InsertEvent, type Media, type InsertMedia, type Document, type InsertDocument, type Teacher, type InsertTeacher, type News, type InsertNews, type SiteContent, type InsertSiteContent, type Section, type InsertSection, type DocumentFolder, type InsertDocumentFolder } from "@shared/schema";
+import { users, events, media, documents, teachers, news, siteContent, sections, documentFolders, reviews, type User, type InsertUser, type Event, type InsertEvent, type Media, type InsertMedia, type Document, type InsertDocument, type Teacher, type InsertTeacher, type News, type InsertNews, type SiteContent, type InsertSiteContent, type Section, type InsertSection, type DocumentFolder, type InsertDocumentFolder, type Review, type InsertReview } from "@shared/schema";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
 import session from "express-session";
@@ -58,6 +58,11 @@ export interface IStorage {
   createFolder(folder: InsertDocumentFolder): Promise<DocumentFolder>;
   updateFolder(id: string, folder: Partial<InsertDocumentFolder>): Promise<DocumentFolder | undefined>;
   deleteFolder(id: string): Promise<void>;
+
+  getReviews(onlyApproved?: boolean): Promise<Review[]>;
+  createReview(review: InsertReview): Promise<Review>;
+  updateReview(id: string, review: Partial<InsertReview>): Promise<Review | undefined>;
+  deleteReview(id: string): Promise<void>;
 
   sessionStore: session.Store;
 }
@@ -306,6 +311,30 @@ export class DatabaseStorage implements IStorage {
 
   async deleteFolder(id: string): Promise<void> {
     await db.delete(documentFolders).where(eq(documentFolders.id, id));
+  }
+
+  async getReviews(onlyApproved: boolean = true): Promise<Review[]> {
+    if (onlyApproved) {
+      return db.select().from(reviews).where(eq(reviews.isApproved, true));
+    }
+    return db.select().from(reviews);
+  }
+
+  async createReview(insertReview: InsertReview): Promise<Review> {
+    const id = crypto.randomUUID();
+    await db.insert(reviews).values({ ...insertReview, id });
+    const [review] = await db.select().from(reviews).where(eq(reviews.id, id));
+    return review;
+  }
+
+  async updateReview(id: string, reviewData: Partial<InsertReview>): Promise<Review | undefined> {
+    await db.update(reviews).set(reviewData).where(eq(reviews.id, id));
+    const [review] = await db.select().from(reviews).where(eq(reviews.id, id));
+    return review;
+  }
+
+  async deleteReview(id: string): Promise<void> {
+    await db.delete(reviews).where(eq(reviews.id, id));
   }
 }
 

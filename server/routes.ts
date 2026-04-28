@@ -15,7 +15,8 @@ import {
   insertNewsSchema,
   insertSiteContentSchema,
   insertSectionSchema,
-  insertDocumentFolderSchema
+  insertDocumentFolderSchema,
+  insertReviewSchema
 } from "@shared/schema";
 // import connectPgSimple from "connect-pg-simple";
 import { Pool } from "@neondatabase/serverless";
@@ -640,6 +641,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ message: "Folder deleted" });
     } catch (error) {
       res.status(500).json({ message: "Failed to delete folder" });
+    }
+  });
+
+  // Reviews Routes
+  app.get("/api/reviews", async (req, res) => {
+    try {
+      const onlyApproved = req.query.all !== "true";
+      const reviews = await storage.getReviews(onlyApproved);
+      res.json(reviews);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch reviews" });
+    }
+  });
+
+  app.post("/api/reviews", async (req, res) => {
+    try {
+      const data = insertReviewSchema.parse(req.body);
+      // New reviews from site are NOT approved by default
+      const review = await storage.createReview({ ...data, isApproved: false });
+      res.json(review);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid review data" });
+    }
+  });
+
+  app.patch("/api/reviews/:id", requireAdmin, async (req, res) => {
+    try {
+      const review = await storage.updateReview(req.params.id, req.body);
+      if (!review) {
+        return res.status(404).json({ message: "Review not found" });
+      }
+      res.json(review);
+    } catch (error) {
+      res.status(400).json({ message: "Failed to update review" });
+    }
+  });
+
+  app.delete("/api/reviews/:id", requireAdmin, async (req, res) => {
+    try {
+      await storage.deleteReview(req.params.id);
+      res.json({ message: "Review deleted" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete review" });
     }
   });
 

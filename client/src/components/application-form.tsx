@@ -21,6 +21,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const applicationSchema = z.object({
   studentName: z.string().min(2, "Баланың аты-жөні міндетті"),
@@ -54,6 +59,10 @@ export default function ApplicationForm() {
     },
   });
 
+  const capitalizeFirst = (value: string) => {
+    return value.charAt(0).toUpperCase() + value.slice(1);
+  };
+
   const onSubmit = async (data: ApplicationFormData) => {
     setIsSubmitting(true);
     
@@ -80,17 +89,16 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
   };
 
   return (
-    <section id="apply" className="py-16 bg-white">
-      <div className="container mx-auto px-4">
+    <div className="w-full">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4 text-gray-800">Мектепке өтінім жіберу</h2>
-            <p className="text-xl text-gray-600">
+            <h2 className="text-3xl font-bold mb-4 text-white">Мектепке өтінім жіберу</h2>
+            <p className="text-xl text-gray-300">
               Балаңызды FGS мектебіне орналастыру үшін өтінім толтырыңыз
             </p>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-2xl p-8">
+          <div className="bg-slate-800/80 backdrop-blur-sm rounded-2xl shadow-2xl p-8 border border-white/10 text-white">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="grid md:grid-cols-2 gap-6">
                 <FormField
@@ -100,7 +108,13 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
                     <FormItem>
                       <FormLabel>Баланың аты-жөні *</FormLabel>
                       <FormControl>
-                        <Input placeholder="Толық аты-жөніні енгізіңіз" {...field} />
+                        <Input 
+                          className="bg-slate-900 border-slate-700 text-white placeholder:text-gray-400" 
+                          placeholder="Толық аты-жөніні енгізіңіз" 
+                          autoComplete="name"
+                          {...field} 
+                          onChange={(e) => field.onChange(capitalizeFirst(e.target.value))}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -111,11 +125,44 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
                   control={form.control}
                   name="birthDate"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="flex flex-col">
                       <FormLabel>Туған күні *</FormLabel>
-                      <FormControl>
-                        <Input type="date" {...field} />
-                      </FormControl>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-full pl-3 text-left font-normal bg-slate-900 border-slate-700 text-white hover:bg-slate-800 hover:text-white transition-all duration-200",
+                                !field.value && "text-gray-400"
+                              )}
+                            >
+                              {field.value ? (
+                                field.value
+                              ) : (
+                                <span>КК.АА.ЖЖЖЖ</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0 bg-slate-900 border-slate-700 shadow-2xl" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value ? new Date(field.value.split('.').reverse().join('-')) : undefined}
+                            onSelect={(date) => {
+                              if (date) {
+                                field.onChange(format(date, "dd.MM.yyyy"));
+                              }
+                            }}
+                            disabled={(date) =>
+                              date > new Date() || date < new Date("1900-01-01")
+                            }
+                            initialFocus
+                            className="bg-slate-900 text-white rounded-md border border-slate-700"
+                          />
+                        </PopoverContent>
+                      </Popover>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -133,16 +180,16 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
                             <SelectValue placeholder="Сыныпты таңдаңыз" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent>
-                          <SelectItem value="0">0 сынып</SelectItem>
-                          <SelectItem value="1">1 сынып</SelectItem>
-                          <SelectItem value="2">2 сынып</SelectItem>
-                          <SelectItem value="3">3 сынып</SelectItem>
-                          <SelectItem value="4">4 сынып</SelectItem>
-                          <SelectItem value="5">5 сынып</SelectItem>
-                          <SelectItem value="6">6 сынып</SelectItem>
-                          <SelectItem value="7">7 сынып</SelectItem>
-                          <SelectItem value="8">8 сынып</SelectItem>
+                        <SelectContent className="bg-slate-800 border-slate-700 text-white">
+                          <SelectItem value="0" className="focus:bg-slate-700 focus:text-white">0 сынып</SelectItem>
+                          <SelectItem value="1" className="focus:bg-slate-700 focus:text-white">1 сынып</SelectItem>
+                          <SelectItem value="2" className="focus:bg-slate-700 focus:text-white">2 сынып</SelectItem>
+                          <SelectItem value="3" className="focus:bg-slate-700 focus:text-white">3 сынып</SelectItem>
+                          <SelectItem value="4" className="focus:bg-slate-700 focus:text-white">4 сынып</SelectItem>
+                          <SelectItem value="5" className="focus:bg-slate-700 focus:text-white">5 сынып</SelectItem>
+                          <SelectItem value="6" className="focus:bg-slate-700 focus:text-white">6 сынып</SelectItem>
+                          <SelectItem value="7" className="focus:bg-slate-700 focus:text-white">7 сынып</SelectItem>
+                          <SelectItem value="8" className="focus:bg-slate-700 focus:text-white">8 сынып</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -162,9 +209,9 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
                             <SelectValue placeholder="Тілді таңдаңыз" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent>
-                          <SelectItem value="kz">Қазақ тілі</SelectItem>
-                          <SelectItem value="ru">Орыс тілі</SelectItem>
+                        <SelectContent className="bg-slate-800 border-slate-700 text-white">
+                          <SelectItem value="kz" className="focus:bg-slate-700 focus:text-white">Қазақ тілі</SelectItem>
+                          <SelectItem value="ru" className="focus:bg-slate-700 focus:text-white">Орыс тілі</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -179,26 +226,76 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
                     <FormItem>
                       <FormLabel>Ата-ананың аты-жөні *</FormLabel>
                       <FormControl>
-                        <Input placeholder="Ата-ананың толық аты-жөні" {...field} />
+                        <Input 
+                          className="bg-slate-900 border-slate-700 text-white placeholder:text-gray-400" 
+                          placeholder="Ата-ананың толық аты-жөні" 
+                          autoComplete="name"
+                          {...field} 
+                          onChange={(e) => field.onChange(capitalizeFirst(e.target.value))}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                <FormField
-                  control={form.control}
-                  name="phone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Телефон номері *</FormLabel>
-                      <FormControl>
-                        <Input placeholder="+7 (___) ___-__-__" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Телефон номері *</FormLabel>
+                        <FormControl>
+                          <Input 
+                            className="bg-slate-900 border-slate-700 text-white placeholder:text-gray-400" 
+                            placeholder="+7 (___) ___-__-__" 
+                            autoComplete="tel"
+                            {...field} 
+                            onChange={(e) => {
+                              let value = e.target.value.replace(/\D/g, "");
+                              
+                              // If they type 11 digits starting with 7 or 8, it's a full number with prefix (e.g. 8707...)
+                              // We remove the first digit to keep only the 10-digit mobile number.
+                              if (value.length === 11 && (value.startsWith("7") || value.startsWith("8"))) {
+                                value = value.substring(1);
+                              } else if (value.length > 11) {
+                                // If it's even longer, just take the last 10 digits
+                                value = value.slice(-10);
+                              }
+                              
+                              // Limit to exactly 10 digits of the actual number
+                              value = value.substring(0, 10);
+                              
+                              let formatted = "";
+                              if (value.length > 0) {
+                                formatted = "+7 (" + value.substring(0, 3);
+                                if (value.length >= 3) {
+                                  formatted += ") ";
+                                  if (value.length > 3) {
+                                    formatted += value.substring(3, 6);
+                                    if (value.length >= 6) {
+                                      formatted += "-";
+                                      if (value.length > 6) {
+                                        formatted += value.substring(6, 8);
+                                        if (value.length >= 8) {
+                                          formatted += "-";
+                                          if (value.length > 8) {
+                                            formatted += value.substring(8, 10);
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                              field.onChange(formatted);
+                            }}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
                 <div className="md:col-span-2">
                   <FormField
@@ -209,9 +306,12 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
                         <FormLabel>Мекенжай</FormLabel>
                         <FormControl>
                           <Textarea
+                            className="bg-slate-900 border-slate-700 text-white placeholder:text-gray-400"
                             rows={3}
                             placeholder="Толық мекенжайды жазыңыз"
-                            {...field}
+                            autoComplete="street-address"
+                            {...field} 
+                            onChange={(e) => field.onChange(capitalizeFirst(e.target.value))}
                           />
                         </FormControl>
                         <FormMessage />
@@ -229,9 +329,11 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
                         <FormLabel>Қосымша ақпарат</FormLabel>
                         <FormControl>
                           <Textarea
+                            className="bg-slate-900 border-slate-700 text-white placeholder:text-gray-400"
                             rows={3}
                             placeholder="Баланың ерекшеліктері, қызығушылықтары туралы жазыңыз"
                             {...field}
+                            onChange={(e) => field.onChange(capitalizeFirst(e.target.value))}
                           />
                         </FormControl>
                         <FormMessage />
@@ -248,12 +350,13 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
                       <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                         <FormControl>
                           <Checkbox
+                            className="border-slate-500 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
                             checked={field.value}
                             onCheckedChange={field.onChange}
                           />
                         </FormControl>
                         <div className="space-y-1 leading-none">
-                          <FormLabel className="text-sm">
+                          <FormLabel className="text-sm text-gray-300">
                             Жеке деректерді өңдеуге келісемін және мектептің ережелерімен таныстым *
                           </FormLabel>
                           <FormMessage />
@@ -289,7 +392,6 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
             </Form>
           </div>
         </div>
-      </div>
-    </section>
+    </div>
   );
 }

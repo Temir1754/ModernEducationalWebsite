@@ -26,12 +26,14 @@ __export(schema_exports, {
   insertEventSchema: () => insertEventSchema,
   insertMediaSchema: () => insertMediaSchema,
   insertNewsSchema: () => insertNewsSchema,
+  insertReviewSchema: () => insertReviewSchema,
   insertSectionSchema: () => insertSectionSchema,
   insertSiteContentSchema: () => insertSiteContentSchema,
   insertTeacherSchema: () => insertTeacherSchema,
   insertUserSchema: () => insertUserSchema,
   media: () => media,
   news: () => news,
+  reviews: () => reviews,
   sections: () => sections,
   siteContent: () => siteContent,
   teachers: () => teachers,
@@ -39,6 +41,7 @@ __export(schema_exports, {
 });
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
 var users = sqliteTable("users", {
   id: text("id").primaryKey(),
   // UUIDs will be generated in app
@@ -158,6 +161,22 @@ var documentFolders = sqliteTable("document_folders", {
 var insertDocumentFolderSchema = createInsertSchema(documentFolders).omit({
   id: true,
   createdAt: true
+});
+var reviews = sqliteTable("reviews", {
+  id: text("id").primaryKey(),
+  authorName: text("author_name").notNull(),
+  rating: integer("rating").notNull(),
+  content: text("content").notNull(),
+  source: text("source").notNull().default("site"),
+  // site, 2gis, yandex
+  isApproved: integer("is_approved", { mode: "boolean" }).default(false),
+  createdAt: integer("created_at", { mode: "timestamp" }).default(/* @__PURE__ */ new Date())
+});
+var insertReviewSchema = createInsertSchema(reviews).omit({
+  id: true,
+  createdAt: true
+}).extend({
+  rating: z.number().min(1).max(5)
 });
 
 // server/db.ts
@@ -373,6 +392,26 @@ var DatabaseStorage = class {
   }
   async deleteFolder(id) {
     await db.delete(documentFolders).where(eq(documentFolders.id, id));
+  }
+  async getReviews(onlyApproved = true) {
+    if (onlyApproved) {
+      return db.select().from(reviews).where(eq(reviews.isApproved, true));
+    }
+    return db.select().from(reviews);
+  }
+  async createReview(insertReview) {
+    const id = crypto.randomUUID();
+    await db.insert(reviews).values({ ...insertReview, id });
+    const [review] = await db.select().from(reviews).where(eq(reviews.id, id));
+    return review;
+  }
+  async updateReview(id, reviewData) {
+    await db.update(reviews).set(reviewData).where(eq(reviews.id, id));
+    const [review] = await db.select().from(reviews).where(eq(reviews.id, id));
+    return review;
+  }
+  async deleteReview(id) {
+    await db.delete(reviews).where(eq(reviews.id, id));
   }
 };
 var storage = new DatabaseStorage();
@@ -936,6 +975,43 @@ async function registerRoutes(app2) {
       res.json({ message: "Folder deleted" });
     } catch (error) {
       res.status(500).json({ message: "Failed to delete folder" });
+    }
+  });
+  app2.get("/api/reviews", async (req, res) => {
+    try {
+      const onlyApproved = req.query.all !== "true";
+      const reviews2 = await storage.getReviews(onlyApproved);
+      res.json(reviews2);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch reviews" });
+    }
+  });
+  app2.post("/api/reviews", async (req, res) => {
+    try {
+      const data = insertReviewSchema.parse(req.body);
+      const review = await storage.createReview({ ...data, isApproved: false });
+      res.json(review);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid review data" });
+    }
+  });
+  app2.patch("/api/reviews/:id", requireAdmin, async (req, res) => {
+    try {
+      const review = await storage.updateReview(req.params.id, req.body);
+      if (!review) {
+        return res.status(404).json({ message: "Review not found" });
+      }
+      res.json(review);
+    } catch (error) {
+      res.status(400).json({ message: "Failed to update review" });
+    }
+  });
+  app2.delete("/api/reviews/:id", requireAdmin, async (req, res) => {
+    try {
+      await storage.deleteReview(req.params.id);
+      res.json({ message: "Review deleted" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete review" });
     }
   });
   const httpServer = createServer(app2);

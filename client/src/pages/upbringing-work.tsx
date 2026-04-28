@@ -1,18 +1,19 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   ArrowLeft, Heart, Users, BookOpen, Shield, Star, Calendar,
   Phone, Mail, User, Clock, MapPin, MessageCircle, Send,
   Camera, Image, Trophy, Target, CheckCircle, AlertTriangle,
   Music, Palette, Code, Microscope, Globe, Calculator,
-  ChevronRight, ChevronDown, TrendingUp, Award, Activity, Download, ExternalLink,
+  ChevronRight, ChevronDown, ChevronUp, TrendingUp, Award, Activity, Download, ExternalLink,
   Plus, Trash2, Loader2, X, Eye, Pencil, FileText
 } from "lucide-react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
 import { queryClient } from "@/lib/queryClient";
+import { motion, AnimatePresence } from "framer-motion";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -266,16 +267,80 @@ function DocumentItem({
   );
 }
 
+function CollapsibleDocList({
+  docs,
+  updateMutation,
+  scansDeleteMutation,
+  onEdit,
+  color,
+  isCard = false
+}: {
+  docs: any[];
+  updateMutation: any;
+  scansDeleteMutation: any;
+  onEdit: (doc: any) => void;
+  color?: string;
+  isCard?: boolean;
+}) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  if (!docs || docs.length === 0) return null;
+  const limit = 3;
+  const hasMore = docs.length > limit;
+  const visibleDocs = isExpanded ? docs : docs.slice(0, limit);
+
+  return (
+    <div className="space-y-3">
+      <div className={isCard ? "grid md:grid-cols-2 lg:grid-cols-3 gap-4" : "space-y-3"}>
+        <AnimatePresence initial={false}>
+          {visibleDocs.map((doc, idx) => (
+            <motion.div
+              key={doc.id || idx}
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <DocumentItem
+                doc={doc}
+                updateMutation={updateMutation}
+                scansDeleteMutation={scansDeleteMutation}
+                onEdit={onEdit}
+                color={color}
+                isCard={isCard}
+              />
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
+
+      {hasMore && (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="w-full mt-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20 font-bold border border-dashed border-blue-200 dark:border-blue-900/50 rounded-xl py-6"
+        >
+          {isExpanded ? (
+            <div className="flex items-center gap-2">
+              <ChevronUp className="w-4 h-4" />
+              <span>Жасыру</span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <ChevronDown className="w-4 h-4" />
+              <span>Барлығын көрсету ({docs.length - limit} құжат қалды)</span>
+            </div>
+          )}
+        </Button>
+      )}
+    </div>
+  );
+}
+
 export default function UpbringingWorkPage() {
   const { user, isLoading } = useAuth();
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#0f172a]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
+
 
   console.log("AUTH USER:", user);
   console.log("USER ROLE:", user?.role);
@@ -298,6 +363,7 @@ export default function UpbringingWorkPage() {
   const [activeUploadSection, setActiveUploadSection] = useState<string | null>(null);
   const [activeEventId, setActiveEventId] = useState<string | null>(null);
   const [isProgramUploadOpen, setIsProgramUploadOpen] = useState(false);
+  const [uploadYear, setUploadYear] = useState("2025-2026");
   const [editingDoc, setEditingDoc] = useState<any>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState<any>(null);
@@ -306,9 +372,53 @@ export default function UpbringingWorkPage() {
     title: "",
     dateText: "",
     month: "Тамыз",
-    description: ""
+    description: "",
+    academicYear: "2025-2026"
   });
   const [isAddEventDialogOpen, setIsAddEventDialogOpen] = useState(false);
+  const [selectedYear, setSelectedYear] = useState("2025-2026");
+  const [expandedMonths, setExpandedMonths] = useState<Set<string>>(new Set(["Тамыз"]));
+  const [activeSection, setActiveSection] = useState<string>("");
+  const [isProgramsDropdownOpen, setIsProgramsDropdownOpen] = useState(false);
+
+  // Scroll Spy Logic
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: '-150px 0px -70% 0px',
+      threshold: 0
+    };
+
+    const handleIntersect = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(handleIntersect, observerOptions);
+    const sections = ['goals', 'programs', 'contacts', 'code', 'prevention', 'events'];
+    
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    const handleClickOutside = (event: any) => {
+      if (!(event.target as Element).closest('.dropdown-container')) {
+        setIsProgramsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    return () => {
+      observer.disconnect();
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, []);
 
   // --- Queries ---
   const { data: galleryItems = [], isLoading: galleryLoading } = useQuery<Media[]>({
@@ -425,7 +535,7 @@ export default function UpbringingWorkPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/events"] });
       setIsAddEventDialogOpen(false);
-      setNewEvent({ title: "", dateText: "", month: "Тамыз", description: "" });
+      setNewEvent({ title: "", dateText: "", month: "Тамыз", description: "", academicYear: "2025-2026" });
     }
   });
 
@@ -457,7 +567,8 @@ export default function UpbringingWorkPage() {
           section: "upbringing-scans",
           url,
           color: "blue",
-          icon: "file"
+          icon: "file",
+          academicYear: uploadYear
         }),
       });
       if (!docRes.ok) throw new Error("Failed to save");
@@ -498,6 +609,8 @@ export default function UpbringingWorkPage() {
   const monthNames = [
     "Тамыз", "Қыркүйек", "Қазан", "Қараша", "Желтоқсан", "Қаңтар", "Ақпан", "Наурыз", "Сәуір", "Мамыр"
   ];
+
+  const academicYears = ["2025-2026", "2026-2027"];
 
   const expandedEvents = [
     {
@@ -583,7 +696,9 @@ export default function UpbringingWorkPage() {
     const grouped: Record<string, any[]> = {};
     monthNames.forEach(m => grouped[m] = []);
 
-    allEvents.forEach(evt => {
+    const filteredEvents = allEvents.filter(evt => evt.academicYear === selectedYear);
+
+    filteredEvents.forEach(evt => {
       const targetMonth = evt.month || monthNames.find(m => evt.dateText?.toLowerCase().includes(m.toLowerCase())) || monthNames[0];
       if (!grouped[targetMonth]) grouped[targetMonth] = [];
       grouped[targetMonth].push({
@@ -592,8 +707,8 @@ export default function UpbringingWorkPage() {
       });
     });
 
-    if (allEvents.length === 0) {
-      return expandedEvents;
+    if (filteredEvents.length === 0 && allEvents.length === 0) {
+      return expandedEvents; // Show mock data for all years to demonstrate functionality
     }
 
     return monthNames
@@ -602,7 +717,25 @@ export default function UpbringingWorkPage() {
         events: grouped[month]
       }))
       .filter(m => m.events.length > 0);
-  }, [allEvents]);
+  }, [allEvents, selectedYear]);
+
+  const toggleMonth = (month: string) => {
+    const newExpanded = new Set(expandedMonths);
+    if (newExpanded.has(month)) {
+      newExpanded.delete(month);
+    } else {
+      newExpanded.add(month);
+    }
+    setExpandedMonths(newExpanded);
+  };
+
+  const toggleAllMonths = (expand: boolean) => {
+    if (expand) {
+      setExpandedMonths(new Set(groupedEvents.map(m => m.month)));
+    } else {
+      setExpandedMonths(new Set());
+    }
+  };
 
   const programUploadMutation = useMutation({
     mutationFn: async (e: React.FormEvent) => {
@@ -622,20 +755,22 @@ export default function UpbringingWorkPage() {
           section: activeUploadSection,
           url,
           color: "blue",
-          icon: "file"
+          icon: "file",
+          academicYear: uploadYear
         }),
       });
       if (!docRes.ok) throw new Error("Failed to save");
       return docRes.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/documents"] });
-      setIsProgramUploadOpen(false);
-      setScansUploadFile(null);
-      setScansTitle("");
-      setActiveUploadSection(null);
     }
   });
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#0f172a]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   // Interactive Statistics
   const statistics = [
@@ -807,7 +942,7 @@ export default function UpbringingWorkPage() {
       title: "Жас сарбаз ұйымы",
       icon: <Star className="w-8 h-8 text-red-600" />,
       description: "Патриоттық тәрбие беруге арналған ұйым. Оқушылардың азаматтық қасиеттерін дамытады.",
-      activities: [],
+      activities: ["Әскери-патриоттық тәрбие", "Саптық дайындық", "Спорттық жарыстар", "Ант қабылдау рәсімі"],
       color: "border-red-200 bg-red-50",
       pdfUrl: "#"
     },
@@ -815,7 +950,7 @@ export default function UpbringingWorkPage() {
       title: "Мектеп парламенті",
       icon: <Shield className="w-8 h-8 text-green-600" />,
       description: "Оқушылардың өзін-өзі басқару органы. Мектеп өмірінде белсенді қатысуға үйретеді.",
-      activities: [],
+      activities: ["Мектеп өзін-өзі басқару", "Іс-шараларды жоспарлау", "Қайырымдылық акциялары", "Оқушылар құқығын қорғау"],
       color: "border-green-200 bg-green-50",
       pdfUrl: "#"
     },
@@ -831,7 +966,7 @@ export default function UpbringingWorkPage() {
       title: "Адал азамат",
       icon: <Award className="w-8 h-8 text-amber-600" />,
       description: "Адал азаматтық қасиеттерді қалыптастыруға арналған бағдарлама. Адалдық пен шынайылықты дамытады.",
-      activities: [],
+      activities: ["Адалдық сабақтары", "Сыбайлас жемқорлыққа қарсы тәрбие", "Этика және эстетика", "Рухани құндылықтар"],
       color: "border-amber-200 bg-amber-50",
       pdfUrl: "#"
     }
@@ -839,25 +974,137 @@ export default function UpbringingWorkPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-[#0f172a]">
-      {/* Header with Back Button */}
-      <div className="bg-white dark:bg-[#1e293b] shadow-sm border-b dark:border-gray-700">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link
-              href="/"
-              className="flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors duration-200 bg-blue-50 dark:bg-[#1e293b] hover:bg-blue-100 dark:hover:bg-slate-700 px-3 py-2 rounded-lg shadow-sm"
+      {/* Sub-Navigation Menu */}
+      <div className="sticky top-[64px] sm:top-[80px] lg:top-[96px] z-30 bg-white/90 dark:bg-[#0f172a]/95 backdrop-blur-xl border-b border-gray-200 dark:border-blue-500/20 shadow-lg transition-all duration-500">
+        <div className="container mx-auto px-4">
+          <nav className="flex items-center justify-start md:justify-center space-x-1 py-3 whitespace-nowrap overflow-x-auto scrollbar-hide w-full">
+            <button
+              onClick={() => document.getElementById('goals')?.scrollIntoView({ behavior: 'smooth' })}
+              className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
+                activeSection === 'goals' 
+                ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
+                : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
+              }`}
             >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              <span className="hidden sm:inline">Басты бетке оралу</span>
-              <span className="sm:hidden">Басты бет</span>
-            </Link>
-            <h1 className="text-lg sm:text-2xl font-bold text-gray-800 dark:text-gray-100">Мектеп тынысы</h1>
-          </div>
+              Мектеп тынысының мақсаты
+              <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'goals' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
+            </button>
+
+            <div className="h-4 w-px bg-gray-300 dark:bg-gray-700 mx-1"></div>
+
+            <div className="relative dropdown-container">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsProgramsDropdownOpen(!isProgramsDropdownOpen);
+                  document.getElementById('programs')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 flex items-center gap-2 relative group/nav ${
+                  (activeSection === 'programs' || activeSection.startsWith('program-')) || isProgramsDropdownOpen
+                  ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
+                  : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
+                }`}
+              >
+                Тәрбие бағдарламалары
+                <ChevronDown className={`w-4 h-4 transition-transform ${isProgramsDropdownOpen ? 'rotate-180 text-blue-500' : ''} ${activeSection === 'programs' ? 'text-blue-500' : ''}`} />
+                <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'programs' || isProgramsDropdownOpen ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
+              </button>
+              
+              <AnimatePresence>
+                {isProgramsDropdownOpen && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    className="absolute left-1/2 -translate-x-1/2 mt-3 w-72 bg-white dark:bg-[#1e293b] backdrop-blur-2xl border border-gray-200 dark:border-blue-500/30 rounded-2xl shadow-2xl z-50 p-2 overflow-hidden"
+                  >
+                    <div className="grid gap-0.5">
+                      {programs.map((prog, idx) => (
+                        <button
+                          key={idx}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const el = document.getElementById(`program-${idx}`);
+                            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            setIsProgramsDropdownOpen(false);
+                          }}
+                          className="w-full text-left px-4 py-2.5 text-xs font-bold text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/40 rounded-xl transition-all flex items-center gap-3 group/item"
+                        >
+                          <div className="w-1.5 h-1.5 rounded-full bg-blue-500/20 group-hover/item:bg-blue-500 group-hover/item:scale-150 transition-all duration-300"></div>
+                          {prog.title}
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            <div className="h-4 w-px bg-gray-300 dark:bg-gray-700 mx-1"></div>
+
+            <button
+              onClick={() => document.getElementById('contacts')?.scrollIntoView({ behavior: 'smooth' })}
+              className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
+                activeSection === 'contacts' 
+                ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
+                : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
+              }`}
+            >
+              Байланыстар
+              <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'contacts' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
+            </button>
+
+            <button
+              onClick={() => document.getElementById('code')?.scrollIntoView({ behavior: 'smooth' })}
+              className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
+                activeSection === 'code' 
+                ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
+                : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
+              }`}
+            >
+              Шәкірттердің кодексі
+              <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'code' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
+            </button>
+
+            <button
+              onClick={() => document.getElementById('prevention')?.scrollIntoView({ behavior: 'smooth' })}
+              className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
+                activeSection === 'prevention' 
+                ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
+                : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
+              }`}
+            >
+              Құқықбұзушылықтың алдын алу
+              <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'prevention' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
+            </button>
+
+            <button
+              onClick={() => document.getElementById('events')?.scrollIntoView({ behavior: 'smooth' })}
+              className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
+                activeSection === 'events' 
+                ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
+                : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
+              }`}
+            >
+              Іс-шаралар
+              <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'events' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
+            </button>
+          </nav>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 pt-12 pb-6 sm:pt-16 sm:pb-8">
+      <div className="container mx-auto px-4 pt-12 pb-6 sm:pb-8">
+        {/* Page Header */}
+        <div className="text-center mb-16">
+          <h1 className="text-3xl md:text-5xl font-bold text-center mb-6 text-gray-800 dark:text-gray-100" style={{ fontFamily: "'Poppins', sans-serif" }}>
+            Мектеп <span className="text-blue-500">өмірі</span>
+          </h1>
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
+            Біздің мектептің күнделікті өміріне көз жүгіртіңіз
+          </p>
+        </div>
+
 
         {/* Interactive Statistics */}
         <section className="mb-12">
@@ -881,7 +1128,7 @@ export default function UpbringingWorkPage() {
         </section>
 
         {/* Overview */}
-        <Card className="mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-gray-700">
+        <Card id="goals" className="mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-gray-700 scroll-mt-24">
           <CardHeader>
             <CardTitle className="text-blue-800 dark:text-blue-400 flex items-center space-x-2">
               <Target className="w-6 h-6" />
@@ -898,14 +1145,40 @@ export default function UpbringingWorkPage() {
         </Card>
 
         {/* Programs */}
-        <section className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6 flex items-center space-x-2">
-            <Users className="w-6 h-6 text-blue-600" />
-            <span>Тәрбие бағдарламалары</span>
-          </h2>
-          <div className="grid gap-6">
+        <section id="programs" className="mb-12 scroll-mt-24">
+          <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 flex items-center space-x-3">
+              <Users className="w-8 h-8 text-blue-600" />
+              <span>Тәрбие <span className="text-blue-500">бағдарламалары</span></span>
+            </h2>
+
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="flex p-1.5 bg-gray-100 dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-inner">
+                {academicYears.map(year => (
+                  <button
+                    key={year}
+                    onClick={() => setSelectedYear(year)}
+                    className={`px-6 py-2.5 rounded-xl text-sm md:text-base font-bold transition-all duration-300 ${selectedYear === year
+                      ? "bg-blue-600 text-white shadow-xl scale-105"
+                      : "text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white/50 dark:hover:bg-gray-700/50"
+                    }`}
+                  >
+                    {year}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+          {selectedYear === "2026-2027" ? (
+            <div className="flex flex-col items-center justify-center py-24 bg-gray-50/50 dark:bg-gray-800/20 rounded-3xl border-2 border-dashed border-gray-200 dark:border-gray-700">
+              <Clock className="w-16 h-16 text-blue-500/50 mb-4 animate-pulse" />
+              <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">Жақын арада</h3>
+              <p className="text-gray-600 dark:text-gray-400">Бұл бөлім 2026-2027 оқу жылына дайындалуда</p>
+            </div>
+          ) : (
+            <div className="grid gap-6">
             {programs.map((program, index) => (
-              <Card key={index} className={`hover:shadow-lg transition-all duration-300 border-2 ${program.color} dark:bg-[#1e293b] dark:border-gray-700`}>
+              <Card key={index} id={`program-${index}`} className={`hover:shadow-lg transition-all duration-300 border-2 ${program.color} dark:bg-[#1e293b] dark:border-gray-700 scroll-mt-24`}>
                 <CardContent className="p-6">
                   <div className="flex items-start space-x-4">
                     <div className="flex-shrink-0">
@@ -932,6 +1205,7 @@ export default function UpbringingWorkPage() {
                               className="h-7 text-xs text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20"
                               onClick={() => {
                                 setActiveUploadSection(`upbringing-program-${program.title.replace(/\s+/g, '-').toLowerCase()}`);
+                                setUploadYear(selectedYear);
                                 setIsProgramUploadOpen(true);
                               }}
                             >
@@ -941,23 +1215,16 @@ export default function UpbringingWorkPage() {
                           )}
                         </div>
                         <div className="space-y-3">
-                          {/* Dynamic documents */}
-                          {programDocs
-                            .filter(doc => doc.section === `upbringing-program-${program.title.replace(/\s+/g, '-').toLowerCase()}`)
-                            .map((doc) => {
-                              const progColor = program.color.split('-')[1]; // extracts 'blue', 'red', etc.
-                              return (
-                                <DocumentItem
-                                  key={`dynamic-${doc.id}`}
-                                  doc={doc}
-                                  updateMutation={updateMutation}
-                                  scansDeleteMutation={scansDeleteMutation}
-                                  onEdit={(d) => { setEditingDoc(d); setIsEditDialogOpen(true); }}
-                                  color={progColor}
-                                />
-                              );
-                            })
-                          }
+                          <CollapsibleDocList
+                            docs={programDocs.filter(doc => 
+                              doc.section === `upbringing-program-${program.title.replace(/\s+/g, '-').toLowerCase()}` &&
+                              (!doc.academicYear || doc.academicYear === selectedYear)
+                            )}
+                            updateMutation={updateMutation}
+                            scansDeleteMutation={scansDeleteMutation}
+                            onEdit={(d) => { setEditingDoc(d); setIsEditDialogOpen(true); }}
+                            color={program.color.split('-')[1]}
+                          />
                           {/* Single PDF program case */}
                           {programDocs.filter(d => d.section === `upbringing-program-${program.title.replace(/\s+/g, '-').toLowerCase()}`).length === 0 && program.pdfUrl !== "#" && (
                             <DocumentItem
@@ -982,6 +1249,7 @@ export default function UpbringingWorkPage() {
               </Card>
             ))}
           </div>
+          )}
         </section>
 
         {/* ДосболLike Section */}
@@ -997,6 +1265,7 @@ export default function UpbringingWorkPage() {
                 className="bg-pink-600 hover:bg-pink-700 text-white"
                 onClick={() => {
                   setActiveUploadSection("upbringing-program-dosbollike");
+                  setUploadYear(selectedYear);
                   setIsProgramUploadOpen(true);
                 }}
               >
@@ -1014,34 +1283,20 @@ export default function UpbringingWorkPage() {
                 {/* Documents will be rendered dynamically below */}
               </div>
 
-              {/* Dynamic Documents for DosbolLike */}
-              {programDocs.filter(doc => doc.section === "upbringing-program-dosbollike").length > 0 && (
-                <div className="mt-8 pt-6 border-t border-pink-200 dark:border-gray-700">
-                  <h4 className="text-sm font-bold text-gray-800 dark:text-gray-200 mb-4 px-1">Қосымша құжаттар:</h4>
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {programDocs
-                      .filter(doc => doc.section === "upbringing-program-dosbollike")
-                      .map((doc) => (
-                        <DocumentItem
-                          key={doc.id}
-                          doc={doc}
-                          updateMutation={updateMutation}
-                          scansDeleteMutation={scansDeleteMutation}
-                          onEdit={(d) => { setEditingDoc(d); setIsEditDialogOpen(true); }}
-                          color="pink"
-                          isCard={true}
-                        />
-                      ))
-                    }
-                  </div>
-                </div>
-              )}
+                    <CollapsibleDocList
+                      docs={programDocs.filter(doc => doc.section === "upbringing-program-dosbollike")}
+                      updateMutation={updateMutation}
+                      scansDeleteMutation={scansDeleteMutation}
+                      onEdit={(d) => { setEditingDoc(d); setIsEditDialogOpen(true); }}
+                      color="pink"
+                      isCard={true}
+                    />
             </CardContent>
           </Card>
         </section>
 
         {/* Responsible Persons Contacts */}
-        <section className="mb-12">
+        <section id="contacts" className="mb-12 scroll-mt-24">
           <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6 flex items-center space-x-2">
             <Phone className="w-6 h-6 text-blue-600" />
             <span>Жауапты тұлғалардың байланыстары</span>
@@ -1081,168 +1336,7 @@ export default function UpbringingWorkPage() {
           </div>
         </section>
 
-        {/* Events Gallery */}
-        <section className="mb-12">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 flex items-center space-x-2">
-              <Camera className="w-6 h-6 text-blue-600" />
-              <span>Іс-шаралар галереясы</span>
-            </h2>
-            {isAdmin && (
-              <div className="flex items-center gap-2">
-                <Dialog open={isGalleryUploadOpen} onOpenChange={setIsGalleryUploadOpen}>
-                  <DialogTrigger asChild>
-                    <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">
-                      <Plus className="w-4 h-4 mr-2" />
-                      Фото қосу
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[400px] bg-[#1e293b] border border-white/10">
-                    <DialogHeader>
-                      <DialogTitle className="text-white">Фото жүктеу</DialogTitle>
-                      <DialogDescription className="text-gray-400">
-                        Оқиғалар галереясына жаңа фотосурет жүктеңіз.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <form onSubmit={(e) => galleryUploadMutation.mutate(e)} className="space-y-4">
-                      <div className="space-y-2">
-                        <Label className="text-gray-300">Фото файл</Label>
-                        <Input
-                          id="admin-gallery-photo"
-                          name="photo"
-                          type="file"
-                          accept="image/*"
-                          onChange={e => setGalleryUploadFile(e.target.files?.[0] || null)}
-                          required
-                          className="bg-[#0d1117] border-white/20 text-white"
-                        />
-                      </div>
-                      <Button
-                        type="submit"
-                        className="w-full bg-blue-600 hover:bg-blue-700"
-                        disabled={galleryUploadMutation.isPending}
-                      >
-                        {galleryUploadMutation.isPending && <Loader2 className="animate-spin mr-2 w-4 h-4" />}
-                        Жүктеу
-                      </Button>
-                    </form>
-                  </DialogContent>
-                </Dialog>
-                <Dialog open={isScansUploadOpen} onOpenChange={setIsScansUploadOpen}>
-                  <DialogTrigger asChild>
-                    <Button size="sm" variant="outline" className="border-gray-400 text-gray-700 dark:border-gray-500 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
-                      <Plus className="w-4 h-4 mr-2" />
-                      Скан қосу
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[400px] bg-[#1e293b] border border-white/10">
-                    <DialogHeader>
-                      <DialogTitle className="text-white">Скан жүктеу</DialogTitle>
-                      <DialogDescription className="text-gray-400">
-                        Құжаттың скан нұсқасын (PDF немесе сурет) жүктеңіз.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <form onSubmit={(e) => scansUploadMutation.mutate(e)} className="space-y-4">
-                      <div className="space-y-2">
-                        <Label className="text-gray-300">Атауы</Label>
-                        <Input
-                          id="admin-scan-title"
-                          name="title"
-                          value={scansTitle}
-                          onChange={e => setScansTitle(e.target.value)}
-                          placeholder="Скан атауы..."
-                          className="bg-[#0d1117] border-white/20 text-white placeholder:text-gray-500"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label className="text-gray-300">Файл (PDF немесе сурет)</Label>
-                        <Input
-                          id="admin-scan-file"
-                          name="file"
-                          type="file"
-                          accept=".pdf,image/*"
-                          onChange={e => setScansUploadFile(e.target.files?.[0] || null)}
-                          required
-                          className="bg-[#0d1117] border-white/20 text-white"
-                        />
-                      </div>
-                      <Button
-                        type="submit"
-                        className="w-full bg-blue-600 hover:bg-blue-700"
-                        disabled={scansUploadMutation.isPending}
-                      >
-                        {scansUploadMutation.isPending && <Loader2 className="animate-spin mr-2 w-4 h-4" />}
-                        Жүктеу
-                      </Button>
-                    </form>
-                  </DialogContent>
-                </Dialog>
-              </div>
-            )}
-          </div>
 
-          {galleryLoading ? (
-            <div className="flex justify-center py-12">
-              <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-            </div>
-          ) : galleryItems.length === 0 ? (
-            <Card className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-purple-200 dark:border-gray-700">
-              <CardContent className="p-8 text-center">
-                <div className="w-24 h-24 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Image className="w-12 h-12 text-purple-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">Іс-шаралар фотогалереясы</h3>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Фотосуреттер жақын арада қосылады
-                </p>
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="columns-2 sm:columns-3 lg:columns-4 gap-3 space-y-3">
-              {galleryItems.map((item) => (
-                <div key={item.id} className="relative group break-inside-avoid">
-                  <img
-                    src={item.url}
-                    alt={item.caption || "Іс-шара фотосы"}
-                    className="w-full rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
-                    onClick={() => setLightboxImage(item.url)}
-                  />
-                  {isAdmin && (
-                    <button
-                      onClick={() => {
-                        if (confirm("Фотоны өшіру керек пе?")) galleryDeleteMutation.mutate(item.id);
-                      }}
-                      className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white rounded-full p-1"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Lightbox */}
-          {lightboxImage && (
-            <div
-              className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
-              onClick={() => setLightboxImage(null)}
-            >
-              <button
-                className="absolute top-4 right-4 text-white hover:text-gray-300"
-                onClick={() => setLightboxImage(null)}
-              >
-                <X className="w-8 h-8" />
-              </button>
-              <img
-                src={lightboxImage}
-                alt="Фото"
-                className="max-w-full max-h-[90vh] rounded-lg object-contain"
-                onClick={e => e.stopPropagation()}
-              />
-            </div>
-          )}
-        </section>
 
         {/* Scanned Documents - Admin Only */}
         {isAdmin && (
@@ -1254,7 +1348,10 @@ export default function UpbringingWorkPage() {
               </h2>
               <Dialog open={isScansUploadOpen} onOpenChange={setIsScansUploadOpen}>
                 <DialogTrigger asChild>
-                  <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">
+                  <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white" onClick={() => {
+                    setUploadYear(selectedYear);
+                    setIsScansUploadOpen(true);
+                  }}>
                     <Plus className="w-4 h-4 mr-2" />
                     Скан қосу
                   </Button>
@@ -1313,7 +1410,7 @@ export default function UpbringingWorkPage() {
               </div>
             ) : (
               <div className="space-y-2">
-                {scansItems.map((doc, index) => (
+                {scansItems.filter(doc => !doc.academicYear || doc.academicYear === selectedYear).map((doc, index) => (
                   <div
                     key={doc.id}
                     className="group flex items-center justify-between px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 dark:bg-gray-800/50 dark:hover:bg-gray-800 transition-colors"
@@ -1367,7 +1464,7 @@ export default function UpbringingWorkPage() {
         )}
 
         {/* Student Code */}
-        <section className="mb-12">
+        <section id="code" className="mb-12 scroll-mt-24">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 flex items-center space-x-2">
               <BookOpen className="w-6 h-6 text-blue-600" />
@@ -1380,6 +1477,7 @@ export default function UpbringingWorkPage() {
                 className="border-green-400 text-green-700 dark:border-green-500 dark:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/20"
                 onClick={() => {
                   setActiveUploadSection("upbringing-student-code");
+                  setUploadYear(selectedYear);
                   setIsProgramUploadOpen(true);
                 }}
               >
@@ -1393,9 +1491,12 @@ export default function UpbringingWorkPage() {
               <p className="text-gray-700 dark:text-gray-300 text-lg mb-6 italic border-l-4 border-green-500 pl-4">
                 «Мен — өз мектебімнің абыройын ойлайтын, тәртіпті, мәдениетті, жауапты тұлғамын» деген ұстанымын қалыптастыратын құжат.
               </p>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-6 gap-6 mb-6">
                 {/* 1. Оқу мәдениеті */}
-                <div className="bg-white dark:bg-[#1e293b] p-4 rounded-lg border border-green-200 dark:border-gray-600">
+                <motion.div 
+                  whileHover={{ y: -5 }}
+                  className="md:col-span-3 bg-white dark:bg-[#1e293b] p-6 rounded-2xl border border-green-200 dark:border-gray-700 shadow-sm hover:shadow-xl hover:shadow-green-500/5 transition-all duration-300"
+                >
                   <h4 className="font-semibold text-gray-800 dark:text-gray-100 mb-3 flex items-center space-x-2">
                     <BookOpen className="w-5 h-5 text-green-600" />
                     <span>1. Оқу мәдениеті</span>
@@ -1418,10 +1519,13 @@ export default function UpbringingWorkPage() {
                       <span>Оқу құралдарын ұқыпты сақтау</span>
                     </li>
                   </ul>
-                </div>
+                </motion.div>
 
                 {/* 2. Тәртіп пен жауапкершілік */}
-                <div className="bg-white dark:bg-[#1e293b] p-4 rounded-lg border border-blue-200 dark:border-gray-600">
+                <motion.div 
+                  whileHover={{ y: -5 }}
+                  className="md:col-span-3 bg-white dark:bg-[#1e293b] p-6 rounded-2xl border border-blue-200 dark:border-gray-700 shadow-sm hover:shadow-xl hover:shadow-blue-500/5 transition-all duration-300"
+                >
                   <h4 className="font-semibold text-gray-800 dark:text-gray-100 mb-3 flex items-center space-x-2">
                     <Shield className="w-5 h-5 text-blue-600" />
                     <span>2. Тәртіп пен жауапкершілік</span>
@@ -1440,10 +1544,13 @@ export default function UpbringingWorkPage() {
                       <span>Мектеп мүлкіне, жиһазына, құрал-жабдықтарына ұқыпты қарау</span>
                     </li>
                   </ul>
-                </div>
+                </motion.div>
 
                 {/* 3. Қарым-қатынас мәдениеті */}
-                <div className="bg-white dark:bg-[#1e293b] p-4 rounded-lg border border-purple-200 dark:border-gray-600">
+                <motion.div 
+                  whileHover={{ y: -5 }}
+                  className="md:col-span-2 bg-white dark:bg-[#1e293b] p-6 rounded-2xl border border-purple-200 dark:border-gray-700 shadow-sm hover:shadow-xl hover:shadow-purple-500/5 transition-all duration-300"
+                >
                   <h4 className="font-semibold text-gray-800 dark:text-gray-100 mb-3 flex items-center space-x-2">
                     <Users className="w-5 h-5 text-purple-600" />
                     <span>3. Қарым-қатынас мәдениеті</span>
@@ -1462,10 +1569,13 @@ export default function UpbringingWorkPage() {
                       <span>Кикілжің тудырмау, әдепті болу</span>
                     </li>
                   </ul>
-                </div>
+                </motion.div>
 
                 {/* 4. Тазалық пен тәртіп сақтау */}
-                <div className="bg-white dark:bg-[#1e293b] p-4 rounded-lg border border-cyan-200 dark:border-gray-600">
+                <motion.div 
+                  whileHover={{ y: -5 }}
+                  className="md:col-span-2 bg-white dark:bg-[#1e293b] p-6 rounded-2xl border border-cyan-200 dark:border-gray-700 shadow-sm hover:shadow-xl hover:shadow-cyan-500/5 transition-all duration-300"
+                >
                   <h4 className="font-semibold text-gray-800 dark:text-gray-100 mb-3 flex items-center space-x-2">
                     <Star className="w-5 h-5 text-cyan-600" />
                     <span>4. Тазалық пен тәртіп сақтау</span>
@@ -1484,10 +1594,13 @@ export default function UpbringingWorkPage() {
                       <span>Гигиена мен киім кию ережелерін сақтау</span>
                     </li>
                   </ul>
-                </div>
+                </motion.div>
 
                 {/* 5. Қауіпсіздік ережелері */}
-                <div className="bg-white dark:bg-[#1e293b] p-4 rounded-lg border border-orange-200 dark:border-gray-600">
+                <motion.div 
+                  whileHover={{ y: -5 }}
+                  className="md:col-span-2 bg-white dark:bg-[#1e293b] p-6 rounded-2xl border border-orange-200 dark:border-gray-700 shadow-sm hover:shadow-xl hover:shadow-orange-500/5 transition-all duration-300"
+                >
                   <h4 className="font-semibold text-gray-800 dark:text-gray-100 mb-3 flex items-center space-x-2">
                     <AlertTriangle className="w-5 h-5 text-orange-600" />
                     <span>5. Қауіпсіздік ережелері</span>
@@ -1506,10 +1619,13 @@ export default function UpbringingWorkPage() {
                       <span>Қауіпсіз интернет пен әлеуметтік желі мәдениетін ұстану</span>
                     </li>
                   </ul>
-                </div>
+                </motion.div>
 
                 {/* 6. Отансүйгіштік және адамгершілік қасиеттер */}
-                <div className="bg-white dark:bg-[#1e293b] p-4 rounded-lg border border-red-200 dark:border-gray-600">
+                <motion.div 
+                  whileHover={{ y: -5 }}
+                  className="md:col-span-3 bg-white dark:bg-[#1e293b] p-6 rounded-2xl border border-red-200 dark:border-gray-700 shadow-sm hover:shadow-xl hover:shadow-red-500/5 transition-all duration-300"
+                >
                   <h4 className="font-semibold text-gray-800 dark:text-gray-100 mb-3 flex items-center space-x-2">
                     <Heart className="w-5 h-5 text-red-600" />
                     <span>6. Отансүйгіштік және адамгершілік</span>
@@ -1528,10 +1644,13 @@ export default function UpbringingWorkPage() {
                       <span>Қайырымдылық, достық, әділдік, еңбексүйгіштік қасиеттерді дамыту</span>
                     </li>
                   </ul>
-                </div>
+                </motion.div>
 
                 {/* 7. Ішкі тәртіп ережесі */}
-                <div className="bg-white dark:bg-[#1e293b] p-4 rounded-lg border border-indigo-200 dark:border-gray-600">
+                <motion.div 
+                  whileHover={{ y: -5 }}
+                  className="md:col-span-3 bg-white dark:bg-[#1e293b] p-6 rounded-2xl border border-indigo-200 dark:border-gray-700 shadow-sm hover:shadow-xl hover:shadow-indigo-500/5 transition-all duration-300"
+                >
                   <h4 className="font-semibold text-gray-800 dark:text-gray-100 mb-3 flex items-center space-x-2">
                     <Shield className="w-5 h-5 text-indigo-600" />
                     <span>7. Ішкі тәртіп ережесі</span>
@@ -1554,32 +1673,27 @@ export default function UpbringingWorkPage() {
                       <span>Мектеп мүлкіне қатысты ережелер</span>
                     </li>
                   </ul>
-                  <div className="pt-3 border-t border-indigo-100 dark:border-gray-700">
-                    <p className="text-xs text-gray-500 italic">Төмендегі «Қосымша құжаттар» бөлімінен толық ақпаратты көре аласыз.</p>
+                  <div className="pt-3 border-t border-indigo-100 dark:border-gray-700/50">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 italic">Төмендегі «Қосымша құжаттар» бөлімінен толық ақпаратты көре аласыз.</p>
                   </div>
-                </div>
+                </motion.div>
               </div>
 
               {/* Dynamic Documents for Student Code */}
               {programDocs.filter(doc => doc.section === "upbringing-student-code").length > 0 && (
                 <div className="mt-8 pt-6 border-t border-indigo-100 dark:border-gray-700">
                   <h4 className="text-sm font-bold text-gray-800 dark:text-gray-200 mb-4 px-1">Қосымша құжаттар:</h4>
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {programDocs
-                      .filter(doc => doc.section === "upbringing-student-code")
-                      .map((doc) => (
-                        <DocumentItem
-                          key={doc.id}
-                          doc={doc}
-                          updateMutation={updateMutation}
-                          scansDeleteMutation={scansDeleteMutation}
-                          onEdit={(d) => { setEditingDoc(d); setIsEditDialogOpen(true); }}
-                          color="indigo"
-                          isCard={true}
-                        />
-                      ))
-                    }
-                  </div>
+                  <CollapsibleDocList
+                    docs={programDocs.filter(doc => 
+                      doc.section === "upbringing-student-code" &&
+                      (!doc.academicYear || doc.academicYear === selectedYear)
+                    )}
+                    updateMutation={updateMutation}
+                    scansDeleteMutation={scansDeleteMutation}
+                    onEdit={(d) => { setEditingDoc(d); setIsEditDialogOpen(true); }}
+                    color="indigo"
+                    isCard={true}
+                  />
                 </div>
               )}
             </CardContent>
@@ -1587,12 +1701,43 @@ export default function UpbringingWorkPage() {
         </section>
 
         {/* Enhanced Crime Prevention */}
-        <section className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6 flex items-center space-x-2">
-            <Shield className="w-6 h-6 text-yellow-600" />
-            <span>Құқықбұзушылықтың алдын алу</span>
-          </h2>
-          <div className="grid md:grid-cols-2 gap-6">
+        <section id="prevention" className="mb-20 scroll-mt-24">
+          <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 border-b border-gray-100 dark:border-gray-800 pb-6">
+            <div className="text-left">
+              <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 flex items-center space-x-3 mb-2">
+                <Shield className="w-8 h-8 text-blue-600" />
+                <span>Құқықбұзушылықтың <span className="text-blue-500">алдын алу</span></span>
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400 max-w-xl">
+                Оқушылардың қауіпсіздігі мен құқықтық сауаттылығын арттыруға бағытталған шаралар жүйесі
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="flex p-1.5 bg-gray-100 dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-inner">
+                {academicYears.map(year => (
+                  <button
+                    key={year}
+                    onClick={() => setSelectedYear(year)}
+                    className={`px-6 py-2.5 rounded-xl text-sm md:text-base font-bold transition-all duration-300 ${selectedYear === year
+                      ? "bg-blue-600 text-white shadow-xl scale-105"
+                      : "text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white/50 dark:hover:bg-gray-700/50"
+                    }`}
+                  >
+                    {year}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+          {selectedYear === "2026-2027" ? (
+            <div className="flex flex-col items-center justify-center py-24 bg-gray-50/50 dark:bg-gray-800/20 rounded-3xl border-2 border-dashed border-gray-200 dark:border-gray-700">
+              <Clock className="w-16 h-16 text-blue-500/50 mb-4 animate-pulse" />
+              <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">Жақын арада</h3>
+              <p className="text-gray-600 dark:text-gray-400">Бұл бөлім 2026-2027 оқу жылына дайындалуда</p>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 gap-6">
             {preventionMeasures.map((pm, idx) => {
               const sectionId = pm.category === "Психологиялық қолдау" ? "crime-prevention-psychological" :
                 pm.category === "Әлеуметтік жұмыс" ? "crime-prevention-social" :
@@ -1622,6 +1767,7 @@ export default function UpbringingWorkPage() {
                           className={`h-7 text-xs ${pm.color} dark:text-gray-400 hover:bg-white/50 dark:hover:bg-gray-800/50`}
                           onClick={() => {
                             setActiveUploadSection(sectionId);
+                            setUploadYear(selectedYear);
                             setIsProgramUploadOpen(true);
                           }}
                         >
@@ -1641,51 +1787,122 @@ export default function UpbringingWorkPage() {
                     </ul>
 
                     {/* Dynamic Documents */}
-                    {programDocs.filter(doc => doc.section === sectionId).map((doc) => (
-                      <DocumentItem
-                        key={doc.id}
-                        doc={doc}
-                        updateMutation={updateMutation}
-                        scansDeleteMutation={scansDeleteMutation}
-                        onEdit={(d) => { setEditingDoc(d); setIsEditDialogOpen(true); }}
-                        color={colorKey}
-                      />
-                    ))}
+                    <CollapsibleDocList
+                      docs={programDocs.filter(doc => 
+                        doc.section === sectionId &&
+                        (!doc.academicYear || doc.academicYear === selectedYear)
+                      )}
+                      updateMutation={updateMutation}
+                      scansDeleteMutation={scansDeleteMutation}
+                      onEdit={(d) => { setEditingDoc(d); setIsEditDialogOpen(true); }}
+                      color={colorKey}
+                    />
                   </CardContent>
                 </Card>
               );
             })}
           </div>
+          )}
         </section>
 
         {/* Expanded Annual Events */}
-        <section className="mb-12">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 flex items-center space-x-2">
-              <Calendar className="w-6 h-6 text-blue-600" />
-              <span>Жылдық іс-шаралар</span>
+        <section id="events" className="mb-12 scroll-mt-24">
+          <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 flex items-center space-x-3">
+              <Calendar className="w-8 h-8 text-blue-600" />
+              <span>Жылдық <span className="text-blue-500">іс-шаралар</span></span>
             </h2>
-            {isAdmin && (
-              <Button
-                onClick={() => setIsAddEventDialogOpen(true)}
-                className="bg-blue-600 hover:bg-blue-700 text-white"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Іс-шара қосу
-              </Button>
-            )}
+            
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="flex p-1.5 bg-gray-100 dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-inner">
+                {academicYears.map(year => (
+                  <button
+                    key={year}
+                    onClick={() => setSelectedYear(year)}
+                    className={`px-6 py-2.5 rounded-xl text-sm md:text-base font-bold transition-all duration-300 ${selectedYear === year
+                      ? "bg-blue-600 text-white shadow-xl scale-105"
+                      : "text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white/50 dark:hover:bg-gray-700/50"
+                    }`}
+                  >
+                    {year}
+                  </button>
+                ))}
+              </div>
+
+              {isAdmin && (
+                <Button
+                  onClick={() => setIsAddEventDialogOpen(true)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/20"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Іс-шара қосу
+                </Button>
+              )}
+            </div>
           </div>
-          <div className="grid gap-6">
-            {groupedEvents.map((monthData, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow duration-300 dark:bg-[#1e293b] dark:border-gray-700">
-                <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
-                  <CardTitle className="text-blue-800 dark:text-blue-400 flex items-center space-x-2">
-                    <Calendar className="w-5 h-5" />
-                    <span>{monthData.month}</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-6">
-                  <div className="grid gap-4">
+          
+          {selectedYear === "2026-2027" ? (
+            <div className="flex flex-col items-center justify-center py-24 bg-gray-50/50 dark:bg-gray-800/20 rounded-3xl border-2 border-dashed border-gray-200 dark:border-gray-700 mb-12">
+              <Clock className="w-16 h-16 text-blue-500/50 mb-4 animate-pulse" />
+              <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">Жақын арада</h3>
+              <p className="text-gray-600 dark:text-gray-400">Бұл бөлім 2026-2027 оқу жылына дайындалуда</p>
+            </div>
+          ) : (
+            <>
+              <div className="flex items-center gap-3">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => toggleAllMonths(true)}
+                className="text-xs border-blue-200 dark:border-gray-700 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+              >
+                Барлығын ашу
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => toggleAllMonths(false)}
+                className="text-xs border-gray-200 dark:border-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50"
+              >
+                Жию
+              </Button>
+            </div>
+
+          <div className="grid gap-4">
+            {groupedEvents.length === 0 ? (
+              <Card className="border-dashed border-2 border-gray-200 dark:border-gray-700 bg-transparent">
+                <CardContent className="p-12 text-center">
+                  <Calendar className="w-12 h-12 mx-auto mb-4 opacity-20 text-gray-500" />
+                  <p className="text-gray-500 dark:text-gray-400">Бұл оқу жылына іс-шаралар әлі қосылмаған</p>
+                </CardContent>
+              </Card>
+            ) : groupedEvents.map((monthData, index) => (
+              <Card key={`${selectedYear}-${monthData.month}`} className="hover:shadow-lg transition-shadow duration-300 dark:bg-[#1e293b] dark:border-gray-700 overflow-hidden border-none shadow-sm">
+                <button
+                  onClick={() => toggleMonth(monthData.month)}
+                  className="w-full text-left bg-gradient-to-r from-blue-50/50 to-indigo-50/50 dark:from-blue-900/10 dark:to-indigo-900/10 px-6 py-4 flex items-center justify-between group"
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className={`p-2 rounded-lg transition-colors ${expandedMonths.has(monthData.month) ? "bg-blue-600 text-white" : "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"}`}>
+                      <Calendar className="w-5 h-5" />
+                    </div>
+                    <span className="text-lg font-bold text-gray-800 dark:text-gray-100">{monthData.month}</span>
+                    <span className="text-xs text-gray-400 ml-2">({monthData.events.length} іс-шара)</span>
+                  </div>
+                  <div className={`transition-transform duration-300 ${expandedMonths.has(monthData.month) ? "rotate-180" : ""}`}>
+                    <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-blue-500" />
+                  </div>
+                </button>
+                <AnimatePresence>
+                  {expandedMonths.has(monthData.month) && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <CardContent className="p-6 pt-0 border-t border-gray-100 dark:border-gray-800/50">
+                        <div className="grid gap-4 mt-6">
                     {monthData.events.map((event) => (
                       <div key={event.id} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
                         <div className="p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
@@ -1800,9 +2017,14 @@ export default function UpbringingWorkPage() {
                     ))}
                   </div>
                 </CardContent>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </Card>
             ))}
           </div>
+          </>
+          )}
         </section>
 
         {/* Feedback Form */}
@@ -1825,10 +2047,15 @@ export default function UpbringingWorkPage() {
                     id="feedback-name"
                     name="name"
                     type="text"
+                    autoComplete="name"
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Толық аты-жөніңізді енгізіңіз"
+                    placeholder="Толық аты-жөнінізді енгізіңіз"
                     value={feedbackForm.name}
-                    onChange={(e) => setFeedbackForm({ ...feedbackForm, name: e.target.value })}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      const capitalized = val.charAt(0).toUpperCase() + val.slice(1);
+                      setFeedbackForm({ ...feedbackForm, name: capitalized });
+                    }}
                   />
                 </div>
                 <div>
@@ -1839,6 +2066,7 @@ export default function UpbringingWorkPage() {
                     id="feedback-email"
                     name="email"
                     type="email"
+                    autoComplete="email"
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="example@email.com"
                     value={feedbackForm.email}
@@ -1856,7 +2084,11 @@ export default function UpbringingWorkPage() {
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Хат тақырыбы"
                     value={feedbackForm.subject}
-                    onChange={(e) => setFeedbackForm({ ...feedbackForm, subject: e.target.value })}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      const capitalized = val.charAt(0).toUpperCase() + val.slice(1);
+                      setFeedbackForm({ ...feedbackForm, subject: capitalized });
+                    }}
                   />
                 </div>
                 <div className="md:col-span-2">
@@ -1870,13 +2102,26 @@ export default function UpbringingWorkPage() {
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Пікіріңіз бен ұсыныстарыңызды жазыңыз..."
                     value={feedbackForm.message}
-                    onChange={(e) => setFeedbackForm({ ...feedbackForm, message: e.target.value })}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      const capitalized = val.charAt(0).toUpperCase() + val.slice(1);
+                      setFeedbackForm({ ...feedbackForm, message: capitalized });
+                    }}
                   />
                 </div>
                 <div className="md:col-span-2">
-                  <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg flex items-center space-x-2">
-                    <Send className="w-4 h-4" />
-                    <span>Жіберу</span>
+                  <Button 
+                    onClick={() => {
+                      const message = `Сәлеметсіз бе! Менің атым: ${feedbackForm.name}. Электрондық пошта: ${feedbackForm.email}. Тақырып: ${feedbackForm.subject}. Хабарлама: ${feedbackForm.message}`;
+                      const encodedMessage = encodeURIComponent(message);
+                      window.open(`https://wa.me/77757906363?text=${encodedMessage}`, '_blank');
+                      alert("Хабарламаңыз сәтті жіберілді!");
+                      setFeedbackForm({ name: "", email: "", subject: "", message: "" });
+                    }}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl flex items-center space-x-3 shadow-lg shadow-blue-500/30 transition-all active:scale-95"
+                  >
+                    <Send className="w-5 h-5" />
+                    <span className="font-bold">WhatsApp арқылы жіберу</span>
                   </Button>
                 </div>
               </div>
@@ -1953,6 +2198,16 @@ export default function UpbringingWorkPage() {
                   required
                 />
               </div>
+              <div className="space-y-2">
+                <Label className="text-gray-300">Оқу жылы</Label>
+                <select
+                  className="w-full bg-[#0d1117] border border-white/20 text-white rounded-md p-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none"
+                  value={uploadYear}
+                  onChange={(e) => setUploadYear(e.target.value)}
+                >
+                  {academicYears.map(y => <option key={y} value={y}>{y}</option>)}
+                </select>
+              </div>
               <Button
                 type="submit"
                 className="w-full bg-blue-600 hover:bg-blue-700 mt-2"
@@ -1986,7 +2241,8 @@ export default function UpbringingWorkPage() {
                 id: editingDoc.id,
                 data: {
                   title: editingDoc.title,
-                  url: editingDoc.url
+                  url: editingDoc.url,
+                  academicYear: editingDoc.academicYear
                 }
               });
               setIsEditDialogOpen(false);
@@ -2012,6 +2268,16 @@ export default function UpbringingWorkPage() {
                   className="bg-[#0d1117] border-white/20 text-white"
                   required
                 />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-gray-300">Оқу жылы</Label>
+                <select
+                  className="w-full bg-[#0d1117] border border-white/20 text-white rounded-md p-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none"
+                  value={editingDoc?.academicYear || "2025-2026"}
+                  onChange={(e) => setEditingDoc({ ...editingDoc, academicYear: e.target.value })}
+                >
+                  {academicYears.map(y => <option key={y} value={y}>{y}</option>)}
+                </select>
               </div>
               <Button
                 type="submit"
@@ -2084,6 +2350,18 @@ export default function UpbringingWorkPage() {
                   onChange={(e) => setEditingEvent({ ...editingEvent, description: e.target.value })}
                 />
               </div>
+              <div className="space-y-2">
+                <Label className="text-gray-300">Оқу жылы</Label>
+                <select
+                  id="edit-event-year"
+                  name="academicYear"
+                  className="w-full bg-[#0d1117] border border-white/20 text-white rounded-md p-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none"
+                  value={editingEvent?.academicYear || "2025-2026"}
+                  onChange={(e) => setEditingEvent({ ...editingEvent, academicYear: e.target.value })}
+                >
+                  {academicYears.map(y => <option key={y} value={y}>{y}</option>)}
+                </select>
+              </div>
               <div className="flex gap-2 pt-2">
                 <Button
                   className="flex-1 bg-blue-600 hover:bg-blue-700"
@@ -2093,7 +2371,8 @@ export default function UpbringingWorkPage() {
                       title: editingEvent.title,
                       dateText: editingEvent.dateText || editingEvent.date,
                       month: editingEvent.month,
-                      description: editingEvent.description
+                      description: editingEvent.description,
+                      academicYear: editingEvent.academicYear
                     }
                   })}
                   disabled={eventUpdateMutation.isPending}
@@ -2167,6 +2446,18 @@ export default function UpbringingWorkPage() {
                   onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}
                 />
               </div>
+              <div className="space-y-2">
+                <Label className="text-gray-300">Оқу жылы</Label>
+                <select
+                  id="new-event-year"
+                  name="academicYear"
+                  className="w-full bg-[#0d1117] border border-white/20 text-white rounded-md p-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none"
+                  value={newEvent.academicYear}
+                  onChange={(e) => setNewEvent({ ...newEvent, academicYear: e.target.value })}
+                >
+                  {academicYears.map(y => <option key={y} value={y}>{y}</option>)}
+                </select>
+              </div>
               <div className="flex gap-2 pt-2">
                 <Button
                   className="flex-1 bg-blue-600 hover:bg-blue-700"
@@ -2186,7 +2477,27 @@ export default function UpbringingWorkPage() {
             </div>
           </DialogContent>
         </Dialog>
-      </div >
-    </div >
+        {/* Global Lightbox for galleries */}
+        {lightboxImage && (
+          <div
+            className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4"
+            onClick={() => setLightboxImage(null)}
+          >
+            <button
+              className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors"
+              onClick={() => setLightboxImage(null)}
+            >
+              <X className="w-8 h-8" />
+            </button>
+            <img
+              src={lightboxImage || ""}
+              alt="Увеличенное фото"
+              className="max-w-full max-h-[90vh] rounded-lg object-contain shadow-2xl"
+              onClick={e => e.stopPropagation()}
+            />
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

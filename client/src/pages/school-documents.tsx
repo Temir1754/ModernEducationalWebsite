@@ -1160,37 +1160,43 @@ export default function SchoolDocumentsPage() {
       <div className="min-h-screen bg-gray-50 dark:bg-[#0f172a]">
 
         {/* ── Header ── */}
-        <div className="bg-white dark:bg-[#1e293b] shadow-sm border-b border-gray-200 dark:border-white/10">
+        <div className="bg-transparent border-b border-gray-200 dark:border-gray-800">
           <div className="container mx-auto px-4 py-5">
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div className="flex items-center gap-4 flex-1 min-w-[300px]">
-                <Link
-                  href="/"
-                  className="flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors duration-200 bg-blue-50 dark:bg-[#1e293b] hover:bg-blue-100 dark:hover:bg-slate-700 px-3 py-2 rounded-lg shadow-sm shrink-0"
-                >
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Басты бет
-                </Link>
+                
 
-                <div className="relative flex-1 max-w-md">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  <Input
-                    id="document-search"
-                    name="searchTerm"
-                  placeholder="Құжаттарды іздеу..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 bg-gray-50 dark:bg-[#0d1117] border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-blue-500 transition-all text-gray-900 dark:text-white"
-                  />
-                  {searchTerm && (
-                    <button
-                      onClick={() => setSearchTerm("")}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  )}
-                </div>
+                <motion.div 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="relative flex-1 max-w-lg group"
+                >
+                  <div className="absolute inset-0 bg-blue-500/5 rounded-2xl blur-xl group-focus-within:bg-blue-500/10 transition-colors" />
+                  <div className="relative flex items-center">
+                    <Search className="absolute left-4 w-5 h-5 text-slate-400 group-focus-within:text-blue-500 transition-colors z-10" />
+                    <Input
+                      id="document-search"
+                      name="searchTerm"
+                      placeholder="Құжаттарды іздеу..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-12 pr-12 h-14 bg-white/40 dark:bg-slate-900/40 backdrop-blur-xl border-slate-200/50 dark:border-slate-800/50 rounded-2xl shadow-xl focus-visible:ring-blue-500/30 focus-visible:border-blue-500/50 transition-all text-lg font-medium dark:text-white"
+                    />
+                    <AnimatePresence>
+                      {searchTerm && (
+                        <motion.button
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.8 }}
+                          onClick={() => setSearchTerm("")}
+                          className="absolute right-4 p-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors z-10"
+                        >
+                          <X className="w-4 h-4" />
+                        </motion.button>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </motion.div>
               </div>
 
               {user && (

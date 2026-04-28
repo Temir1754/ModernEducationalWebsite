@@ -28,22 +28,7 @@ const EventsPage = () => {
     <div className="min-h-screen bg-gray-50 dark:bg-[#0f172a]">
       <SEOHead page="home" customTitle="Іс-шаралар күнтізбесі | FGS School" />
 
-      {/* Header */}
-      <div className="bg-white dark:bg-[#1e293b] shadow-sm border-b dark:border-gray-700">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link 
-              href="/"
-              className="flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors duration-200 bg-blue-50 dark:bg-[#1e293b] hover:bg-blue-100 dark:hover:bg-slate-700 px-3 py-2 rounded-lg shadow-sm"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              <span className="hidden sm:inline">Басты бетке оралу</span>
-              <span className="sm:hidden">Басты бет</span>
-            </Link>
-            <h1 className="text-lg sm:text-2xl font-bold text-gray-800 dark:text-gray-100">Іс-шаралар</h1>
-          </div>
-        </div>
-      </div>
+      
 
       <div className="container mx-auto px-4 py-12">
         {isLoading ? (
