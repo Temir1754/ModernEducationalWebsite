@@ -160,64 +160,69 @@ export default function Header() {
 
               {/* Prominent Social Media buttons */}
               <div className="hidden md:flex items-center space-x-2 ml-6 border-l border-gray-300 pl-4">
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.location.href = 'instagram://user?username=bilimdi_urpaq_shymkent';
-                    setTimeout(() => {
-                      window.open('https://www.instagram.com/bilimdi_urpaq_shymkent/', '_blank');
-                    }, 1000);
-                  }}
-                  className="flex items-center bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1.5 rounded-full hover:from-purple-600 hover:to-pink-600 transform hover:scale-105 transition-all duration-200 text-xs font-medium shadow-md"
-                >
-                  <Instagram className="w-4 h-4 mr-1" />
-                  Instagram
-                </button>
-
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    const telegramLink = prompt('Телеграм каналы немесе топ сілтемесін енгізіңіз (мысалы: https://t.me/bilimdi_urpaq):');
-                    if (telegramLink) {
-                      const username = telegramLink.replace('https://t.me/', '');
-                      window.location.href = `tg://resolve?domain=${username}`;
+                  <button
+                    aria-label="Instagram"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      window.location.href = 'instagram://user?username=bilimdi_urpaq_shymkent';
                       setTimeout(() => {
-                        window.open(telegramLink, '_blank');
+                        window.open('https://www.instagram.com/bilimdi_urpaq_shymkent/', '_blank');
                       }, 1000);
-                    }
-                  }}
-                  className="flex items-center bg-blue-500 text-white px-3 py-1.5 rounded-full hover:bg-blue-600 transform hover:scale-105 transition-all duration-200 text-xs font-medium shadow-md"
-                >
-                  <Send className="w-4 h-4 mr-1" />
-                  Telegram
-                </button>
+                    }}
+                    className="flex items-center bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1.5 rounded-full hover:from-purple-600 hover:to-pink-600 transform hover:scale-105 transition-all duration-200 text-xs font-medium shadow-md"
+                  >
+                    <Instagram className="w-4 h-4 mr-1" />
+                    Instagram
+                  </button>
 
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.open('https://wa.me/77757906363', '_blank');
-                  }}
-                  className="flex items-center bg-green-500 text-white px-3 py-1.5 rounded-full hover:bg-green-600 transform hover:scale-105 transition-all duration-200 text-xs font-medium shadow-md"
-                >
-                  <MessageCircle className="w-4 h-4 mr-1" />
-                  WhatsApp
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.open('https://www.facebook.com/people/Bilimdi-Urpaq-School/pfbid0b3bkVb2Vz1B59RdK3PfLQR7DcKwJ92XaxfMXdB5kK7wv1AwTBBUbtUZ5uj1oAN7ul/', '_blank');
-                  }}
-                  className="flex items-center bg-blue-600 text-white px-3 py-1.5 rounded-full hover:bg-blue-700 transform hover:scale-105 transition-all duration-200 text-xs font-medium shadow-md"
-                >
-                  <Facebook className="w-4 h-4 mr-1" />
-                  Facebook
-                </button>
+                  <button
+                    aria-label="Telegram"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      const telegramLink = prompt('Телеграм каналы немесе топ сілтемесін енгізіңіз (мысалы: https://t.me/bilimdi_urpaq):');
+                      if (telegramLink) {
+                        const username = telegramLink.replace('https://t.me/', '');
+                        window.location.href = `tg://resolve?domain=${username}`;
+                        setTimeout(() => {
+                          window.open(telegramLink, '_blank');
+                        }, 1000);
+                      }
+                    }}
+                    className="flex items-center bg-blue-500 text-white px-3 py-1.5 rounded-full hover:bg-blue-600 transform hover:scale-105 transition-all duration-200 text-xs font-medium shadow-md"
+                  >
+                    <Send className="w-4 h-4 mr-1" />
+                    Telegram
+                  </button>
+
+                  <button
+                    aria-label="WhatsApp"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      window.open('https://wa.me/77757906363', '_blank');
+                    }}
+                    className="flex items-center bg-green-500 text-white px-3 py-1.5 rounded-full hover:bg-green-600 transform hover:scale-105 transition-all duration-200 text-xs font-medium shadow-md"
+                  >
+                    <MessageCircle className="w-4 h-4 mr-1" />
+                    WhatsApp
+                  </button>
+                  <button
+                    aria-label="Facebook"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      window.open('https://www.facebook.com/people/Bilimdi-Urpaq-School/pfbid0b3bkVb2Vz1B59RdK3PfLQR7DcKwJ92XaxfMXdB5kK7wv1AwTBBUbtUZ5uj1oAN7ul/', '_blank');
+                    }}
+                    className="flex items-center bg-blue-600 text-white px-3 py-1.5 rounded-full hover:bg-blue-700 transform hover:scale-105 transition-all duration-200 text-xs font-medium shadow-md"
+                  >
+                    <Facebook className="w-4 h-4 mr-1" />
+                    Facebook
+                  </button>
               </div>
             </div>
 
             {/* Mobile Social Media Icons */}
             <div className="flex md:hidden items-center space-x-2">
               <button
+                aria-label="Instagram"
                 onClick={(e) => {
                   e.preventDefault();
                   window.location.href = 'instagram://user?username=bilimdi_urpaq_shymkent';
@@ -231,6 +236,7 @@ export default function Header() {
               </button>
 
               <button
+                aria-label="Telegram"
                 onClick={(e) => {
                   e.preventDefault();
                   const telegramLink = prompt('Телеграм каналы немесе топ сілтемесін енгізіңіз (мысалы: https://t.me/bilimdi_urpaq):');
@@ -248,6 +254,7 @@ export default function Header() {
               </button>
 
               <button
+                aria-label="WhatsApp"
                 onClick={(e) => {
                   e.preventDefault();
                   window.location.href = 'whatsapp://send?phone=77757906363';
@@ -260,6 +267,7 @@ export default function Header() {
                 <MessageCircle className="w-4 h-4" />
               </button>
               <button
+                aria-label="Facebook"
                 onClick={(e) => {
                   e.preventDefault();
                   window.open('https://www.facebook.com/people/Bilimdi-Urpaq-School/pfbid0b3bkVb2Vz1B59RdK3PfLQR7DcKwJ92XaxfMXdB5kK7wv1AwTBBUbtUZ5uj1oAN7ul/', '_blank');

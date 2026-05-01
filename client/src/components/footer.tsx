@@ -5,6 +5,7 @@ export default function Footer() {
     {
       href: "https://www.instagram.com/bilimdi_urpaq_shymkent/",
       icon: "fab fa-instagram",
+      label: "Instagram",
       className: "text-pink-400 hover:text-pink-500 transform hover:scale-110 transition-all duration-200",
       onClick: (e: React.MouseEvent) => {
         e.preventDefault();
@@ -17,6 +18,7 @@ export default function Footer() {
     {
       href: "#",
       icon: "fab fa-telegram",
+      label: "Telegram",
       className: "text-blue-400 hover:text-blue-500 transform hover:scale-110 transition-all duration-200",
       onClick: (e: React.MouseEvent) => {
         e.preventDefault();
@@ -33,6 +35,7 @@ export default function Footer() {
     {
       href: "https://wa.me/77757906363",
       icon: "fab fa-whatsapp",
+      label: "WhatsApp",
       className: "text-green-400 hover:text-green-500 transform hover:scale-110 transition-all duration-200",
       onClick: (e: React.MouseEvent) => {
         e.preventDefault();
@@ -45,6 +48,7 @@ export default function Footer() {
     {
       href: "https://www.facebook.com/people/Bilimdi-Urpaq-School/pfbid0b3bkVb2Vz1B59RdK3PfLQR7DcKwJ92XaxfMXdB5kK7wv1AwTBBUbtUZ5uj1oAN7ul/",
       icon: "fab fa-facebook-f",
+      label: "Facebook",
       className: "text-blue-400 hover:text-blue-500 transform hover:scale-110 transition-all duration-200",
     },
   ];
@@ -73,6 +77,7 @@ export default function Footer() {
                   href={link.href}
                   className={link.className}
                   onClick={link.onClick}
+                  aria-label={link.label}
                 >
                   <i className={`${link.icon} text-xl`}></i>
                 </a>

@@ -97,6 +97,7 @@ function DocRow({
           size="sm"
           onClick={() => handleView(doc.url)}
           className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 h-7 px-2 text-xs"
+          aria-label="Көру"
         >
           <Eye className="w-3.5 h-3.5 mr-1" />
           Көру
@@ -106,6 +107,7 @@ function DocRow({
           size="sm"
           onClick={() => handleDownload(doc.url, doc.title)}
           className="text-green-400 hover:text-green-300 hover:bg-green-500/10 h-7 px-2 text-xs"
+          aria-label="Жүктеу"
         >
           <Download className="w-3.5 h-3.5 mr-1" />
           Жүктеу
@@ -155,6 +157,7 @@ function DocRow({
                   size="sm"
                   onClick={() => handleView(doc.scanUrl!)}
                   className="text-purple-400 hover:text-purple-300 hover:bg-purple-500/10 h-7 px-2 text-xs"
+                  aria-label="Сканды көру"
                 >
                   <Eye className="w-3.5 h-3.5 mr-1" />
                   Скан
@@ -168,6 +171,7 @@ function DocRow({
                     }
                   }}
                   className="text-red-400 hover:text-red-300 hover:bg-red-500/10 h-7 w-7 p-0"
+                  aria-label="Сканды өшіру"
                 >
                   <Trash2 className="w-3 h-3" />
                 </Button>
@@ -180,6 +184,7 @@ function DocRow({
               onClick={() => onEdit(doc)}
               className="text-gray-400 hover:text-white hover:bg-white/10 h-7 w-7 p-0"
               disabled={isDeleting}
+              aria-label="Өңдеу"
             >
               <Pencil className="w-3.5 h-3.5" />
             </Button>
@@ -1131,7 +1136,16 @@ export default function SchoolDocumentsPage() {
                     <Search className="absolute left-4 w-5 h-5 text-slate-400 group-focus-within:text-blue-500 transition-colors z-10" />
                     <Input id="document-search" name="searchTerm" placeholder="Құжаттарды іздеу..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-12 pr-12 h-14 bg-white/40 dark:bg-slate-900/40 backdrop-blur-xl border-slate-200/50 dark:border-slate-800/50 rounded-2xl shadow-xl focus-visible:ring-blue-500/30 focus-visible:border-blue-500/50 transition-all text-lg font-medium dark:text-white" />
                     <AnimatePresence>{searchTerm && (
-                      <motion.button initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} onClick={() => setSearchTerm("")} className="absolute right-4 p-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors z-10"><X className="w-4 h-4" /></motion.button>
+                      <motion.button 
+                        initial={{ opacity: 0, scale: 0.8 }} 
+                        animate={{ opacity: 1, scale: 1 }} 
+                        exit={{ opacity: 0, scale: 0.8 }} 
+                        onClick={() => setSearchTerm("")} 
+                        className="absolute right-4 p-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors z-10"
+                        aria-label="Іздеуді тазалау"
+                      >
+                        <X className="w-4 h-4" />
+                      </motion.button>
                     )}</AnimatePresence>
                   </div>
                 </motion.div>
