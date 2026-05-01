@@ -154,13 +154,15 @@ export default function MobileSchoolFactsSlides() {
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`w-2 h-2 rounded-full transition-all duration-200 ${
+              className="w-10 h-10 flex items-center justify-center transition-all duration-200"
+              aria-label={`${index + 1}-ші фактқа өту`}
+            >
+              <span className={`h-2 rounded-full transition-all duration-200 ${
                 index === currentIndex 
                   ? `${currentFact.color.replace('text-', 'bg-')} w-6` 
-                  : 'bg-gray-300 hover:bg-gray-400'
-              }`}
-              aria-label={`${index + 1}-ші фактқа өту`}
-            />
+                  : 'bg-gray-300 hover:bg-gray-400 w-2'
+              }`} />
+            </button>
           ))}
         </div>
 

@@ -131,13 +131,15 @@ export default function MobileDevelopmentCarousel() {
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-200 ${
+              className="w-10 h-10 flex items-center justify-center transition-all duration-200"
+              aria-label={`${index + 1}-ші бағытқа өту`}
+            >
+              <span className={`w-3 h-3 rounded-full transition-all duration-200 ${
                 index === currentIndex 
                   ? `${currentDirection.color.replace('text-', 'bg-')} shadow-sm` 
                   : 'bg-gray-300 hover:bg-gray-400'
-              }`}
-              aria-label={`${index + 1}-ші бағытқа өту`}
-            />
+              }`} />
+            </button>
           ))}
         </div>
 
