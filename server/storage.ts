@@ -310,6 +310,16 @@ export class DatabaseStorage implements IStorage {
   }
 
   async deleteFolder(id: string): Promise<void> {
+    // Recursive delete: find subfolders
+    const subs = await db.select().from(documentFolders).where(eq(documentFolders.parentId, id));
+    for (const sub of subs) {
+      await this.deleteFolder(sub.id);
+    }
+
+    // Delete documents in this folder
+    await db.delete(documents).where(eq(documents.section, id));
+
+    // Finally delete the folder itself
     await db.delete(documentFolders).where(eq(documentFolders.id, id));
   }
 

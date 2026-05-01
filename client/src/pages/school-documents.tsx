@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import {
   ArrowLeft, Download, Eye, Loader2, Plus, Trash2, Pencil,
-  ChevronRight, ChevronDown, Folder, FolderOpen, FileText, Search, X, Check, FolderPlus
+  ChevronRight, ChevronDown, Folder, FolderOpen, FileText, Search, X, Check, FolderPlus, SortAsc
 } from "lucide-react";
 import SEOHead from "@/components/seo-head";
 import type { Document, DocumentFolder } from "@shared/schema";
@@ -275,20 +275,40 @@ function SubFolderAccordion({
           )}
         </button>
         {user && (
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-8 w-8 p-0 text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 mr-1 shrink-0"
-            onClick={(e) => {
-              e.stopPropagation();
-              if (confirm(`"${subfolder.label}" папкасын өшіруге сенімдісіз бе? Ішіндегі мәліметтер жойылуы мүмкін.`)) {
-                deleteFolderMutation.mutate(subfolder.id);
-              }
-            }}
-            title="Папканы өшіру"
-          >
-            <Trash2 className="w-3.5 h-3.5" />
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0 text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 mr-1 shrink-0"
+                onClick={(e) => e.stopPropagation()}
+                title="Папканы өшіру"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="bg-[#111827] border-white/10 text-white">
+              <DialogHeader>
+                <DialogTitle>Папканы өшіру</DialogTitle>
+                <DialogDescription className="text-gray-400">
+                  "{subfolder.label}" папкасын өшіруге сенімдісіз бе? Ішіндегі барлық папкалар мен құжаттар біржола жойылады.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="flex justify-end gap-2 mt-4">
+                <DialogTrigger asChild>
+                  <Button variant="ghost">Болдырмау</Button>
+                </DialogTrigger>
+                <Button
+                  onClick={() => deleteFolderMutation.mutate(subfolder.id)}
+                  className="bg-red-600 hover:bg-red-700 text-white"
+                  disabled={deleteFolderMutation.isPending}
+                >
+                  {deleteFolderMutation.isPending && <Loader2 className="animate-spin mr-2 w-4 h-4" />}
+                  Өшіру
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         )}
         {user && (
           <Dialog>
@@ -444,20 +464,40 @@ function CategoryAccordion({
           )}
         </button>
         {user && (
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 mr-3 shrink-0"
-            onClick={(e) => {
-              e.stopPropagation();
-              if (confirm(`"${category.label}" папкасын өшіруге сенімдісіз бе? Ішіндегі барлық мәліметтер өшуі мүмкін!`)) {
-                deleteFolderMutation.mutate(category.id);
-              }
-            }}
-            title="Папканы өшіру"
-          >
-            <Trash2 className="w-4 h-4" />
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 mr-3 shrink-0"
+                onClick={(e) => e.stopPropagation()}
+                title="Папканы өшіру"
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="bg-[#111827] border-white/10 text-white">
+              <DialogHeader>
+                <DialogTitle>Категорияны өшіру</DialogTitle>
+                <DialogDescription className="text-gray-400">
+                  "{category.label}" категориясын өшіруге сенімдісіз бе? Ішіндегі барлық папкалар мен құжаттар өшеді!
+                </DialogDescription>
+              </DialogHeader>
+              <div className="flex justify-end gap-2 mt-4">
+                <DialogTrigger asChild>
+                  <Button variant="ghost">Болдырмау</Button>
+                </DialogTrigger>
+                <Button
+                  onClick={() => deleteFolderMutation.mutate(category.id)}
+                  className="bg-red-600 hover:bg-red-700 text-white"
+                  disabled={deleteFolderMutation.isPending}
+                >
+                  {deleteFolderMutation.isPending && <Loader2 className="animate-spin mr-2 w-4 h-4" />}
+                  Өшіру
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         )}
         {user && (
           <Dialog>
@@ -849,6 +889,9 @@ export default function SchoolDocumentsPage() {
   const { user } = useAuth();
   const { toast } = useToast();
 
+  const [sortBy, setSortBy] = useState<'order' | 'name' | 'count'>('order');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+
   const { data: dbFolders = [], isLoading: isFoldersLoading } = useQuery<DocumentFolder[]>({
     queryKey: ["/api/folders"],
     queryFn: async () => {
@@ -858,30 +901,67 @@ export default function SchoolDocumentsPage() {
     },
   });
 
+  const { data: documents = [], isLoading } = useQuery<Document[]>({
+    queryKey: ["/api/documents"],
+    queryFn: async () => {
+      const res = await fetch("/api/documents");
+      if (!res.ok) return [];
+      return res.json();
+    },
+  });
+
   const categories: CategoryDef[] = React.useMemo(() => {
-    const rootFolders = dbFolders.filter((f) => f.isCategory).sort((a, b) => Number(a.order) - Number(b.order));
     const buildSubfolders = (parentId: string): SubFolder[] => {
-      return dbFolders
+      const subs = dbFolders
         .filter((f) => f.parentId === parentId)
-        .sort((a, b) => Number(a.order) - Number(b.order))
         .map(f => ({
           id: f.id,
           label: f.name,
+          order: Number(f.order) || 0,
           subfolders: buildSubfolders(f.id)
         }));
+
+      return subs.sort((a, b) => {
+        if (sortBy === 'name') {
+          return sortOrder === 'asc' 
+            ? a.label.localeCompare(b.label) 
+            : b.label.localeCompare(a.label);
+        }
+        return a.order - b.order;
+      });
     };
 
-    return rootFolders.map(cat => {
-      const subs = buildSubfolders(cat.id);
-      return {
-        id: cat.id,
-        label: cat.name,
-        type: subs.length > 0 ? "grouped" : "simple",
-        section: subs.length === 0 ? cat.id : undefined,
-        subfolders: subs.length > 0 ? subs : undefined,
-      };
+    const rootFolders = dbFolders
+      .filter((f) => f.isCategory)
+      .map(cat => {
+        const subs = buildSubfolders(cat.id);
+        const count = subs.length > 0 
+          ? subs.reduce((acc, sf) => acc + getDocCount(sf, documents), 0)
+          : documents.filter(d => d.section === cat.id).length;
+
+        return {
+          id: cat.id,
+          label: cat.name,
+          order: Number(cat.order) || 0,
+          type: subs.length > 0 ? "grouped" as const : "simple" as const,
+          section: subs.length === 0 ? cat.id : undefined,
+          subfolders: subs.length > 0 ? subs : undefined,
+          docCount: count
+        };
+      });
+
+    return rootFolders.sort((a, b) => {
+      if (sortBy === 'name') {
+        return sortOrder === 'asc' 
+          ? a.label.localeCompare(b.label) 
+          : b.label.localeCompare(a.label);
+      }
+      if (sortBy === 'count') {
+        return sortOrder === 'asc' ? a.docCount - b.docCount : b.docCount - a.docCount;
+      }
+      return a.order - b.order;
     });
-  }, [dbFolders]);
+  }, [dbFolders, sortBy, sortOrder, documents]);
 
   const allSections: { id: string; label: string }[] = React.useMemo(() => {
     const flattenSubfolders = (catLabel: string, sfs: SubFolder[]): { id: string; label: string }[] => {
@@ -913,7 +993,6 @@ export default function SchoolDocumentsPage() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const [isFolderOpen, setIsFolderOpen] = useState(false);
-  const [editingFolderId, setEditingFolderId] = useState<string | null>(null);
   const [newFolder, setNewFolder] = useState({
     name: "",
     subName: "",
@@ -927,145 +1006,56 @@ export default function SchoolDocumentsPage() {
   const folderUploadMutation = useMutation({
     mutationFn: async (e: React.FormEvent) => {
       e.preventDefault();
-
-      const payload1: any = {
-        name: newFolder.name,
-        order: "0",
-        isCategory: newFolder.parentId === "null"
-      };
-      if (newFolder.parentId !== "null") {
-        payload1.parentId = newFolder.parentId;
-      }
-
-      const res1 = await fetch("/api/folders", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload1)
-      });
-      if (!res1.ok) {
-        throw new Error("Папканы жасау кезінде қате кетті");
-      }
+      const payload1: any = { name: newFolder.name, order: "0", isCategory: newFolder.parentId === "null" };
+      if (newFolder.parentId !== "null") payload1.parentId = newFolder.parentId;
+      const res1 = await fetch("/api/folders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload1) });
+      if (!res1.ok) throw new Error("Папканы жасау кезінде қате кетті");
       const createdFolder = await res1.json();
-
       let targetId = createdFolder.id;
-
       if (newFolder.subName.trim() !== "") {
-        const payload2 = {
-          name: newFolder.subName.trim(),
-          parentId: createdFolder.id,
-          order: "0",
-          isCategory: false
-        };
-        const res2 = await fetch("/api/folders", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload2)
-        });
+        const res2 = await fetch("/api/folders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: newFolder.subName.trim(), parentId: createdFolder.id, order: "0", isCategory: false }) });
         if (!res2.ok) throw new Error("Ішкі папканы жасау кезінде қате кетті");
         const createdSubFolder = await res2.json();
         targetId = createdSubFolder.id;
       }
-
       if (newFolder.autoCreateYears) {
         if (isParentYear) {
           const siblings = dbFolders.filter(f => f.parentId === selectedParent.parentId && f.id !== selectedParent.id);
           for (const sib of siblings) {
-            const sibRes = await fetch("/api/folders", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                name: newFolder.name,
-                parentId: sib.id,
-                order: "0",
-                isCategory: false
-              })
-            });
+            const sibRes = await fetch("/api/folders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: newFolder.name, parentId: sib.id, order: "0", isCategory: false }) });
             if (sibRes.ok && newFolder.subName.trim() !== "") {
               const sibFolder = await sibRes.json();
-              await fetch("/api/folders", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  name: newFolder.subName.trim(),
-                  parentId: sibFolder.id,
-                  order: "0",
-                  isCategory: false
-                })
-              });
+              await fetch("/api/folders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: newFolder.subName.trim(), parentId: sibFolder.id, order: "0", isCategory: false }) });
             }
           }
         } else {
           const years = ["2024-2025", "2025-2026", "2026-2027"];
           for (let i = 0; i < years.length; i++) {
-            await fetch("/api/folders", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                name: years[i],
-                parentId: targetId,
-                order: String(i),
-                isCategory: false
-              })
-            });
+            await fetch("/api/folders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: years[i], parentId: targetId, order: String(i), isCategory: false }) });
           }
         }
       }
-
       return createdFolder;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/folders"] });
       toast({ title: "Папка сәтті қосылды!" });
       setIsFolderOpen(false);
-      // Keep parentId so the user can add another folder to the same section easily
       setNewFolder(prev => ({ ...prev, name: "", subName: "", autoCreateYears: false }));
     },
     onError: (err: Error) => toast({ title: "Қате", description: err.message, variant: "destructive" })
-  });
-
-  // Fetch ALL documents in one request
-  const { data: documents = [], isLoading } = useQuery<Document[]>({
-    queryKey: ["/api/documents"],
-    queryFn: async () => {
-      const res = await fetch("/api/documents");
-      if (!res.ok) return [];
-      return res.json();
-    },
   });
 
   const uploadMutation = useMutation({
     mutationFn: async (e: React.FormEvent) => {
       e.preventDefault();
       if (!uploadFile) throw new Error("Please select a file");
-
       const fd = new FormData();
       fd.append("file", uploadFile);
       const uploadRes = await fetch("/api/upload", { method: "POST", body: fd });
-      if (!uploadRes.ok) {
-        const errText = await uploadRes.text().catch(() => "");
-        let errMsg = "File upload failed";
-        try {
-          const errData = JSON.parse(errText);
-          if (errData.message) errMsg = errData.message;
-        } catch {
-          if (errText) errMsg = errText.slice(0, 100);
-        }
-        throw new Error(errMsg);
-      }
+      if (!uploadRes.ok) throw new Error("File upload failed");
       const { url } = await uploadRes.json();
-
-      const docRes = await fetch("/api/documents", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: newDoc.title,
-          description: newDoc.description,
-          section: newDoc.section,
-          url,
-          color: "blue",
-          icon: "file",
-        }),
-      });
+      const docRes = await fetch("/api/documents", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title: newDoc.title, description: newDoc.description, section: newDoc.section, url, color: "blue", icon: "file" }) });
       if (!docRes.ok) throw new Error("Failed to save document info");
       return docRes.json();
     },
@@ -1076,17 +1066,12 @@ export default function SchoolDocumentsPage() {
       setNewDoc({ title: "", description: "", section: defaultSection });
       setUploadFile(null);
     },
-    onError: (err: Error) =>
-      toast({ title: "Қате", description: err.message, variant: "destructive" }),
+    onError: (err: Error) => toast({ title: "Қате", description: err.message, variant: "destructive" }),
   });
 
   const updateMutation = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: any }) => {
-      const res = await fetch(`/api/documents/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+      const res = await fetch(`/api/documents/${id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
       if (!res.ok) throw new Error("Failed to update document");
       return res.json();
     },
@@ -1102,50 +1087,29 @@ export default function SchoolDocumentsPage() {
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
       const res = await fetch(`/api/documents/${id}`, { method: "DELETE" });
-      if (!res.ok) {
-        const errText = await res.text().catch(() => "");
-        throw new Error(errText || "Өшіру сәтсіз аяқталды");
-      }
+      if (!res.ok) throw new Error("Өшіру сәтсіз аяқталды");
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/documents"] });
-      toast({ title: "Құжат өшірілді" });
-    },
-    onError: (err: Error) =>
-      toast({ title: "Қате", description: err.message, variant: "destructive" }),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["/api/documents"] }); toast({ title: "Құжат өшірілді" }); },
+    onError: (err: Error) => toast({ title: "Қате", description: err.message, variant: "destructive" }),
   });
 
   const deleteFolderMutation = useMutation({
     mutationFn: async (id: string) => {
       const res = await fetch(`/api/folders/${id}`, { method: "DELETE" });
-      if (!res.ok) {
-        throw new Error("Өшіру сәтсіз аяқталды");
-      }
+      if (!res.ok) throw new Error("Өшіру сәтсіз аяқталды");
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/folders"] });
-      toast({ title: "Папка өшірілді" });
-    },
-    onError: (err: Error) =>
-      toast({ title: "Қате", description: err.message, variant: "destructive" }),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["/api/folders"] }); toast({ title: "Папка өшірілді" }); },
+    onError: (err: Error) => toast({ title: "Қате", description: err.message, variant: "destructive" }),
   });
 
   const updateFolderMutation = useMutation({
     mutationFn: async ({ id, name }: { id: string; name: string }) => {
-      const res = await fetch(`/api/folders/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name }),
-      });
+      const res = await fetch(`/api/folders/${id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name }) });
       if (!res.ok) throw new Error("Атауын өзгерту сәтсіз аяқталды");
       return res.json();
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/folders"] });
-      toast({ title: "Папка атауы жаңартылды" });
-    },
-    onError: (err: Error) =>
-      toast({ title: "Қате", description: err.message, variant: "destructive" }),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["/api/folders"] }); toast({ title: "Папка атауы жаңартылды" }); },
+    onError: (err: Error) => toast({ title: "Қате", description: err.message, variant: "destructive" }),
   });
 
   const handleEdit = (doc: Document) => {
@@ -1158,349 +1122,78 @@ export default function SchoolDocumentsPage() {
     <>
       <SEOHead page="documents" />
       <div className="min-h-screen bg-gray-50 dark:bg-[#0f172a]">
-
-        {/* ── Header ── */}
         <div className="bg-transparent border-b border-gray-200 dark:border-gray-800">
           <div className="container mx-auto px-4 py-5">
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div className="flex items-center gap-4 flex-1 min-w-[300px]">
-                
-
-                <motion.div 
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="relative flex-1 max-w-lg group"
-                >
-                  <div className="absolute inset-0 bg-blue-500/5 rounded-2xl blur-xl group-focus-within:bg-blue-500/10 transition-colors" />
+                <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="relative flex-1 max-w-lg group">
                   <div className="relative flex items-center">
                     <Search className="absolute left-4 w-5 h-5 text-slate-400 group-focus-within:text-blue-500 transition-colors z-10" />
-                    <Input
-                      id="document-search"
-                      name="searchTerm"
-                      placeholder="Құжаттарды іздеу..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-12 pr-12 h-14 bg-white/40 dark:bg-slate-900/40 backdrop-blur-xl border-slate-200/50 dark:border-slate-800/50 rounded-2xl shadow-xl focus-visible:ring-blue-500/30 focus-visible:border-blue-500/50 transition-all text-lg font-medium dark:text-white"
-                    />
-                    <AnimatePresence>
-                      {searchTerm && (
-                        <motion.button
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0.8 }}
-                          onClick={() => setSearchTerm("")}
-                          className="absolute right-4 p-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors z-10"
-                        >
-                          <X className="w-4 h-4" />
-                        </motion.button>
-                      )}
-                    </AnimatePresence>
+                    <Input id="document-search" name="searchTerm" placeholder="Құжаттарды іздеу..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-12 pr-12 h-14 bg-white/40 dark:bg-slate-900/40 backdrop-blur-xl border-slate-200/50 dark:border-slate-800/50 rounded-2xl shadow-xl focus-visible:ring-blue-500/30 focus-visible:border-blue-500/50 transition-all text-lg font-medium dark:text-white" />
+                    <AnimatePresence>{searchTerm && (
+                      <motion.button initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} onClick={() => setSearchTerm("")} className="absolute right-4 p-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors z-10"><X className="w-4 h-4" /></motion.button>
+                    )}</AnimatePresence>
                   </div>
                 </motion.div>
+                <div className="flex items-center gap-1 bg-white/20 dark:bg-slate-800/40 backdrop-blur-md rounded-2xl p-1 border border-slate-200/50 dark:border-slate-800/50">
+                  <Button variant="ghost" size="sm" onClick={() => { if (sortBy === 'name') { setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc'); } else { setSortBy('name'); setSortOrder('asc'); } }} className={`rounded-xl h-10 px-3 flex items-center gap-2 transition-all ${sortBy === 'name' ? "bg-blue-600 text-white shadow-lg" : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white"}`}><SortAsc className={`w-4 h-4 transition-transform ${sortOrder === 'desc' ? "rotate-180" : ""}`} /><span className="text-xs font-bold uppercase tracking-wider hidden sm:inline">А-Я</span></Button>
+                  <Button variant="ghost" size="sm" onClick={() => setSortBy('order')} className={`rounded-xl h-10 px-3 flex items-center gap-2 transition-all ${sortBy === 'order' ? "bg-blue-600 text-white shadow-lg" : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white"}`}><span className="text-xs font-bold uppercase tracking-wider">Ретімен</span></Button>
+                </div>
               </div>
-
               {user && (
                 <div className="flex items-center gap-2">
                   <Dialog open={isFolderOpen} onOpenChange={setIsFolderOpen}>
-                    <DialogTrigger asChild>
-                      <Button size="sm" variant="outline" className="border-blue-200 text-blue-600 hover:bg-blue-50 dark:border-blue-900 dark:text-blue-400 dark:hover:bg-blue-900/30">
-                        <FolderPlus className="w-4 h-4 mr-2" />
-                        Папка қосу
-                      </Button>
-                    </DialogTrigger>
+                    <DialogTrigger asChild><Button size="sm" variant="outline" className="border-blue-200 text-blue-600 hover:bg-blue-50 dark:border-blue-900 dark:text-blue-400 dark:hover:bg-blue-900/30"><FolderPlus className="w-4 h-4 mr-2" />Папка қосу</Button></DialogTrigger>
                     <DialogContent className="bg-[#111827] border-white/10 text-white max-w-lg max-h-[90vh] overflow-hidden flex flex-col p-0">
-                      <DialogHeader className="p-6 pb-2">
-                        <DialogTitle className="text-xl font-bold text-white">
-                          Жаңа папка қосу
-                        </DialogTitle>
-                        <DialogDescription className="text-gray-400">
-                          Құжаттарды жүйелеу үшін жаңа папка немесе категория жасаңыз.
-                        </DialogDescription>
-                      </DialogHeader>
+                      <DialogHeader className="p-6 pb-2"><DialogTitle className="text-xl font-bold text-white">Жаңа папка қосу</DialogTitle><DialogDescription className="text-gray-400">Құжаттарды жүйелеу үшін жаңа папка немесе категория жасаңыз.</DialogDescription></DialogHeader>
                       <div className="flex-1 overflow-y-auto p-6 pt-2 custom-scrollbar space-y-6">
                         <form onSubmit={(e) => folderUploadMutation.mutate(e)} className="space-y-6">
-                          {/* Folder Section Selector */}
-                          <div className="space-y-3">
-                            <Label className="text-xs uppercase tracking-widest text-gray-500 font-bold">Орналасатын жері</Label>
-
-                            <div
-                              onClick={() => setNewFolder({ ...newFolder, parentId: "null" })}
-                              className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all border ${newFolder.parentId === "null"
-                                  ? "bg-blue-600/20 border-blue-500/50"
-                                  : "bg-white/5 border-white/10 hover:bg-white/10"
-                                }`}
-                            >
-                              <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${newFolder.parentId === "null" ? "border-blue-400" : "border-gray-500"
-                                }`}>
-                                {newFolder.parentId === "null" && <div className="w-2 h-2 rounded-full bg-blue-400" />}
-                              </div>
-                              <span className={`text-sm font-medium ${newFolder.parentId === "null" ? "text-blue-400" : "text-gray-300"}`}>
-                                Негізгі бөлім (Жаңа категория)
-                              </span>
-                            </div>
-
-                            <div className="pt-2">
-                              <NestedSectionSelector
-                                selectedId={newFolder.parentId !== "null" ? newFolder.parentId : ""}
-                                onSelect={(id) => setNewFolder({ ...newFolder, parentId: id })}
-                                categories={categories}
-                                allSections={allSections}
-                              />
-                            </div>
-                          </div>
-
-                          <div className="space-y-2">
-                            <Label className="text-gray-300">Папка атауы</Label>
-                            <Input
-                              id="new-folder-name"
-                              name="folderName"
-                              value={newFolder.name}
-                              onChange={(e) => setNewFolder({ ...newFolder, name: e.target.value })}
-                              required
-                              className="bg-[#0d1117] border-white/20 text-white h-11"
-                              placeholder="Атауын енгізіңіз..."
-                            />
-                          </div>
-
-                          <div className="space-y-2">
-                            <Label className="text-gray-300">Ішкі папка атауы (Міндетті емес)</Label>
-                            <Input
-                              id="new-subfolder-name"
-                              name="subFolderName"
-                              value={newFolder.subName}
-                              onChange={(e) => setNewFolder({ ...newFolder, subName: e.target.value })}
-                              className="bg-[#0d1117] border-white/20 text-white h-11"
-                              placeholder="Егер ішкі папка қосқыңыз келсе жазыңыз..."
-                            />
-                          </div>
-
-                          <div className="flex items-center gap-3 mt-4 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
-                            <input
-                              type="checkbox"
-                              id="autoCreateYears"
-                              checked={newFolder.autoCreateYears}
-                              onChange={(e) => setNewFolder(f => ({ ...f, autoCreateYears: e.target.checked }))}
-                              className="w-5 h-5 rounded border-blue-500/30 text-blue-600 focus:ring-blue-500/50 bg-[#0d1117]"
-                            />
-                            <Label htmlFor="autoCreateYears" className="text-sm font-medium text-blue-100 cursor-pointer flex-1">
-                              {isParentYear
-                                ? "Басқа оқу жылдарында да дәл осы папканы жасау (Дубликат)"
-                                : "Оқу жылдарын автоматты түрде қосу (2024-2027)"}
-                            </Label>
-                          </div>
-
-                          <div className="pt-2 sticky bottom-0 bg-[#111827] pb-2">
-                            <Button
-                              type="submit"
-                              className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-lg shadow-blue-900/20"
-                              disabled={folderUploadMutation.isPending}
-                            >
-                              {folderUploadMutation.isPending && <Loader2 className="animate-spin mr-2" />}
-                              Сақтау
-                            </Button>
-                          </div>
+                          <div className="space-y-3"><Label className="text-xs uppercase tracking-widest text-gray-500 font-bold">Орналасатын жері</Label><div onClick={() => setNewFolder({ ...newFolder, parentId: "null" })} className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all border ${newFolder.parentId === "null" ? "bg-blue-600/20 border-blue-500/50" : "bg-white/5 border-white/10 hover:bg-white/10"}`}><div className={`w-4 h-4 rounded-full border flex items-center justify-center ${newFolder.parentId === "null" ? "border-blue-400" : "border-gray-500"}`}>{newFolder.parentId === "null" && <div className="w-2 h-2 rounded-full bg-blue-400" />}</div><span className={`text-sm font-medium ${newFolder.parentId === "null" ? "text-blue-400" : "text-gray-300"}`}>Негізгі бөлім (Жаңа категория)</span></div><div className="pt-2"><NestedSectionSelector selectedId={newFolder.parentId !== "null" ? newFolder.parentId : ""} onSelect={(id) => setNewFolder({ ...newFolder, parentId: id })} categories={categories} allSections={allSections} /></div></div>
+                          <div className="space-y-2"><Label className="text-gray-300">Папка атауы</Label><Input id="new-folder-name" name="folderName" value={newFolder.name} onChange={(e) => setNewFolder({ ...newFolder, name: e.target.value })} required className="bg-[#0d1117] border-white/20 text-white h-11" placeholder="Атауын енгізіңіз..." /></div>
+                          <div className="space-y-2"><Label className="text-gray-300">Ішкі папка атауы (Міндетті емес)</Label><Input id="new-subfolder-name" name="subFolderName" value={newFolder.subName} onChange={(e) => setNewFolder({ ...newFolder, subName: e.target.value })} className="bg-[#0d1117] border-white/20 text-white h-11" placeholder="Егер ішкі папка қосқыңыз келсе жазыңыз..." /></div>
+                          <div className="flex items-center gap-3 mt-4 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl"><input type="checkbox" id="autoCreateYears" checked={newFolder.autoCreateYears} onChange={(e) => setNewFolder(f => ({ ...f, autoCreateYears: e.target.checked }))} className="w-5 h-5 rounded border-blue-500/30 text-blue-600 focus:ring-blue-500/50 bg-[#0d1117]" /><Label htmlFor="autoCreateYears" className="text-sm font-medium text-blue-100 cursor-pointer flex-1">{isParentYear ? "Басқа оқу жылдарында да дәл осы папканы жасау (Дубликат)" : "Оқу жылдарын автоматты түрде қосу (2024-2027)"}</Label></div>
+                          <div className="pt-2 sticky bottom-0 bg-[#111827] pb-2"><Button type="submit" className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-lg shadow-blue-900/20" disabled={folderUploadMutation.isPending}>{folderUploadMutation.isPending && <Loader2 className="animate-spin mr-2" />}Сақтау</Button></div>
                         </form>
                       </div>
                     </DialogContent>
                   </Dialog>
-
-                  <Dialog
-                    open={isUploadOpen}
-                    onOpenChange={(open) => {
-                      setIsUploadOpen(open);
-                      if (!open) {
-                        setEditingDocId(null);
-                        setNewDoc({ title: "", description: "", section: defaultSection });
-                      }
-                    }}
-                  >
-                    <DialogTrigger asChild>
-                      <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white border-0">
-                        <Plus className="w-4 h-4 mr-2" />
-                        Құжат қосу
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="bg-[#111827] border-white/10 text-white max-w-lg max-h-[90vh] overflow-hidden flex flex-col p-0">
-                      <DialogHeader className="p-6 pb-2">
-                        <DialogTitle className="text-xl font-bold text-white">
-                          {editingDocId ? "Құжатты өңдеу" : "Жаңа құжат жүктеу"}
-                        </DialogTitle>
-                        <DialogDescription className="text-gray-400">
-                          {editingDocId ? "Құжат мәліметтерін өзгертіңіз." : "Керекті бөлімді таңдап, құжат файлын жүктеңіз."}
-                        </DialogDescription>
-                      </DialogHeader>
-
+                  <Dialog open={isUploadOpen} onOpenChange={(open) => { setIsUploadOpen(open); if (!open) { setEditingDocId(null); setNewDoc({ title: "", description: "", section: defaultSection }); } }}><DialogTrigger asChild><Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white border-0"><Plus className="w-4 h-4 mr-2" />Құжат қосу</Button></DialogTrigger><DialogContent className="bg-[#111827] border-white/10 text-white max-w-lg max-h-[90vh] overflow-hidden flex flex-col p-0"><DialogHeader className="p-6 pb-2"><DialogTitle className="text-xl font-bold text-white">{editingDocId ? "Құжатты өңдеу" : "Жаңа құжат жүктеу"}</DialogTitle><DialogDescription className="text-gray-400">{editingDocId ? "Құжат мәліметтерін өзгертіңіз." : "Керекті бөлімді таңдап, құжат файлын жүктеңіз."}</DialogDescription></DialogHeader>
                       <div className="flex-1 overflow-y-auto p-6 pt-2 custom-scrollbar space-y-6">
-                        <form
-                          onSubmit={(e) => {
-                            e.preventDefault();
-                            if (editingDocId) {
-                              updateMutation.mutate({ id: editingDocId, data: newDoc });
-                            } else {
-                              uploadMutation.mutate(e);
-                            }
-                          }}
-                          className="space-y-6"
-                        >
-                          {/* Combined Section Selector */}
-                          <div className="space-y-3">
-                            <Label className="text-xs uppercase tracking-widest text-gray-500 font-bold">Бөлім таңдау</Label>
-                            <NestedSectionSelector
-                              selectedId={newDoc.section}
-                              onSelect={(id) => setNewDoc({ ...newDoc, section: id })}
-                              categories={categories}
-                              allSections={allSections}
-                            />
-                          </div>
-
-                          {/* Title */}
-                          <div className="space-y-2">
-                            <Label className="text-gray-300">Атауы</Label>
-                            <Input
-                              id="new-doc-title"
-                              name="docTitle"
-                              value={newDoc.title}
-                              onChange={(e) => setNewDoc({ ...newDoc, title: e.target.value })}
-                              required
-                              className="bg-[#0d1117] border-white/20 text-white h-11"
-                              placeholder="Құжат атауын енгізіңіз..."
-                            />
-                          </div>
-
-                          {/* Description */}
-                          <div className="space-y-2">
-                            <Label className="text-gray-300">Сипаттамасы</Label>
-                            <Textarea
-                              id="new-doc-description"
-                              name="docDescription"
-                              value={newDoc.description}
-                              onChange={(e) => setNewDoc({ ...newDoc, description: e.target.value })}
-                              className="bg-[#0d1117] border-white/20 text-white min-h-[100px]"
-                              placeholder="Қосымша мәліметтер (міндетті емес)..."
-                            />
-                          </div>
-
-                          {/* File (only on create) */}
-                          {!editingDocId && (
-                            <div className="space-y-2">
-                              <Label className="text-gray-300">Файл</Label>
-                              <Input
-                                id="new-doc-file"
-                                name="docFile"
-                                type="file"
-                                onChange={(e) => setUploadFile(e.target.files?.[0] || null)}
-                                required
-                                className="bg-[#0d1117] border-white/20 text-white h-11 py-2"
-                              />
-                            </div>
-                          )}
-
-                          <div className="pt-2 sticky bottom-0 bg-[#111827] pb-2">
-                            <Button
-                              type="submit"
-                              className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-lg shadow-blue-900/20"
-                              disabled={uploadMutation.isPending || updateMutation.isPending}
-                            >
-                              {(uploadMutation.isPending || updateMutation.isPending) && (
-                                <Loader2 className="animate-spin mr-2" />
-                              )}
-                              {editingDocId ? "Жаңарту" : "Жүктеу"}
-                            </Button>
-                          </div>
+                        <form onSubmit={(e) => { e.preventDefault(); if (editingDocId) { updateMutation.mutate({ id: editingDocId, data: newDoc }); } else { uploadMutation.mutate(e); } }} className="space-y-6">
+                          <div className="space-y-3"><Label className="text-xs uppercase tracking-widest text-gray-500 font-bold">Бөлім таңдау</Label><NestedSectionSelector selectedId={newDoc.section} onSelect={(id) => setNewDoc({ ...newDoc, section: id })} categories={categories} allSections={allSections} /></div>
+                          <div className="space-y-2"><Label className="text-gray-300">Атауы</Label><Input id="new-doc-title" name="docTitle" value={newDoc.title} onChange={(e) => setNewDoc({ ...newDoc, title: e.target.value })} required className="bg-[#0d1117] border-white/20 text-white h-11" placeholder="Құжат атауын енгізіңіз..." /></div>
+                          <div className="space-y-2"><Label className="text-gray-300">Сипаттамасы</Label><Textarea id="new-doc-description" name="docDescription" value={newDoc.description} onChange={(e) => setNewDoc({ ...newDoc, description: e.target.value })} className="bg-[#0d1117] border-white/20 text-white min-h-[100px]" placeholder="Қосымша мәліметтер (міндетті емес)..." /></div>
+                          {!editingDocId && (<div className="space-y-2"><Label className="text-gray-300">Файл</Label><Input id="new-doc-file" name="docFile" type="file" onChange={(e) => setUploadFile(e.target.files?.[0] || null)} required className="bg-[#0d1117] border-white/20 text-white h-11 py-2" /></div>)}
+                          <div className="pt-2 sticky bottom-0 bg-[#111827] pb-2"><Button type="submit" className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-lg shadow-blue-900/20" disabled={uploadMutation.isPending || updateMutation.isPending}>{(uploadMutation.isPending || updateMutation.isPending) && (<Loader2 className="animate-spin mr-2" />)}{editingDocId ? "Жаңарту" : "Жүктеу"}</Button></div>
                         </form>
                       </div>
-                    </DialogContent>
-                  </Dialog>
+                    </DialogContent></Dialog>
                 </div>
               )}
             </div>
           </div>
         </div>
-
-        {/* ── Main Content ── */}
         <div className="container mx-auto px-4 py-8 max-w-4xl">
           <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-1">Мектеп құжаттары</h1>
-          <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
-            Мектептің барлық маңызды құжаттарымен танысыңыз
-          </p>
-
-          {isLoading ? (
-            <div className="flex items-center justify-center py-20">
-              <Loader2 className="w-8 h-8 animate-spin text-blue-400" />
-            </div>
-          ) : searchTerm ? (
+          <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">Мектептің барлық маңызды құжаттарымен танысыңыз</p>
+          {isLoading ? (<div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-blue-400" /></div>) : searchTerm ? (
             <div className="space-y-6">
-              <div className="flex items-center justify-between px-1">
-                <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
-                  Іздеу нәтижелері: {searchTerm}
-                </h2>
-                <span className="text-sm text-gray-500 bg-gray-100 dark:bg-white/5 px-2 py-0.5 rounded-full">
-                  Табылды: {
-                    documents.filter(d =>
-                      d.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                      d.description?.toLowerCase().includes(searchTerm.toLowerCase())
-                    ).length
-                  }
-                </span>
-              </div>
-
+              <div className="flex items-center justify-between px-1"><h2 className="text-lg font-semibold text-gray-800 dark:text-white">Іздеу нәтижелері: {searchTerm}</h2><span className="text-sm text-gray-500 bg-gray-100 dark:bg-white/5 px-2 py-0.5 rounded-full">Табылды: {documents.filter(d => d.title.toLowerCase().includes(searchTerm.toLowerCase()) || d.description?.toLowerCase().includes(searchTerm.toLowerCase())).length}</span></div>
               <div className="space-y-4">
                 {(() => {
-                  const filtered = documents.filter(d =>
-                    d.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    d.description?.toLowerCase().includes(searchTerm.toLowerCase())
-                  );
-
-                  // Group by section
+                  const filtered = documents.filter(d => d.title.toLowerCase().includes(searchTerm.toLowerCase()) || d.description?.toLowerCase().includes(searchTerm.toLowerCase()));
                   const groups: Record<string, Document[]> = {};
-                  filtered.forEach(d => {
-                    if (!groups[d.section]) groups[d.section] = [];
-                    groups[d.section].push(d);
-                  });
-
+                  filtered.forEach(d => { if (!groups[d.section]) groups[d.section] = []; groups[d.section].push(d); });
                   const sectionIds = Object.keys(groups);
-                  if (sectionIds.length === 0) {
-                    return (
-                      <div className="text-center py-12">
-                        <Search className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                        <p className="text-gray-500">Сұраныс бойынша ештеңе табылмады</p>
-                      </div>
-                    );
-                  }
-
-                  return sectionIds.map(sid => {
-                    const section = allSections.find(s => s.id === sid);
-                    return (
-                      <SearchSection
-                        key={sid}
-                        label={section?.label || sid}
-                        docs={groups[sid]}
-                        user={user}
-                        updateMutation={updateMutation}
-                        deleteMutation={deleteMutation}
-                        onEdit={handleEdit}
-                        toast={toast}
-                      />
-                    );
-                  });
+                  if (sectionIds.length === 0) return (<div className="text-center py-12"><Search className="w-12 h-12 text-gray-300 mx-auto mb-4" /><p className="text-gray-500">Сұраныс бойынша ештеңе табылмады</p></div>);
+                  return sectionIds.map(sid => { const section = allSections.find(s => s.id === sid); return (<SearchSection key={sid} label={section?.label || sid} docs={groups[sid]} user={user} updateMutation={updateMutation} deleteMutation={deleteMutation} onEdit={handleEdit} toast={toast} />); });
                 })()}
               </div>
             </div>
           ) : (
             <div className="space-y-3">
               {categories.map((cat) => (
-                <CategoryAccordion
-                  key={cat.id}
-                  category={cat}
-                  documents={documents}
-                  user={user}
-                  updateMutation={updateMutation}
-                  deleteMutation={deleteMutation}
-                  deleteFolderMutation={deleteFolderMutation}
-                  updateFolderMutation={updateFolderMutation}
-                  onEdit={handleEdit}
-                  toast={toast}
-                />
+                <CategoryAccordion key={cat.id} category={cat} documents={documents} user={user} updateMutation={updateMutation} deleteMutation={deleteMutation} deleteFolderMutation={deleteFolderMutation} updateFolderMutation={updateFolderMutation} onEdit={handleEdit} toast={toast} />
               ))}
             </div>
           )}
