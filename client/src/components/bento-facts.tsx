@@ -56,8 +56,8 @@ export default function BentoFacts() {
             Неліктен бізді таңдайды?
           </motion.span>
           <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             className="text-3xl md:text-5xl font-black mt-4 text-white leading-tight"
           >
             Білімді ұрпақ жекеменшік мектебі — бұл <span className="text-blue-400">сапа мен нәтиже</span>
@@ -95,6 +95,8 @@ export default function BentoFacts() {
                   <img 
                     src={item.image} 
                     alt={item.title} 
+                    width={800}
+                    height={600}
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent" />

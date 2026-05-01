@@ -107,7 +107,9 @@ const ResponsiveNavbar = () => {
                 <img
                   src="/logo.png"
                   alt="Білімді ұрпақ жекеменшік мектебі Logo"
-                  className="h-10 sm:h-12 lg:h-16 w-auto object-contain drop-shadow-md"
+                  width={64}
+                  height={64}
+                  className="h-10 w-10 sm:h-12 sm:w-12 lg:h-16 lg:w-16 object-contain drop-shadow-md"
                   data-testid="nav-logo"
                 />
               </motion.div>
