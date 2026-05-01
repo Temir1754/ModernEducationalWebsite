@@ -159,8 +159,8 @@ export default function MobileDevelopmentCarousel() {
           onClick={() => setIsAutoPlaying(!isAutoPlaying)}
           className={`text-xs px-3 py-1 rounded-full transition-all duration-200 ${
             isAutoPlaying 
-              ? 'bg-blue-100 text-blue-600' 
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              ? 'bg-blue-600 text-white shadow-md' 
+              : 'bg-gray-700 text-white hover:bg-gray-800 shadow-sm'
           }`}
           aria-label={isAutoPlaying ? "Автоматты ауысуды тоқтату" : "Автоматты ауысуды қосу"}
         >

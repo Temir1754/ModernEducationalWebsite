@@ -304,7 +304,7 @@ export default function Home() {
                 </p>
 
                 {/* Key Statistics - Mobile optimized */}
-                <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-6 md:mb-8 max-w-3xl mx-auto">
+                <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-6 md:mb-8 max-w-3xl mx-auto min-h-[120px] sm:min-h-[160px]">
                   <div className="text-center bg-white/30 backdrop-blur-md rounded-lg sm:rounded-xl p-3 sm:p-6 border border-white/40 shadow-lg hover:shadow-xl transition-all duration-300">
                     <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-1 sm:mb-2 drop-shadow-md">2022</div>
                     <div className="text-xs sm:text-sm text-white font-medium drop-shadow-sm">{t('stats.since')}</div>

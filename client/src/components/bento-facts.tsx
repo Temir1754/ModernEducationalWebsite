@@ -64,7 +64,7 @@ export default function BentoFacts() {
           </motion.h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-3 gap-4 min-h-[800px]">
+        <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-3 gap-4 min-h-[1800px] md:min-h-[800px]">
           {bentoItems.map((item, index) => (
             <motion.div
               key={index}
