@@ -120,6 +120,7 @@ export default function MobileDevelopmentCarousel() {
         <button
           onClick={goToPrevious}
           className="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-md hover:shadow-lg transition-all duration-200 border border-gray-200"
+          aria-label="Алдыңғы бағыт"
         >
           <ChevronLeft className="w-5 h-5 text-gray-600" />
         </button>
@@ -135,6 +136,7 @@ export default function MobileDevelopmentCarousel() {
                   ? `${currentDirection.color.replace('text-', 'bg-')} shadow-sm` 
                   : 'bg-gray-300 hover:bg-gray-400'
               }`}
+              aria-label={`${index + 1}-ші бағытқа өту`}
             />
           ))}
         </div>
@@ -143,6 +145,7 @@ export default function MobileDevelopmentCarousel() {
         <button
           onClick={goToNext}
           className="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-md hover:shadow-lg transition-all duration-200 border border-gray-200"
+          aria-label="Келесі бағыт"
         >
           <ChevronRight className="w-5 h-5 text-gray-600" />
         </button>
@@ -157,6 +160,7 @@ export default function MobileDevelopmentCarousel() {
               ? 'bg-blue-100 text-blue-600' 
               : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
           }`}
+          aria-label={isAutoPlaying ? "Автоматты ауысуды тоқтату" : "Автоматты ауысуды қосу"}
         >
           {isAutoPlaying ? 'Автоматты ауысу' : 'Қолмен басқару'}
         </button>

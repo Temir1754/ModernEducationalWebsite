@@ -280,16 +280,26 @@ export default function Header() {
 
             {/* Desktop Social Media Icons (old) - keeping for backward compatibility */}
             <div className="hidden items-center space-x-3">
-              {socialLinks.map((link, index) => (
-                <a
-                  key={index}
-                  href={link.href}
-                  className={link.className}
-                  onClick={link.onClick}
-                >
-                  <i className={`${link.icon} text-xl`}></i>
-                </a>
-              ))}
+              {socialLinks.map((link, index) => {
+                // Determine label from icon class or href
+                let label = "Әлеуметтік желі";
+                if (link.icon.includes('instagram')) label = "Instagram";
+                else if (link.icon.includes('telegram')) label = "Telegram";
+                else if (link.icon.includes('whatsapp')) label = "WhatsApp";
+                else if (link.icon.includes('facebook')) label = "Facebook";
+
+                return (
+                  <a
+                    key={index}
+                    href={link.href}
+                    className={link.className}
+                    onClick={link.onClick}
+                    aria-label={label}
+                  >
+                    <i className={`${link.icon} text-xl`}></i>
+                  </a>
+                );
+              })}
             </div>
           </div>
         </div>
