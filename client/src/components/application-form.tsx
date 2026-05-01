@@ -106,9 +106,10 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
                   name="studentName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Баланың аты-жөні *</FormLabel>
+                      <FormLabel htmlFor="studentName">Баланың аты-жөні *</FormLabel>
                       <FormControl>
                         <Input 
+                          id="studentName"
                           className="bg-slate-900 border-slate-700 text-white placeholder:text-gray-400" 
                           placeholder="Толық аты-жөніні енгізіңіз" 
                           autoComplete="name"
@@ -126,24 +127,25 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
                   name="birthDate"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
-                      <FormLabel>Туған күні *</FormLabel>
+                      <FormLabel htmlFor="birthDate">Туған күні *</FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
                           <FormControl>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "w-full pl-3 text-left font-normal bg-slate-900 border-slate-700 text-white hover:bg-slate-800 hover:text-white transition-all duration-200",
-                                !field.value && "text-gray-400"
-                              )}
-                            >
-                              {field.value ? (
-                                field.value
-                              ) : (
-                                <span>КК.АА.ЖЖЖЖ</span>
-                              )}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
+                              <Button
+                                id="birthDate"
+                                variant={"outline"}
+                                className={cn(
+                                  "w-full pl-3 text-left font-normal bg-slate-900 border-slate-700 text-white hover:bg-slate-800 hover:text-white transition-all duration-200",
+                                  !field.value && "text-gray-400"
+                                )}
+                              >
+                                {field.value ? (
+                                  field.value
+                                ) : (
+                                  <span>КК.АА.ЖЖЖЖ</span>
+                                )}
+                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                              </Button>
                           </FormControl>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0 bg-slate-900 border-slate-700 shadow-2xl" align="start">
@@ -173,10 +175,10 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
                   name="grade"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Сынып *</FormLabel>
+                      <FormLabel htmlFor="grade">Сынып *</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
-                          <SelectTrigger>
+                          <SelectTrigger id="grade">
                             <SelectValue placeholder="Сыныпты таңдаңыз" />
                           </SelectTrigger>
                         </FormControl>
@@ -202,10 +204,10 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
                   name="language"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Оқу тілі *</FormLabel>
+                      <FormLabel htmlFor="language">Оқу тілі *</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
-                          <SelectTrigger>
+                          <SelectTrigger id="language">
                             <SelectValue placeholder="Тілді таңдаңыз" />
                           </SelectTrigger>
                         </FormControl>
@@ -224,9 +226,10 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
                   name="parentName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Ата-ананың аты-жөні *</FormLabel>
+                      <FormLabel htmlFor="parentName">Ата-ананың аты-жөні *</FormLabel>
                       <FormControl>
                         <Input 
+                          id="parentName"
                           className="bg-slate-900 border-slate-700 text-white placeholder:text-gray-400" 
                           placeholder="Ата-ананың толық аты-жөні" 
                           autoComplete="name"
@@ -244,9 +247,10 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
                     name="phone"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Телефон номері *</FormLabel>
+                        <FormLabel htmlFor="phone">Телефон номері *</FormLabel>
                         <FormControl>
                           <Input 
+                            id="phone"
                             className="bg-slate-900 border-slate-700 text-white placeholder:text-gray-400" 
                             placeholder="+7 (___) ___-__-__" 
                             autoComplete="tel"
@@ -303,9 +307,10 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
                     name="address"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Мекенжай</FormLabel>
+                        <FormLabel htmlFor="address">Мекенжай</FormLabel>
                         <FormControl>
                           <Textarea
+                            id="address"
                             className="bg-slate-900 border-slate-700 text-white placeholder:text-gray-400"
                             rows={3}
                             placeholder="Толық мекенжайды жазыңыз"
@@ -326,9 +331,10 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
                     name="additionalInfo"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Қосымша ақпарат</FormLabel>
+                        <FormLabel htmlFor="additionalInfo">Қосымша ақпарат</FormLabel>
                         <FormControl>
                           <Textarea
+                            id="additionalInfo"
                             className="bg-slate-900 border-slate-700 text-white placeholder:text-gray-400"
                             rows={3}
                             placeholder="Баланың ерекшеліктері, қызығушылықтары туралы жазыңыз"
@@ -350,13 +356,14 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
                       <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                         <FormControl>
                           <Checkbox
+                            id="consent"
                             className="border-slate-500 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
                             checked={field.value}
                             onCheckedChange={field.onChange}
                           />
                         </FormControl>
                         <div className="space-y-1 leading-none">
-                          <FormLabel className="text-sm text-gray-300">
+                          <FormLabel htmlFor="consent" className="text-sm text-gray-300 cursor-pointer">
                             Жеке деректерді өңдеуге келісемін және мектептің ережелерімен таныстым *
                           </FormLabel>
                           <FormMessage />

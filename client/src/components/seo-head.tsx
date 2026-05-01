@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { getPageSEO, schoolInfo, type pageSEO } from '@shared/seo-config';
+import { getPageSEO, schoolInfo, organizationSchema, type pageSEO } from '@shared/seo-config';
 
 interface SeoHeadProps {
   page: keyof typeof pageSEO;
@@ -41,6 +41,11 @@ export default function SeoHead({
       <meta name="language" content={language === 'kz' ? 'Kazakh' : 'Russian'} />
       <meta name="geo.region" content="KZ-10" />
       <meta name="geo.placename" content={schoolCity} />
+
+      {/* Structured Data */}
+      <script type="application/ld+json">
+        {JSON.stringify(organizationSchema)}
+      </script>
 
       {/* Canonical URL */}
       <link rel="canonical" href={canonicalUrl} />
