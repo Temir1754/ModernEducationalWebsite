@@ -23,7 +23,7 @@ interface SchoolCardsProps {
   sectionSubtitle?: string;
 }
 
-// Default data for FGS school facts
+
 const defaultItems: SchoolCardProps[] = [
   {
     id: "upay",
@@ -248,7 +248,7 @@ export default function SchoolCards({
   items = defaultItems, 
   showAllButton = false,
   sectionTitle = "Мектеп туралы қызықты фактілер",
-  sectionSubtitle = "FGS мектебін ерекше ететін жаңашыл әдістер мен жетістіктер"
+  sectionSubtitle = "Білімді ұрпақ жекеменшік мектебін ерекше ететін жаңашыл әдістер мен жетістіктер"
 }: SchoolCardsProps) {
   const [sectionRef, isSectionVisible] = useIntersectionObserver();
   const [activeSection, setActiveSection] = useState(0);

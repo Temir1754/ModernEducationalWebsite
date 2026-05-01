@@ -38,7 +38,7 @@ export default function AdministrationPage() {
       position: "Мектеп директоры",
       education: "Назарбаев Университет",
       experience: "2 жыл педагогикалық тәжірибе",
-      email: "fgs.school.2022@gmail.com",
+      email: "director@bilimdi-urpaq.kz",
       phone: "+7-775-790-63-63"
     },
     {
@@ -46,7 +46,7 @@ export default function AdministrationPage() {
       position: "Оқу ісі жөніндегі директордың орынбасары",
       education: "Халықаралық Қазақ Түрік университеті",
       experience: "32 жыл педагогикалық тәжірибе",
-      email: "fgs.school.2022@gmail.com",
+      email: "education@bilimdi-urpaq.kz",
       phone: "+7-775-790-63-63"
     },
     {
@@ -54,7 +54,7 @@ export default function AdministrationPage() {
       position: "Тәрбие ісі жөніндегі директордың орынбасары",
       education: "Халықаралық Қазақ Түрік университеті",
       experience: "37 жыл педагогикалық тәжірибе",
-      email: "fgs.school.2022@gmail.com",
+      email: "upbringing@bilimdi-urpaq.kz",
       phone: "+7-775-790-63-63"
     }
   ];
@@ -100,7 +100,7 @@ export default function AdministrationPage() {
             Мектеп <span className="text-blue-500">әкімшілігі</span>
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
-            FGS мектебінің әкімшілік құрамы — өз ісінің шеберлері мен жоғары білікті мамандар жиынтығы.
+            Білімді ұрпақ жекеменшік мектебінің әкімшілік құрамы — өз ісінің шеберлері мен жоғары білікті мамандар жиынтығы.
           </p>
         </div>
 
@@ -118,7 +118,7 @@ export default function AdministrationPage() {
                         </div>
                       </div>
                       <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-white dark:bg-slate-900 px-4 py-2 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 whitespace-nowrap">
-                        <span className="text-[10px] font-black uppercase tracking-tighter text-blue-500">FGS Staff</span>
+                        <span className="text-[10px] font-black uppercase tracking-tighter text-blue-500">Білімді ұрпақ жекеменшік мектебі Staff</span>
                       </div>
                     </div>
                     

@@ -263,7 +263,7 @@ export default function AboutSchoolPage() {
               Мектеп <span className="text-blue-500">туралы</span>
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
-              FGS мектебінің тарихы, құндылықтары мен заманауи мүмкіндіктері
+              Білімді ұрпақ жекеменшік мектебінің тарихы, құндылықтары мен заманауи мүмкіндіктері
             </p>
             
             {/* Admin Upload Button */}
@@ -470,7 +470,7 @@ export default function AboutSchoolPage() {
                           Бейсбаева Ж.М.
                         </p>
                         <p className="text-blue-500 font-bold uppercase tracking-widest text-xs">
-                          FGS мектебінің директоры
+                          Білімді ұрпақ жекеменшік мектебінің директоры
                         </p>
                       </div>
                     </div>
@@ -489,7 +489,7 @@ export default function AboutSchoolPage() {
                 Біздің ерекшеліктеріміз бен құндылықтарымыз
               </h2>
               <p className="text-gray-400 max-w-2xl mx-auto text-lg">
-                FGS мектебін таңдаудың 6 негізгі себебі — бір жерде жинақталған
+                Білімді ұрпақ жекеменшік мектебін таңдаудың 6 негізгі себебі — бір жерде жинақталған
               </p>
             </div>
 

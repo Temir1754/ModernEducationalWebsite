@@ -113,7 +113,7 @@ export default function EducationProcessPage() {
             Оқу <span className="text-blue-500">процесі</span>
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
-            FGS мектебіндегі оқу бағдарламалары мен білім беру стандарты
+            Білімді ұрпақ жекеменшік мектебіндегі оқу бағдарламалары мен білім беру стандарты
           </p>
         </div>
 

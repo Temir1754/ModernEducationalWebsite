@@ -67,7 +67,7 @@ export default function ApplicationForm() {
     setIsSubmitting(true);
     
     // Create WhatsApp message
-    const message = `Сәлеметсіз бе! FGS мектебіне өтінім:
+    const message = `Сәлеметсіз бе! Білімді ұрпақ жекеменшік мектебіне өтінім:
 
 👤 Баланың аты-жөні: ${data.studentName}
 📅 Туған күні: ${data.birthDate}
@@ -94,7 +94,7 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4 text-white">Мектепке өтінім жіберу</h2>
             <p className="text-xl text-gray-300">
-              Балаңызды FGS мектебіне орналастыру үшін өтінім толтырыңыз
+              Балаңызды Білімді ұрпақ жекеменшік мектебіне орналастыру үшін өтінім толтырыңыз
             </p>
           </div>
 
@@ -380,7 +380,7 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
                     variant="secondary"
                     className="flex-1 bg-green-500 text-white hover:bg-green-600 transform hover:scale-105 transition-all duration-300"
                     onClick={() => {
-                      const whatsappUrl = "https://wa.me/77757906363?text=Сәлеметсіз%20бе!%20FGS%20мектебіне%20баламды%20қабылдау%20туралы%20ақпарат%20алғым%20келеді.";
+                      const whatsappUrl = "https://wa.me/77757906363?text=Сәлеметсіз%20бе!%20Білімді%20ұрпақ%20мектебіне%20баламды%20қабылдау%20туралы%20ақпарат%20алғым%20келеді.";
                       window.open(whatsappUrl, '_blank');
                     }}
                   >

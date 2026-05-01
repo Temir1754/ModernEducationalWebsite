@@ -150,7 +150,7 @@ export default function InstagramFeed({ widgetId }: InstagramFeedProps) {
                       Қазірше сіз біздің парақшаға тікелей өте аласыз:
                     </p>
                     <a 
-                      href="https://www.instagram.com/fgs.schoolkz/" 
+                      href="https://www.instagram.com/bilimdi_urpaq_shymkent/" 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold rounded-xl hover:shadow-xl transition-all transform hover:scale-105"

@@ -39,7 +39,7 @@ export default function StructuredData({
         "@type": "ListItem",
         "position": index + 1,
         "name": item.name,
-        "item": `https://fgs.kz${item.url}`
+        "item": `https://bilimdi-urpaq.kz${item.url}`
       }))
     };
     
@@ -69,7 +69,7 @@ export default function StructuredData({
       "@context": "https://schema.org",
       "@type": "LocalBusiness",
       "name": language === 'kz' ? schoolInfo.nameKk : schoolInfo.nameRu,
-      "image": "https://fgs.kz/logo.png",
+      "image": "https://bilimdi-urpaq.kz/logo.png",
       "address": {
         "@type": "PostalAddress",
         "addressLocality": language === 'kz' ? schoolInfo.cityKk : schoolInfo.cityRu,

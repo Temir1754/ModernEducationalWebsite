@@ -93,7 +93,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use(
     session({
       store: storage.sessionStore,
-      secret: process.env.SESSION_SECRET || "fgs-dev-secret-key-2024",
+      secret: process.env.SESSION_SECRET || "bilimdi-urpaq-dev-secret-key-2024",
       resave: false,
       saveUninitialized: false,
       cookie: {

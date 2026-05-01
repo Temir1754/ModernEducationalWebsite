@@ -3,15 +3,14 @@ import { Link } from "wouter";
 export default function Footer() {
   const socialLinks = [
     {
-      href: "https://www.instagram.com/fgs.schoolkz/",
+      href: "https://www.instagram.com/bilimdi_urpaq_shymkent/",
       icon: "fab fa-instagram",
       className: "text-pink-400 hover:text-pink-500 transform hover:scale-110 transition-all duration-200",
       onClick: (e: React.MouseEvent) => {
         e.preventDefault();
-        // Try to open Instagram app first, fallback to web
-        window.location.href = 'instagram://user?username=fgs.schoolkz';
+        window.location.href = 'instagram://user?username=bilimdi_urpaq_shymkent';
         setTimeout(() => {
-          window.open('https://www.instagram.com/fgs.schoolkz/', '_blank');
+          window.open('https://www.instagram.com/bilimdi_urpaq_shymkent/', '_blank');
         }, 1000);
       }
     },
@@ -21,10 +20,8 @@ export default function Footer() {
       className: "text-blue-400 hover:text-blue-500 transform hover:scale-110 transition-all duration-200",
       onClick: (e: React.MouseEvent) => {
         e.preventDefault();
-        // Ask user for Telegram channel/group link
-        const telegramLink = prompt('Телеграм каналы немесе топ сілтемесін енгізіңіз (мысалы: https://t.me/fgs_school):');
+        const telegramLink = prompt('Телеграм каналы немесе топ сілтемесін енгізіңіз (мысалы: https://t.me/bilimdi_urpaq):');
         if (telegramLink) {
-          // Extract username from link and try app first
           const username = telegramLink.replace('https://t.me/', '');
           window.location.href = `tg://resolve?domain=${username}`;
           setTimeout(() => {
@@ -39,7 +36,6 @@ export default function Footer() {
       className: "text-green-400 hover:text-green-500 transform hover:scale-110 transition-all duration-200",
       onClick: (e: React.MouseEvent) => {
         e.preventDefault();
-        // Try to open WhatsApp app first, fallback to web
         window.location.href = 'whatsapp://send?phone=77757906363';
         setTimeout(() => {
           window.open('https://wa.me/77757906363', '_blank');
@@ -47,7 +43,7 @@ export default function Footer() {
       }
     },
     {
-      href: "https://www.facebook.com/people/Fgs-School/pfbid0b3bkVb2Vz1B59RdK3PfLQR7DcKwJ92XaxfMXdB5kK7wv1AwTBBUbtUZ5uj1oAN7ul/",
+      href: "https://www.facebook.com/people/Bilimdi-Urpaq-School/pfbid0b3bkVb2Vz1B59RdK3PfLQR7DcKwJ92XaxfMXdB5kK7wv1AwTBBUbtUZ5uj1oAN7ul/",
       icon: "fab fa-facebook-f",
       className: "text-blue-400 hover:text-blue-500 transform hover:scale-110 transition-all duration-200",
     },
@@ -63,12 +59,12 @@ export default function Footer() {
                 <i className="fas fa-graduation-cap text-xl"></i>
               </div>
               <div>
-                <h3 className="text-xl font-bold">FGS</h3>
+                <h3 className="text-xl font-bold">Білімді ұрпақ жекеменшік мектебі</h3>
                 <p className="text-sm text-gray-300">Болашақ ұрпақ мектебі</p>
               </div>
             </div>
             <p className="text-gray-300 mb-4">
-              Балаларыңыздың болашағына инвестиция жасау үшін дұрыс таңдау - FGS мектебі.
+              Балаларыңыздың болашағына инвестиция жасау үшін дұрыс таңдау - Білімді ұрпақ жекеменшік мектебі.
             </p>
             <div className="flex flex-wrap gap-3">
               {socialLinks.map((link, index) => (
@@ -171,7 +167,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-300">
-          <p>&copy; 2024 FGS - Болашақ ұрпақ мектебі. Барлық құқықтар сақталған.</p>
+          <p>&copy; 2024 Білімді ұрпақ жекеменшік мектебі. Барлық құқықтар сақталған.</p>
         </div>
       </div>
     </footer>

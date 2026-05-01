@@ -106,7 +106,7 @@ const ResponsiveNavbar = () => {
               >
                 <img
                   src="/logo.png"
-                  alt="FGS Logo"
+                  alt="Білімді ұрпақ жекеменшік мектебі Logo"
                   className="h-10 sm:h-12 lg:h-16 w-auto object-contain drop-shadow-md"
                   data-testid="nav-logo"
                 />
@@ -228,7 +228,7 @@ const ResponsiveNavbar = () => {
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.45 }}
-                href="https://t.me/fgs_school"
+                href="https://t.me/bilimdi_urpaq"
                 data-testid="contact-telegram"
                 className={`w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 ${isScrolled
                   ? 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-blue-500 hover:text-white'
@@ -242,7 +242,7 @@ const ResponsiveNavbar = () => {
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.5 }}
-                href="https://www.facebook.com/people/Fgs-School/pfbid0b3bkVb2Vz1B59RdK3PfLQR7DcKwJ92XaxfMXdB5kK7wv1AwTBBUbtUZ5uj1oAN7ul/"
+                href="https://www.facebook.com/people/Bilimdi-Urpaq-School/pfbid0b3bkVb2Vz1B59RdK3PfLQR7DcKwJ92XaxfMXdB5kK7wv1AwTBBUbtUZ5uj1oAN7ul/"
                 data-testid="contact-facebook"
                 className={`w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 ${isScrolled
                   ? 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-blue-600 hover:text-white'
@@ -354,7 +354,7 @@ const ResponsiveNavbar = () => {
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ duration: 0.3, delay: 0.65 }}
-                    href="https://t.me/fgs_school"
+                    href="https://t.me/bilimdi_urpaq"
                     data-testid="mobile-contact-telegram"
                     className="flex flex-col items-center gap-2 p-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-blue-500 hover:text-white transition-all duration-300 hover:scale-105"
                     title="Telegram"
@@ -367,7 +367,7 @@ const ResponsiveNavbar = () => {
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ duration: 0.3, delay: 0.7 }}
-                    href="https://www.facebook.com/people/Fgs-School/pfbid0b3bkVb2Vz1B59RdK3PfLQR7DcKwJ92XaxfMXdB5kK7wv1AwTBBUbtUZ5uj1oAN7ul/"
+                    href="https://www.facebook.com/people/Bilimdi-Urpaq-School/pfbid0b3bkVb2Vz1B59RdK3PfLQR7DcKwJ92XaxfMXdB5kK7wv1AwTBBUbtUZ5uj1oAN7ul/"
                     data-testid="mobile-contact-facebook"
                     className="flex flex-col items-center gap-2 p-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-blue-600 hover:text-white transition-all duration-300 hover:scale-105"
                     title="Facebook"

@@ -26,7 +26,7 @@ const EventsPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-[#0f172a]">
-      <SEOHead page="home" customTitle="Іс-шаралар күнтізбесі | FGS School" />
+      <SEOHead page="home" customTitle="Іс-шаралар күнтізбесі | Білімді ұрпақ жекеменшік мектебі" />
 
       
 

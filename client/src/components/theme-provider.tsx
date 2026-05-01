@@ -13,7 +13,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     root.classList.remove("light");
     root.classList.add("dark");
     root.setAttribute("data-theme", "dark");
-    localStorage.setItem("fgs-theme", "dark");
+    localStorage.setItem("school-theme", "dark");
   }, []);
 
   return (

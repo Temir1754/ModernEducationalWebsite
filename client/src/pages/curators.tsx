@@ -41,7 +41,7 @@ export default function CuratorsPage() {
               </a>
               
               <a
-                href="https://www.instagram.com/fgs.schoolkz/"
+                href="https://www.instagram.com/bilimdi_urpaq_shymkent/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-8 h-8 bg-blue-500/30 hover:bg-blue-400 rounded-lg flex items-center justify-center transition-colors duration-200"
@@ -53,7 +53,7 @@ export default function CuratorsPage() {
               </a>
               
               <a
-                href="https://t.me/fgs_school"
+                href="https://t.me/bilimdi_urpaq"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-8 h-8 bg-blue-500/30 hover:bg-blue-400 rounded-lg flex items-center justify-center transition-colors duration-200"

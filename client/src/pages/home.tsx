@@ -545,14 +545,11 @@ export default function Home() {
                 <CardContent className="p-0">
                   <details className="group">
                     <summary className="flex justify-between items-center cursor-pointer p-6 text-lg font-bold text-white hover:bg-slate-800/50 transition-all">
-                      FGS - жеке мектебі: төлем және шарттар
+                      Білімді ұрпақ жекеменшік мектебі - жеке мектебі: төлем және шарттар
                       <ChevronDown className="w-5 h-5 transform group-open:rotate-180 transition-transform duration-300 text-blue-500" />
                     </summary>
                     <div className="px-6 pb-6 text-gray-300 animate-in fade-in slide-in-from-top-2 duration-300">
-                      <div className="bg-blue-50 dark:bg-blue-900/30 p-6 rounded-2xl border-l-4 border-blue-500 mb-6">
-                        <p className="font-bold text-blue-800 dark:text-blue-300 mb-2">Оқу ақысы</p>
-                        <p className="text-2xl text-blue-700 dark:text-blue-200 font-black">70,000 теңге <span className="text-sm font-normal">/ айына</span></p>
-                      </div>
+
                       <p className="mb-3 font-bold">Оқу ақысына кіреді:</p>
                       <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
                         {[

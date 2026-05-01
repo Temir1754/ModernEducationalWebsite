@@ -72,15 +72,14 @@ export default function Header() {
 
   const socialLinks = [
     {
-      href: "https://www.instagram.com/fgs.schoolkz/",
+      href: "https://www.instagram.com/bilimdi_urpaq_shymkent/",
       icon: "fab fa-instagram",
       className: "text-pink-500 hover:text-pink-600 transform hover:scale-110 transition-all duration-200",
       onClick: (e: React.MouseEvent) => {
         e.preventDefault();
-        // Try to open Instagram app first, fallback to web
-        window.location.href = 'instagram://user?username=fgs.schoolkz';
+        window.location.href = 'instagram://user?username=bilimdi_urpaq_shymkent';
         setTimeout(() => {
-          window.open('https://www.instagram.com/fgs.schoolkz/', '_blank');
+          window.open('https://www.instagram.com/bilimdi_urpaq_shymkent/', '_blank');
         }, 1000);
       }
     },
@@ -90,10 +89,8 @@ export default function Header() {
       className: "text-blue-500 hover:text-blue-600 transform hover:scale-110 transition-all duration-200",
       onClick: (e: React.MouseEvent) => {
         e.preventDefault();
-        // Ask user for Telegram channel/group link
-        const telegramLink = prompt('Телеграм каналы немесе топ сілтемесін енгізіңіз (мысалы: https://t.me/fgs_school):');
+        const telegramLink = prompt('Телеграм каналы немесе топ сілтемесін енгізіңіз (мысалы: https://t.me/bilimdi_urpaq):');
         if (telegramLink) {
-          // Extract username from link and try app first
           const username = telegramLink.replace('https://t.me/', '');
           window.location.href = `tg://resolve?domain=${username}`;
           setTimeout(() => {
@@ -108,7 +105,6 @@ export default function Header() {
       className: "text-green-500 hover:text-green-600 transform hover:scale-110 transition-all duration-200",
       onClick: (e: React.MouseEvent) => {
         e.preventDefault();
-        // Try to open WhatsApp app first, fallback to web
         window.location.href = 'whatsapp://send?phone=77757906363';
         setTimeout(() => {
           window.open('https://wa.me/77757906363', '_blank');
@@ -116,12 +112,12 @@ export default function Header() {
       }
     },
     {
-      href: "https://www.facebook.com/people/Fgs-School/pfbid0b3bkVb2Vz1B59RdK3PfLQR7DcKwJ92XaxfMXdB5kK7wv1AwTBBUbtUZ5uj1oAN7ul/",
+      href: "https://www.facebook.com/people/Bilimdi-Urpaq-School/pfbid0b3bkVb2Vz1B59RdK3PfLQR7DcKwJ92XaxfMXdB5kK7wv1AwTBBUbtUZ5uj1oAN7ul/",
       icon: "fab fa-facebook-f",
       className: "text-blue-600 hover:text-blue-700 transform hover:scale-110 transition-all duration-200",
     },
     {
-      href: "https://t.me/fgs_school",
+      href: "https://t.me/bilimdi_urpaq",
       icon: "fab fa-telegram",
       className: "text-blue-500 hover:text-blue-600",
     },
@@ -142,7 +138,6 @@ export default function Header() {
               <button
                 className="flex items-center text-gray-600 hover:text-primary transition-colors duration-200 hover:bg-gray-50 px-2 py-1 rounded"
                 onClick={() => {
-                  // Initiate phone call
                   window.location.href = 'tel:+77757906363';
                 }}
               >
@@ -156,7 +151,6 @@ export default function Header() {
               <button
                 className="hidden sm:flex items-center text-gray-600 hover:text-primary transition-colors duration-200 hover:bg-gray-50 px-2 py-1 rounded"
                 onClick={() => {
-                  // Open in 2GIS
                   window.open('https://go.2gis.com/DoFle', '_blank');
                 }}
               >
@@ -169,10 +163,9 @@ export default function Header() {
                 <button
                   onClick={(e) => {
                     e.preventDefault();
-                    // Try to open Instagram app first, fallback to web
-                    window.location.href = 'instagram://user?username=fgs.schoolkz';
+                    window.location.href = 'instagram://user?username=bilimdi_urpaq_shymkent';
                     setTimeout(() => {
-                      window.open('https://www.instagram.com/fgs.schoolkz/', '_blank');
+                      window.open('https://www.instagram.com/bilimdi_urpaq_shymkent/', '_blank');
                     }, 1000);
                   }}
                   className="flex items-center bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1.5 rounded-full hover:from-purple-600 hover:to-pink-600 transform hover:scale-105 transition-all duration-200 text-xs font-medium shadow-md"
@@ -184,10 +177,8 @@ export default function Header() {
                 <button
                   onClick={(e) => {
                     e.preventDefault();
-                    // Ask user for Telegram channel/group link
-                    const telegramLink = prompt('Телеграм каналы немесе топ сілтемесін енгізіңіз (мысалы: https://t.me/fgs_school):');
+                    const telegramLink = prompt('Телеграм каналы немесе топ сілтемесін енгізіңіз (мысалы: https://t.me/bilimdi_urpaq):');
                     if (telegramLink) {
-                      // Extract username from link and try app first
                       const username = telegramLink.replace('https://t.me/', '');
                       window.location.href = `tg://resolve?domain=${username}`;
                       setTimeout(() => {
@@ -214,7 +205,7 @@ export default function Header() {
                 <button
                   onClick={(e) => {
                     e.preventDefault();
-                    window.open('https://www.facebook.com/people/Fgs-School/pfbid0b3bkVb2Vz1B59RdK3PfLQR7DcKwJ92XaxfMXdB5kK7wv1AwTBBUbtUZ5uj1oAN7ul/', '_blank');
+                    window.open('https://www.facebook.com/people/Bilimdi-Urpaq-School/pfbid0b3bkVb2Vz1B59RdK3PfLQR7DcKwJ92XaxfMXdB5kK7wv1AwTBBUbtUZ5uj1oAN7ul/', '_blank');
                   }}
                   className="flex items-center bg-blue-600 text-white px-3 py-1.5 rounded-full hover:bg-blue-700 transform hover:scale-105 transition-all duration-200 text-xs font-medium shadow-md"
                 >
@@ -229,9 +220,9 @@ export default function Header() {
               <button
                 onClick={(e) => {
                   e.preventDefault();
-                  window.location.href = 'instagram://user?username=fgs.schoolkz';
+                  window.location.href = 'instagram://user?username=bilimdi_urpaq_shymkent';
                   setTimeout(() => {
-                    window.open('https://www.instagram.com/fgs.schoolkz/', '_blank');
+                    window.open('https://www.instagram.com/bilimdi_urpaq_shymkent/', '_blank');
                   }, 1000);
                 }}
                 className="p-2 bg-pink-500 text-white rounded-full hover:bg-pink-600 transform hover:scale-110 transition-all duration-200 shadow-md"
@@ -242,7 +233,7 @@ export default function Header() {
               <button
                 onClick={(e) => {
                   e.preventDefault();
-                  const telegramLink = prompt('Телеграм каналы немесе топ сілтемесін енгізіңіз (мысалы: https://t.me/fgs_school):');
+                  const telegramLink = prompt('Телеграм каналы немесе топ сілтемесін енгізіңіз (мысалы: https://t.me/bilimdi_urpaq):');
                   if (telegramLink) {
                     const username = telegramLink.replace('https://t.me/', '');
                     window.location.href = `tg://resolve?domain=${username}`;
@@ -271,7 +262,7 @@ export default function Header() {
               <button
                 onClick={(e) => {
                   e.preventDefault();
-                  window.open('https://www.facebook.com/people/Fgs-School/pfbid0b3bkVb2Vz1B59RdK3PfLQR7DcKwJ92XaxfMXdB5kK7wv1AwTBBUbtUZ5uj1oAN7ul/', '_blank');
+                  window.open('https://www.facebook.com/people/Bilimdi-Urpaq-School/pfbid0b3bkVb2Vz1B59RdK3PfLQR7DcKwJ92XaxfMXdB5kK7wv1AwTBBUbtUZ5uj1oAN7ul/', '_blank');
                 }}
                 className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transform hover:scale-110 transition-all duration-200 shadow-md"
               >

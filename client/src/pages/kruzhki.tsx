@@ -3,6 +3,15 @@ import { Link } from "wouter";
 import { ArrowLeft, ChevronDown, Sparkles, Trophy, Lightbulb, Palette, Phone } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "@/hooks/use-auth";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { queryClient } from "@/lib/queryClient";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Loader2, Camera, Plus, Trash2 } from "lucide-react";
+import type { SiteContent } from "@shared/schema";
 
 export default function KruzhkiPage() {
   const [activeSection, setActiveSection] = useState<string>("");
@@ -33,6 +42,80 @@ export default function KruzhkiPage() {
     return () => observer.disconnect();
   }, []);
 
+  const { user } = useAuth();
+  const isAdmin = user?.role === "admin";
+
+  const [uploadingClub, setUploadingClub] = useState<string | null>(null);
+  const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+
+  // Fetch dynamic content (images)
+  const { data: content = [] } = useQuery<SiteContent[]>({
+    queryKey: ["/api/content"],
+  });
+
+  const updateContentMutation = useMutation({
+    mutationFn: async ({ key, value }: { key: string; value: string }) => {
+      // Find if entry exists
+      const existing = content.find(c => c.key === key);
+      if (existing) {
+        const res = await fetch(`/api/content/${existing.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ value }),
+        });
+        if (!res.ok) throw new Error("Failed to update content");
+        return res.json();
+      } else {
+        const res = await fetch("/api/content", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ key, value, lang: "kz", type: "image" }),
+        });
+        if (!res.ok) throw new Error("Failed to create content");
+        return res.json();
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/content"] });
+      setIsUploadDialogOpen(false);
+      setUploadingClub(null);
+    }
+  });
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !uploadingClub) return;
+
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const uploadRes = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!uploadRes.ok) throw new Error("Upload failed");
+      const { url } = await uploadRes.json();
+
+      const key = `club_image_${uploadingClub.toLowerCase().replace(/\s+/g, '_')}`;
+      await updateContentMutation.mutateAsync({ key, value: url });
+    } catch (error) {
+      console.error("Upload error:", error);
+      alert("Файлды жүктеу сәтсіз аяқталды");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const getClubImage = (clubName: string, defaultImage: string) => {
+    const key = `club_image_${clubName.toLowerCase().replace(/\s+/g, '_')}`;
+    const dynamic = content.find(c => c.key === key);
+    return dynamic ? dynamic.value : defaultImage;
+  };
+
   const clubsData = [
     {
       id: "creative",
@@ -43,7 +126,7 @@ export default function KruzhkiPage() {
         {
           name: "Хореография",
           description: "Классикалық және заманауи билерді үйрену, пластика және ритм дамыту",
-          image: "https://images.unsplash.com/photo-1545224144-b38cd309ef69?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250",
+          image: getClubImage("Хореография", "https://images.unsplash.com/photo-1545224144-b38cd309ef69?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250"),
           schedule: "Дүйсенбі, Сәрсенбі, Жұма: 15:00-16:30",
           age: "5-15 жас",
           teacher: "Өмірзақ Мөлдір Абдуллақызы"
@@ -51,7 +134,7 @@ export default function KruzhkiPage() {
         {
           name: "Домбыра",
           description: "Қазақтың ұлттық аспабын үйрену, фольклорлық әндерді орындау",
-          image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250",
+          image: getClubImage("Домбыра", "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250"),
           schedule: "Сейсенбі, Бейсенбі: 16:00-17:00",
           age: "6-16 жас",
           teacher: "Ержанова Жадыра Нурдуллаевна"
@@ -59,7 +142,7 @@ export default function KruzhkiPage() {
         {
           name: "Дизайн",
           description: "Графикалық дизайн, сурет салу және шығармашылық жобалар",
-          image: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250",
+          image: getClubImage("Дизайн", "https://images.unsplash.com/photo-1541961017774-22349e4a1262?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250"),
           schedule: "Дүйсенбі, Сәрсенбі: 14:30-16:00",
           age: "8-16 жас",
           teacher: "Аманбек Жансая Тимурханқызы"
@@ -67,7 +150,7 @@ export default function KruzhkiPage() {
         {
           name: "Глинолепка",
           description: "Балшықпен жұмыс істеу, керамика және мүсін жасау",
-          image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250",
+          image: getClubImage("Глинолепка", "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250"),
           schedule: "Сейсенбі, Жұма: 15:30-17:00",
           age: "5-14 жас",
           teacher: "Кендебайұлы Шынболат"
@@ -83,7 +166,7 @@ export default function KruzhkiPage() {
         {
           name: "Робототехника",
           description: "Lego роботтарын құрастыру, программалау және басқару",
-          image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250",
+          image: getClubImage("Робототехника", "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250"),
           schedule: "Дүйсенбі, Сәрсенбі, Жұма: 16:00-17:30",
           age: "7-15 жас",
           teacher: "Ускенбаева Сая Жоланбаевна"
@@ -91,7 +174,7 @@ export default function KruzhkiPage() {
         {
           name: "Шахмат",
           description: "Шахмат ойынының негіздері, тактика және стратегия үйрену",
-          image: "/gallery/chess.jpg",
+          image: getClubImage("Шахмат", "/gallery/chess.jpg"),
           schedule: "Сейсенбі, Бейсенбі: 15:00-16:30",
           age: "6-16 жас",
           teacher: "Байшоинова Сания Тузельбаевна"
@@ -99,7 +182,7 @@ export default function KruzhkiPage() {
         {
           name: "Speaking Club",
           description: "Ағылшын тілінде сөйлеу дағдыларын дамыту және коммуникация",
-          image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250",
+          image: getClubImage("Speaking Club", "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250"),
           schedule: "Дүйсенбі, Сәрсенбі: 17:00-18:00",
           age: "8-16 жас",
           teacher: "Нұрланқызы Жанеля"
@@ -107,7 +190,7 @@ export default function KruzhkiPage() {
         {
           name: "Дебат",
           description: "Пікірталас дағдылары, сын тұрғысынан ойлау және дәлелдеу",
-          image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250",
+          image: getClubImage("Дебат", "https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250"),
           schedule: "Сейсенбі, Жұма: 16:30-18:00",
           age: "10-16 жас",
           teacher: "Аширбекова Гулмира Султановна"
@@ -123,7 +206,7 @@ export default function KruzhkiPage() {
         {
           name: "Тэквондо",
           description: "Корей жекпе-жегі, өзін-өзі қорғау және физикалық дайындық",
-          image: "https://images.unsplash.com/photo-1555597673-b21d5c935865?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250",
+          image: getClubImage("Тэквондо", "https://images.unsplash.com/photo-1555597673-b21d5c935865?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250"),
           schedule: "Дүйсенбі, Сәрсенбі, Жұма: 17:30-19:00",
           age: "6-16 жас",
           teacher: "Камытбаев Айдын Сыпабекович"
@@ -131,7 +214,7 @@ export default function KruzhkiPage() {
         {
           name: "Футбол",
           description: "Командалық ойын, техника және тактика дамыту",
-          image: "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250",
+          image: getClubImage("Футбол", "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250"),
           schedule: "Сейсенбі, Бейсенбі, Сенбі: 16:00-17:30",
           age: "7-16 жас",
           teacher: "Юзыкаев Жасулан Серикбайулы"
@@ -203,13 +286,30 @@ export default function KruzhkiPage() {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {category.clubs.map((club, clubIndex) => (
                 <Card key={clubIndex} className="group overflow-hidden rounded-[2.5rem] border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 backdrop-blur-sm hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] dark:hover:shadow-blue-900/20 transition-all duration-500 transform hover:-translate-y-2">
-                  <div className="relative h-64 overflow-hidden">
+                  <div className="relative overflow-hidden">
                     <img
                       src={club.image}
                       alt={club.name}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      className="w-full h-auto transition-transform duration-700"
                     />
-                    <div className={`absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-60`}></div>
+                    <div className={`absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-40`}></div>
+                    
+                    {isAdmin && (
+                      <div className="absolute top-4 right-4 z-20">
+                        <Button
+                          size="icon"
+                          variant="secondary"
+                          className="rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white hover:bg-white hover:text-blue-600 transition-all shadow-lg"
+                          onClick={() => {
+                            setUploadingClub(club.name);
+                            setIsUploadDialogOpen(true);
+                          }}
+                        >
+                          <Camera className="w-5 h-5" />
+                        </Button>
+                      </div>
+                    )}
+
                     <div className="absolute bottom-6 left-6 right-6">
                       <div className="inline-block px-4 py-1.5 bg-white/20 backdrop-blur-md border border-white/30 text-white rounded-full text-xs font-bold uppercase tracking-widest">
                         {club.age}
@@ -297,6 +397,43 @@ export default function KruzhkiPage() {
           </div>
         </div>
       </section>
+
+      {/* Upload Dialog */}
+      <Dialog open={isUploadDialogOpen} onOpenChange={setIsUploadDialogOpen}>
+        <DialogContent className="sm:max-w-md bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-slate-900 dark:text-white">
+              Суретті жаңарту: {uploadingClub}
+            </DialogTitle>
+            <DialogDescription className="text-slate-400 dark:text-slate-300">
+              Осы үйірме үшін жаңа мұқаба суретін жүктеңіз
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-6 py-4">
+            <div className="grid w-full items-center gap-2">
+              <Label htmlFor="club-photo" className="text-sm font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-widest">
+                Фото таңдау
+              </Label>
+              <Input
+                id="club-photo"
+                type="file"
+                accept="image/*"
+                onChange={handleFileUpload}
+                disabled={isUploading}
+                className="cursor-pointer text-white file:bg-blue-50 file:text-blue-700 file:border-0 file:rounded-md file:px-4 file:py-2 hover:file:bg-blue-100 transition-all bg-slate-800 border-slate-700"
+              />
+            </div>
+          </div>
+          <DialogFooter className="flex justify-center sm:justify-center pt-2">
+            {isUploading && (
+              <div className="flex items-center gap-2 text-blue-600 font-bold animate-pulse">
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Жүктелуде...
+              </div>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

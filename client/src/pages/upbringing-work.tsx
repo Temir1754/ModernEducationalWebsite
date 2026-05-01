@@ -618,9 +618,9 @@ export default function UpbringingWorkPage() {
       events: [
         {
           id: "tamyz-1",
-          title: "FGS IV олимпиадасы",
+          title: "Білімді ұрпақ жекеменшік мектебі IV олимпиадасы",
           date: "20 тамыз",
-          description: "FGS IV олимпиадасы өтті, олимпиадаға қаланың барлық мектептерінен оқушылар қатысты. Олар өз білімдерін байқап шыңдай білді.",
+          description: "Білімді ұрпақ жекеменшік мектебі IV олимпиадасы өтті, олимпиадаға қаланың барлық мектептерінен оқушылар қатысты. Олар өз білімдерін байқап шыңдай білді.",
           photos: [] as string[]
         },
         {
@@ -810,7 +810,7 @@ export default function UpbringingWorkPage() {
       name: "Утепбаева Махаббат Анарбековна",
       position: "Тәрбие жұмысы жөніндегі орынбасар",
       phone: "+7‒775‒790‒63‒63",
-      email: "fgs.school.2022@gmail.com",
+      email: "school.bilimdi.urpaq@gmail.com",
       icon: <User className="w-6 h-6" />,
       color: "bg-blue-50 border-blue-200"
     },
@@ -818,7 +818,7 @@ export default function UpbringingWorkPage() {
       name: "Катаева Молдир Сабырхановна",
       position: "Психолог",
       phone: "+7‒775‒790‒63‒63",
-      email: "fgs.school.2022@gmail.com",
+      email: "school.bilimdi.urpaq@gmail.com",
       icon: <Heart className="w-6 h-6" />,
       color: "bg-green-50 border-green-200"
     },
@@ -826,7 +826,7 @@ export default function UpbringingWorkPage() {
       name: "Бекболат Жасмин Жанаділқызы",
       position: "Әлеуметтік педагог",
       phone: "+7‒775‒790‒63‒63",
-      email: "fgs.school.2022@gmail.com",
+      email: "school.bilimdi.urpaq@gmail.com",
       icon: <Users className="w-6 h-6" />,
       color: "bg-purple-50 border-purple-200"
     },
@@ -834,7 +834,7 @@ export default function UpbringingWorkPage() {
       name: "Насурлаев Бауыржан Ташабаевич",
       position: '"Жас сарбаз" жетекшісі',
       phone: "+7‒775‒790‒63‒63",
-      email: "fgs.school.2022@gmail.com",
+      email: "school.bilimdi.urpaq@gmail.com",
       icon: <Star className="w-6 h-6" />,
       color: "bg-red-50 border-red-200"
     }
@@ -1137,7 +1137,7 @@ export default function UpbringingWorkPage() {
           </CardHeader>
           <CardContent>
             <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">
-              FGS мектебінде тәрбие жұмысы оқушылардың рухани-адамгершілік қасиеттерін қалыптастыруға,
+              Білімді ұрпақ жекеменшік мектебінде тәрбие жұмысы оқушылардың рухани-адамгершілік қасиеттерін қалыптастыруға,
               патриоттық сезімдерін дамытуға және қоғамдық белсенділігін арттыруға бағытталған.
               Біз әрбір баланың жеке дарынын ашып, оларды болашақ өмірге дайындауға ұмтыламыз.
             </p>

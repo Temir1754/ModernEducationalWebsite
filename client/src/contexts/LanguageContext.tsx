@@ -45,7 +45,7 @@ const translations = {
     'stats.admission': '< 50% НИШ/РФМШ түсу',
 
     // Features
-    'features.title': 'Неліктен FGS мектебін таңдау керек?',
+    'features.title': 'Неліктен Білімді ұрпақ жекеменшік мектебін таңдау керек?',
     'features.subtitle': 'Біз балаларыңыздың толыққанды дамуы үшін барлық жағдай жасаймыз',
     'features.education': 'Сапалы білім беру',
     'features.education.desc': '0-9 сыныптары үшін толық бағдарлама',

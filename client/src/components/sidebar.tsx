@@ -169,10 +169,10 @@ export default function Sidebar() {
         <Link href="/" className="block">
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow-lg">
-              <span className="text-blue-600 font-bold text-lg">FGS</span>
+              <span className="text-blue-600 font-bold text-xs">БҰЖМ</span>
             </div>
             <div>
-              <h1 className="text-lg font-bold">FGS</h1>
+              <h1 className="text-[10px] font-bold leading-tight">Білімді ұрпақ<br/>жекеменшік мектебі</h1>
               <p className="text-sm text-blue-100">Болашақ ұрпақ мектебі</p>
             </div>
           </div>
@@ -245,9 +245,9 @@ export default function Sidebar() {
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-2" data-testid="mobile-home-link">
             <div className="w-7 h-7 sm:w-8 sm:h-8 bg-white rounded-md flex items-center justify-center shadow-md">
-              <span className="text-blue-600 font-bold text-xs sm:text-sm">FGS</span>
+              <span className="text-blue-600 font-bold text-[8px] sm:text-[10px]">БҰЖМ</span>
             </div>
-            <span className="font-semibold text-sm sm:text-base">FGS</span>
+            <span className="font-semibold text-xs sm:text-sm">Білімді ұрпақ жекеменшік мектебі</span>
           </Link>
           <Button
             variant="ghost"

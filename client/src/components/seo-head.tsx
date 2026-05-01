@@ -23,8 +23,8 @@ export default function SeoHead({
   const title = customTitle || seo.title;
   const description = customDescription || seo.description;
   const keywords = customKeywords || seo.keywords;
-  const canonicalUrl = `https://fgs.kz${seo.path}`;
-  const imageUrl = customImage || 'https://fgs.kz/og-image.png';
+  const canonicalUrl = `https://bilimdi-urpaq.kz${seo.path}`;
+  const imageUrl = customImage || 'https://bilimdi-urpaq.kz/og-image.png';
 
   const schoolName = language === 'kz' ? schoolInfo.nameKk : schoolInfo.nameRu;
   const schoolCity = language === 'kz' ? schoolInfo.cityKk : schoolInfo.cityRu;
@@ -46,8 +46,8 @@ export default function SeoHead({
       <link rel="canonical" href={canonicalUrl} />
 
       {/* Hreflang Tags for Bilingual Support */}
-      <link rel="alternate" hrefLang="kk" href={`https://fgs.kz${seo.path}?lang=kz`} />
-      <link rel="alternate" hrefLang="ru" href={`https://fgs.kz${seo.path}?lang=ru`} />
+      <link rel="alternate" hrefLang="kk" href={`https://bilimdi-urpaq.kz${seo.path}?lang=kz`} />
+      <link rel="alternate" hrefLang="ru" href={`https://bilimdi-urpaq.kz${seo.path}?lang=ru`} />
       <link rel="alternate" hrefLang="x-default" href={canonicalUrl} />
 
       {/* Open Graph / Facebook */}

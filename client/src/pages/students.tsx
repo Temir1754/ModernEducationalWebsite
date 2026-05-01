@@ -146,7 +146,7 @@ export default function StudentsPage() {
             Оқушыларға <span className="text-blue-500">арналған</span>
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
-            FGS мектебінің оқушылары үшін пайдалы ақпарат пен мүмкіндіктер
+            Білімді ұрпақ жекеменшік мектебінің оқушылары үшін пайдалы ақпарат пен мүмкіндіктер
           </p>
         </div>
 

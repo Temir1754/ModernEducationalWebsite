@@ -37,7 +37,7 @@ export default function ContactPage() {
       icon: MapPin,
       title: "Мекенжайымыз",
       content: "Шымкент қаласы, Енбекші ауданы",
-      subtitle: "ӘӨЖ «FGS - Болашақ ұрпақ мектебі»"
+      subtitle: "Білімді ұрпақ жекеменшік мектебі"
     },
     {
       icon: Phone,
@@ -48,7 +48,7 @@ export default function ContactPage() {
     {
       icon: Mail,
       title: "Электрондық пошта",
-      content: "info@fgs-school.kz",
+      content: "info@bilimdi-urpaq.kz",
       subtitle: "Сұрақтарыңызды жібере аласыз"
     },
     {
@@ -63,14 +63,14 @@ export default function ContactPage() {
     {
       name: "Instagram",
       icon: Instagram,
-      url: "https://www.instagram.com/fgs.schoolkz/",
+      url: "https://www.instagram.com/bilimdi_urpaq_shymkent/",
       color: "hover:text-pink-500",
       bgColor: "hover:bg-pink-50"
     },
     {
       name: "Telegram",
       icon: Send,
-      url: "https://t.me/fgs_school",
+      url: "https://t.me/bilimdi_urpaq",
       color: "hover:text-blue-500",
       bgColor: "hover:bg-blue-50"
     },
@@ -84,7 +84,7 @@ export default function ContactPage() {
     {
       name: "Facebook",
       icon: Facebook,
-      url: "https://www.facebook.com/people/Fgs-School/pfbid0b3bkVb2Vz1B59RdK3PfLQR7DcKwJ92XaxfMXdB5kK7wv1AwTBBUbtUZ5uj1oAN7ul/",
+      url: "https://www.facebook.com/people/Bilimdi-Urpaq-School/pfbid0b3bkVb2Vz1B59RdK3PfLQR7DcKwJ92XaxfMXdB5kK7wv1AwTBBUbtUZ5uj1oAN7ul/",
       color: "hover:text-blue-600",
       bgColor: "hover:bg-blue-50"
     }
@@ -93,21 +93,21 @@ export default function ContactPage() {
   const departments = [
     {
       title: "Директор",
-      name: "Жолдасбаева Гульжан Кенжебаевна",
+      name: "Бейсбаева Жұлдыз Мейіржанқызы",
       phone: "+7‒775‒790‒63‒63",
-      email: "director@fgs-school.kz"
+      email: "director@bilimdi-urpaq.kz"
     },
     {
       title: "Оқу ісі жөніндегі директор орынбасары",
-      name: "Сағындық Айгүл Сейткасымқызы",
+      name: "Сарсенбаева Алия Раманкуловна",
       phone: "+7‒775‒790‒63‒63",
-      email: "education@fgs-school.kz"
+      email: "education@bilimdi-urpaq.kz"
     },
     {
       title: "Тәрбие ісі жөніндегі директор орынбасары",
-      name: "Қадірбекова Перуза Несіпбайқызы",
+      name: "Утепбаева Махаббат Анарбековна",
       phone: "+7‒775‒790‒63‒63",
-      email: "upbringing@fgs-school.kz"
+      email: "upbringing@bilimdi-urpaq.kz"
     }
   ];
 
@@ -307,7 +307,7 @@ export default function ContactPage() {
                     <MapPin className="w-6 h-6 text-blue-600 dark:text-blue-400 mt-1" />
                     <div>
                       <p className="font-medium text-gray-900 dark:text-gray-100">
-                        ӘӨЖ «FGS - Болашақ ұрпақ мектебі»
+                        Білімді ұрпақ жекеменшік мектебі
                       </p>
                       <p className="text-gray-600 dark:text-gray-300">
                         Шымкент қаласы, Енбекші ауданы
@@ -335,7 +335,7 @@ export default function ContactPage() {
                 </p>
                 <div className="space-y-2">
                   <p className="text-blue-100 dark:text-blue-200">📞 Телефон: +7‒775‒790‒63‒63</p>
-                  <p className="text-blue-100 dark:text-blue-200">📧 Email: info@fgs-school.kz</p>
+                  <p className="text-blue-100 dark:text-blue-200">📧 Email: info@bilimdi-urpaq.kz</p>
                 </div>
               </div>
             </div>

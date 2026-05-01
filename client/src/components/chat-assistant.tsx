@@ -40,7 +40,7 @@ export default function ChatAssistant() {
     if (messages.length === 0) {
       const welcomeMessage: Message = {
         id: Date.now().toString(),
-        text: `Сәлем 👋 Мен – FGS мектебінің виртуалды көмекшісімін!\nМен сізге кесте, асхана мәзірі, UPay жүйесі және басқа ақпаратты табуға көмектесемін.\nТағы да сұрақтарыңыз болса — мен әрқашан дайынмын 💡`,
+        text: `Сәлем 👋 Мен – Білімді ұрпақ жекеменшік мектебінің виртуалды көмекшісімін!\nМен сізге кесте, асхана мәзірі, UPay жүйесі және басқа ақпаратты табуға көмектесемін.\nТағы да сұрақтарыңыз болса — мен әрқашан дайынмын 💡`,
         sender: "bot",
         timestamp: new Date()
       };
@@ -122,7 +122,7 @@ export default function ChatAssistant() {
       setUserName(formData.name);
 
       // Create message for Telegram/WhatsApp
-      const message = `🎓 Жаңа өтініш FGS мектебінен:\n\n👤 Аты: ${formData.name}\n📝 Рөлі: ${formData.role}\n💬 Сұрақ: ${formData.question}`;
+      const message = `🎓 Жаңа өтініш Білімді ұрпақ жекеменшік мектебінен:\n\n👤 Аты: ${formData.name}\n📝 Рөлі: ${formData.role}\n💬 Сұрақ: ${formData.question}`;
       
       // Send to WhatsApp
       const whatsappUrl = `https://wa.me/77757906363?text=${encodeURIComponent(message)}`;
@@ -172,7 +172,7 @@ export default function ChatAssistant() {
               <Bot className="w-6 h-6 text-blue-600 dark:text-[#00bfff]" />
             </div>
             <div className="flex-1">
-              <h3 className="font-bold text-lg">FGS Көмекші</h3>
+              <h3 className="font-bold text-lg">Білімді ұрпақ жекеменшік мектебі Көмекші</h3>
               <p className="text-xs text-blue-100 dark:text-gray-300">Виртуалды ассистент</p>
             </div>
           </div>

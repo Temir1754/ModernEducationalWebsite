@@ -60,7 +60,7 @@ export default function BentoFacts() {
             whileInView={{ opacity: 1, y: 0 }}
             className="text-3xl md:text-5xl font-black mt-4 text-white leading-tight"
           >
-            Білімді ұрпақ жекеменшік мектебі — бұл <span className="text-primary">сапа мен нәтиже</span>
+            Білімді ұрпақ жекеменшік мектебі — бұл <span className="text-blue-400">сапа мен нәтиже</span>
           </motion.h2>
         </div>
 
@@ -77,7 +77,7 @@ export default function BentoFacts() {
               <div className="relative z-10 h-full flex flex-col justify-center">
                 <div>
                   {item.badge && (
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-primary mb-2 block">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-blue-400 mb-2 block">
                       {item.badge}
                     </span>
                   )}

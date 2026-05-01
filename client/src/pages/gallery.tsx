@@ -172,9 +172,9 @@ export default function GalleryPage() {
     <>
       <SEOHead
         page="home"
-        customTitle="Мектеп фотогалереясы | FGS - Болашақ ұрпақ мектебі"
-        customDescription="FGS мектебінің өмірінен қызықты сәттер мен іс-шаралар галереясы. Біздің мектептегі оқу үдерісі мен іс-шаралардың суреттері."
-        customKeywords="FGS фотогалерея, мектеп суреттері, іс-шаралар, оқушылар, Шымкент мектеп"
+        customTitle="Мектеп фотогалереясы | Білімді ұрпақ жекеменшік мектебі"
+        customDescription="Білімді ұрпақ жекеменшік мектебінің өмірінен қызықты сәттер мен іс-шаралар галереясы. Біздің мектептегі оқу үдерісі мен іс-шаралардың суреттері."
+        customKeywords="Білімді ұрпақ жекеменшік мектебі фотогалерея, мектеп суреттері, іс-шаралар, оқушылар, Шымкент мектеп"
       />
       <div className="min-h-screen bg-gray-50 dark:bg-[#0f172a]">
         {/* Header with Back Button */}
@@ -182,8 +182,6 @@ export default function GalleryPage() {
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center">
               
-
-
               {/* Admin Upload Button */}
               {user && (
                 <Dialog open={isUploadOpen} onOpenChange={setIsUploadOpen}>
@@ -277,7 +275,7 @@ export default function GalleryPage() {
         <div className="container mx-auto px-4 pt-12 pb-6 sm:pt-16 sm:pb-8">
           <div className="text-center mb-8">
             <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-              FGS мектебінің өмірінен қызықты сәттер мен іс-шаралар галереясы
+              Білімді ұрпақ жекеменшік мектебінің өмірінен қызықты сәттер мен іс-шаралар галереясы
             </p>
           </div>
 
@@ -296,23 +294,16 @@ export default function GalleryPage() {
                       className="flex-[0_0_100%] min-w-0 px-2 lg:flex-[0_0_25%]"
                     >
                       <div
-                        className="relative group cursor-pointer h-[400px] lg:h-[350px]"
+                        className="relative group cursor-pointer bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg transition-all duration-500 hover:shadow-2xl hover:scale-[1.02]"
                         onClick={() => setSelectedIndex(index)}
                       >
-                        <img
-                          src={media.url}
-                          alt="Галерея"
-                          className="w-full h-full object-cover rounded-2xl shadow-lg transition-all duration-500 group-hover:shadow-2xl group-hover:scale-[1.02]"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                        {/* Admin Buttons */}
+                        {/* Admin Header Bar */}
                         {user && (
-                          <>
-                            <Button
-                              variant="secondary"
+                          <div className="flex justify-end gap-2 p-2 bg-slate-100 dark:bg-slate-800 border-b border-gray-200 dark:border-gray-700">
+                             <Button
+                              variant="ghost"
                               size="icon"
-                              className="absolute top-2 right-14 z-30 opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110 active:scale-90"
+                              className="w-8 h-8 rounded-full hover:bg-blue-100 dark:hover:bg-blue-900/30 text-blue-600 dark:text-blue-400"
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
@@ -322,13 +313,12 @@ export default function GalleryPage() {
                               <Pencil className="w-4 h-4" />
                             </Button>
                             <Button
-                              variant="destructive"
+                              variant="ghost"
                               size="icon"
-                              className="absolute top-2 right-2 z-30 opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110 active:scale-90"
+                              className="w-8 h-8 rounded-full hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400"
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
-                                console.log("Delete button clicked for media:", media.id);
                                 if (window.confirm("Бұл суретті өшіруді растайсыз ба? (Confirm delete?)")) {
                                   deleteMutation.mutate(media.id);
                                 }
@@ -336,8 +326,17 @@ export default function GalleryPage() {
                             >
                               <Trash2 className="w-4 h-4" />
                             </Button>
-                          </>
+                          </div>
                         )}
+                        
+                        <div className="h-[300px] lg:h-[280px]">
+                          <img
+                            src={media.url}
+                            alt="Галерея"
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -429,6 +428,26 @@ export default function GalleryPage() {
                         <p className="text-white text-lg font-medium drop-shadow-md">
                           {mediaItems[selectedIndex].caption}
                         </p>
+                      </div>
+                    )}
+                    {user && (
+                      <div className="absolute -top-12 right-0 flex gap-2">
+                         <Button
+                          variant="destructive"
+                          size="sm"
+                          className="rounded-full bg-red-600/80 hover:bg-red-600 backdrop-blur-md"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (window.confirm("Бұл суретті өшіруді растайсыз ба? (Confirm delete?)")) {
+                              const idToDelete = mediaItems[selectedIndex].id;
+                              deleteMutation.mutate(idToDelete);
+                              setSelectedIndex(null);
+                            }
+                          }}
+                        >
+                          <Trash2 className="w-4 h-4 mr-2" />
+                          Суретті өшіру
+                        </Button>
                       </div>
                     )}
                     {/* Counter */}
