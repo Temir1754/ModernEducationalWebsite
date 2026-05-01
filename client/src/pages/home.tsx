@@ -280,16 +280,14 @@ export default function Home() {
       <div className="min-h-screen">
         {/* Hero Section */}
         <section className="relative h-[calc(100vh-4rem)] w-full flex items-center justify-center overflow-hidden">
-          {/* Full Screen Background Image */}
-          <div
-            className="absolute inset-0 w-full h-full"
-            style={{
-              backgroundImage: `url(${WhatsApp_Image_2025_08_15_at_18_02_15})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center center',
-              backgroundRepeat: 'no-repeat'
-            }}
-          ></div>
+          {/* Full Screen Background Image - Optimized for LCP */}
+          <img
+            src={WhatsApp_Image_2025_08_15_at_18_02_15}
+            alt="School background"
+            className="absolute inset-0 w-full h-full object-cover object-center"
+            loading="eager"
+            fetchpriority="high"
+          />
 
           {/* Background Overlay - Enhanced for mobile visibility */}
           <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-900/90 via-blue-800/85 to-purple-900/90 md:from-blue-900/80 md:via-blue-800/70 md:to-purple-900/80"></div>

@@ -385,7 +385,7 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
                   <Button
                     type="button"
                     variant="secondary"
-                    className="flex-1 bg-green-500 text-white hover:bg-green-600 transform hover:scale-105 transition-all duration-300"
+                    className="flex-1 bg-green-700 text-white hover:bg-green-800 transform hover:scale-105 transition-all duration-300 shadow-lg"
                     onClick={() => {
                       const whatsappUrl = "https://wa.me/77757906363?text=Сәлеметсіз%20бе!%20Білімді%20ұрпақ%20мектебіне%20баламды%20қабылдау%20туралы%20ақпарат%20алғым%20келеді.";
                       window.open(whatsappUrl, '_blank');
