@@ -282,7 +282,7 @@ export default function Home() {
         <section className="relative h-[calc(100vh-4rem)] w-full flex items-center justify-center overflow-hidden">
           {/* Full Screen Background Image - Optimized for LCP */}
           <img
-            src={WhatsApp_Image_2025_08_15_at_18_02_15}
+            src="/hero-bg.jpg"
             alt="School background"
             className="absolute inset-0 w-full h-full object-cover object-center"
             loading="eager"

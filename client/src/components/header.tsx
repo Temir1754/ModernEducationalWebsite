@@ -140,6 +140,7 @@ export default function Header() {
                 onClick={() => {
                   window.location.href = 'tel:+77757906363';
                 }}
+                aria-label="Телефонға қоңырау шалу"
               >
                 <Phone className="w-4 h-4 text-primary mr-1" />
                 +7‒775‒790‒63‒63
@@ -153,6 +154,7 @@ export default function Header() {
                 onClick={() => {
                   window.open('https://go.2gis.com/DoFle', '_blank');
                 }}
+                aria-label="Мектеп мекенжайын картадан көру"
               >
                 <MapPin className="w-4 h-4 text-primary mr-1" />
                 Шымкент, Өтегенова 43А
