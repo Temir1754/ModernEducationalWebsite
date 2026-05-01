@@ -296,16 +296,16 @@ export default function Home() {
             <div className="text-center max-w-4xl mx-auto">
               {/* Text Content - Enhanced for mobile */}
               <div className="px-4 sm:px-0">
-                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold mb-4 md:mb-6 text-white leading-tight drop-shadow-lg">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold mb-4 md:mb-6 text-white leading-tight drop-shadow-lg min-h-[1.2em]">
                   {t('hero.title')}
                 </h1>
-                <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 md:mb-8 text-white leading-relaxed drop-shadow-md">
+                <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 md:mb-8 text-white leading-relaxed drop-shadow-md min-h-[3em]">
                   {t('hero.subtitle')}
                 </p>
 
                 {/* Key Statistics - Mobile optimized */}
                 <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-6 md:mb-8 max-w-3xl mx-auto min-h-[120px] sm:min-h-[160px]">
-                  <div className="text-center bg-white/30 backdrop-blur-md rounded-lg sm:rounded-xl p-3 sm:p-6 border border-white/40 shadow-lg hover:shadow-xl transition-all duration-300">
+                  <div className="text-center bg-white/30 backdrop-blur-md rounded-lg sm:rounded-xl p-3 sm:p-6 border border-white/40 shadow-lg hover:shadow-xl hover:bg-white/40 transition-shadow">
                     <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-1 sm:mb-2 drop-shadow-md">2022</div>
                     <div className="text-xs sm:text-sm text-white font-medium drop-shadow-sm">{t('stats.since')}</div>
                   </div>
@@ -314,11 +314,11 @@ export default function Home() {
                   {/* Текущее значение: 12-18 */}
                   {/* Чтобы изменить, замените "12-18" на новое значение */}
                   {/* ======================================== */}
-                  <div className="text-center bg-white/30 backdrop-blur-md rounded-lg sm:rounded-xl p-3 sm:p-6 border border-white/40 shadow-lg hover:shadow-xl transition-all duration-300">
+                  <div className="text-center bg-white/30 backdrop-blur-md rounded-lg sm:rounded-xl p-3 sm:p-6 border border-white/40 shadow-lg hover:shadow-xl hover:bg-white/40 transition-shadow">
                     <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-1 sm:mb-2 drop-shadow-md">12-18</div>
                     <div className="text-xs sm:text-sm text-white font-medium drop-shadow-sm">сыныптағы балалар саны</div>
                   </div>
-                  <div className="text-center bg-white/30 backdrop-blur-md rounded-lg sm:rounded-xl p-3 sm:p-6 border border-white/40 shadow-lg hover:shadow-xl transition-all duration-300">
+                  <div className="text-center bg-white/30 backdrop-blur-md rounded-lg sm:rounded-xl p-3 sm:p-6 border border-white/40 shadow-lg hover:shadow-xl hover:bg-white/40 transition-shadow">
                     <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-1 sm:mb-2 drop-shadow-md">&lt; 50%</div>
                     <div className="text-xs sm:text-sm text-white font-medium drop-shadow-sm">{t('stats.admission')}</div>
                   </div>

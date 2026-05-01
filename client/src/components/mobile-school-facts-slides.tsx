@@ -160,7 +160,7 @@ export default function MobileSchoolFactsSlides() {
               <span className={`h-2 rounded-full transition-all duration-200 ${
                 index === currentIndex 
                   ? `${currentFact.color.replace('text-', 'bg-')} w-6` 
-                  : 'bg-gray-300 hover:bg-gray-400 w-2'
+                  : 'bg-gray-400 hover:bg-gray-500 w-2'
               }`} />
             </button>
           ))}

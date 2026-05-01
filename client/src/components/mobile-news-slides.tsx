@@ -138,7 +138,7 @@ export default function MobileNewsSlides({ items }: MobileNewsSlidesProps) {
             >
               <span className={`w-3 h-3 rounded-full transition-all duration-200 ${index === currentIndex
                   ? 'bg-blue-600 shadow-md'
-                  : 'bg-gray-300 hover:bg-gray-400'
+                  : 'bg-gray-400 hover:bg-gray-500'
                 }`} />
             </button>
           ))}
