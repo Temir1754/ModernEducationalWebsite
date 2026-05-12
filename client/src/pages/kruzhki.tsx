@@ -63,16 +63,24 @@ export default function KruzhkiPage() {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ value }),
+          credentials: "include"
         });
-        if (!res.ok) throw new Error("Failed to update content");
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.message || "Failed to update content");
+        }
         return res.json();
       } else {
         const res = await fetch("/api/content", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ key, value, lang: "kz", type: "image" }),
+          credentials: "include"
         });
-        if (!res.ok) throw new Error("Failed to create content");
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.message || "Failed to create content");
+        }
         return res.json();
       }
     },
@@ -80,6 +88,10 @@ export default function KruzhkiPage() {
       queryClient.invalidateQueries({ queryKey: ["/api/content"] });
       setIsUploadDialogOpen(false);
       setUploadingClub(null);
+    },
+    onError: (error: Error) => {
+      console.error("Content update error:", error);
+      alert("Қате / Ошибка: " + error.message);
     }
   });
 
@@ -95,16 +107,20 @@ export default function KruzhkiPage() {
       const uploadRes = await fetch("/api/upload", {
         method: "POST",
         body: formData,
+        credentials: "include"
       });
 
-      if (!uploadRes.ok) throw new Error("Upload failed");
+      if (!uploadRes.ok) {
+        const err = await uploadRes.json().catch(() => ({}));
+        throw new Error(err.message || "Upload failed");
+      }
       const { url } = await uploadRes.json();
 
       const key = `club_image_${uploadingClub.toLowerCase().replace(/\s+/g, '_')}`;
       await updateContentMutation.mutateAsync({ key, value: url });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Upload error:", error);
-      alert("Файлды жүктеу сәтсіз аяқталды");
+      alert("Қате / Ошибка: " + (error.message || "Файлды жүктеу сәтсіз аяқталды"));
     } finally {
       setIsUploading(false);
     }

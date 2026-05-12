@@ -135,8 +135,15 @@ export default function AboutSchoolPage() {
       const formData = new FormData();
       formData.append("file", uploadFile);
 
-      const uploadRes = await fetch("/api/upload", { method: "POST", body: formData });
-      if (!uploadRes.ok) throw new Error("Жүктеу сәтсіз аяқталды");
+      const uploadRes = await fetch("/api/upload", { 
+        method: "POST", 
+        body: formData,
+        credentials: "include"
+      });
+      if (!uploadRes.ok) {
+        const err = await uploadRes.json().catch(() => ({}));
+        throw new Error(err.message || "Жүктеу сәтсіз аяқталды (Upload failed)");
+      }
       const { url } = await uploadRes.json();
 
       const mediaRes = await fetch("/api/media", {
@@ -148,26 +155,46 @@ export default function AboutSchoolPage() {
           caption: uploadTitle,
           section: "about-school"
         }),
+        credentials: "include"
       });
 
-      if (!mediaRes.ok) throw new Error("Сақтау мүмкін болмады");
+      if (!mediaRes.ok) {
+        const err = await mediaRes.json().catch(() => ({}));
+        throw new Error(err.message || "Сақтау мүмкін болмады");
+      }
       return mediaRes.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/media", "about-school"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/media"] });
       setIsUploadOpen(false);
       setUploadFile(null);
       setUploadTitle("");
+    },
+    onError: (error: Error) => {
+      console.error("Upload error:", error);
+      alert("Қате / Ошибка: " + error.message);
     }
   });
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const res = await fetch(`/api/media/${id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Өшіру мүмкін болмады");
+      const res = await fetch(`/api/media/${id}`, { 
+        method: "DELETE",
+        credentials: "include" 
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || "Өшіру мүмкін болмады");
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/media", "about-school"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/media"] });
+    },
+    onError: (error: Error) => {
+      console.error("Delete error:", error);
+      alert("Қате / Ошибка: " + error.message);
     }
   });
 

@@ -137,8 +137,15 @@ function DocRow({
                     try {
                       const fd = new FormData();
                       fd.append("file", file);
-                      const res = await fetch("/api/upload", { method: "POST", body: fd });
-                      if (!res.ok) throw new Error("Upload failed");
+                      const res = await fetch("/api/upload", { 
+                        method: "POST", 
+                        body: fd,
+                        credentials: "include"
+                      });
+                      if (!res.ok) {
+                        const err = await res.json().catch(() => ({}));
+                        throw new Error(err.message || "Upload failed");
+                      }
                       const { url } = await res.json();
                       await updateMutation.mutateAsync({ id: doc.id, data: { scanUrl: url } });
                       toast({ title: "Скан сәтті қосылды" });
@@ -969,57 +976,34 @@ export default function SchoolDocumentsPage() {
   }, [dbFolders, sortBy, sortOrder, documents]);
 
   const allSections: { id: string; label: string }[] = React.useMemo(() => {
-    const flattenSubfolders = (catLabel: string, sfs: SubFolder[]): { id: string; label: string }[] => {
-      return sfs.flatMap(sf => {
-        const currentLabel = `${catLabel} › ${sf.label}`;
-        const rest = sf.subfolders ? flattenSubfolders(currentLabel, sf.subfolders) : [];
-        return [{ id: sf.id, label: currentLabel }, ...rest];
-      });
-    };
-
-    return categories.flatMap((cat) => {
-      if (cat.type === "simple") {
-        return [{ id: cat.section!, label: cat.label }];
-      }
-      return [{ id: cat.id, label: cat.label }, ...flattenSubfolders(cat.label, cat.subfolders ?? [])];
-    });
-  }, [categories]);
-
-  const defaultSection = allSections[0]?.id || "";
-
-  const [isUploadOpen, setIsUploadOpen] = useState(false);
-  const [editingDocId, setEditingDocId] = useState<string | null>(null);
-  const [uploadFile, setUploadFile] = useState<File | null>(null);
-  const [newDoc, setNewDoc] = useState({
-    title: "",
-    description: "",
-    section: defaultSection,
-  });
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const [isFolderOpen, setIsFolderOpen] = useState(false);
-  const [newFolder, setNewFolder] = useState({
-    name: "",
-    subName: "",
-    parentId: "null",
-    autoCreateYears: false,
-  });
-
-  const selectedParent = dbFolders.find(f => f.id === newFolder.parentId);
-  const isParentYear = selectedParent && selectedParent.name.match(/20\d\d[\s\-–—]20\d\d/);
-
-  const folderUploadMutation = useMutation({
+    const flattenSub  const folderUploadMutation = useMutation({
     mutationFn: async (e: React.FormEvent) => {
       e.preventDefault();
       const payload1: any = { name: newFolder.name, order: "0", isCategory: newFolder.parentId === "null" };
       if (newFolder.parentId !== "null") payload1.parentId = newFolder.parentId;
-      const res1 = await fetch("/api/folders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload1) });
-      if (!res1.ok) throw new Error("Папканы жасау кезінде қате кетті");
+      const res1 = await fetch("/api/folders", { 
+        method: "POST", 
+        headers: { "Content-Type": "application/json" }, 
+        body: JSON.stringify(payload1),
+        credentials: "include"
+      });
+      if (!res1.ok) {
+        const err = await res1.json().catch(() => ({}));
+        throw new Error(err.message || "Папканы жасау кезінде қате кетті");
+      }
       const createdFolder = await res1.json();
       let targetId = createdFolder.id;
       if (newFolder.subName.trim() !== "") {
-        const res2 = await fetch("/api/folders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: newFolder.subName.trim(), parentId: createdFolder.id, order: "0", isCategory: false }) });
-        if (!res2.ok) throw new Error("Ішкі папканы жасау кезінде қате кетті");
+        const res2 = await fetch("/api/folders", { 
+          method: "POST", 
+          headers: { "Content-Type": "application/json" }, 
+          body: JSON.stringify({ name: newFolder.subName.trim(), parentId: createdFolder.id, order: "0", isCategory: false }),
+          credentials: "include"
+        });
+        if (!res2.ok) {
+          const err = await res2.json().catch(() => ({}));
+          throw new Error(err.message || "Ішкі папканы жасау кезінде қате кетті");
+        }
         const createdSubFolder = await res2.json();
         targetId = createdSubFolder.id;
       }
@@ -1027,16 +1011,31 @@ export default function SchoolDocumentsPage() {
         if (isParentYear) {
           const siblings = dbFolders.filter(f => f.parentId === selectedParent.parentId && f.id !== selectedParent.id);
           for (const sib of siblings) {
-            const sibRes = await fetch("/api/folders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: newFolder.name, parentId: sib.id, order: "0", isCategory: false }) });
+            const sibRes = await fetch("/api/folders", { 
+              method: "POST", 
+              headers: { "Content-Type": "application/json" }, 
+              body: JSON.stringify({ name: newFolder.name, parentId: sib.id, order: "0", isCategory: false }),
+              credentials: "include"
+            });
             if (sibRes.ok && newFolder.subName.trim() !== "") {
               const sibFolder = await sibRes.json();
-              await fetch("/api/folders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: newFolder.subName.trim(), parentId: sibFolder.id, order: "0", isCategory: false }) });
+              await fetch("/api/folders", { 
+                method: "POST", 
+                headers: { "Content-Type": "application/json" }, 
+                body: JSON.stringify({ name: newFolder.subName.trim(), parentId: sibFolder.id, order: "0", isCategory: false }),
+                credentials: "include"
+              });
             }
           }
         } else {
           const years = ["2024-2025", "2025-2026", "2026-2027"];
           for (let i = 0; i < years.length; i++) {
-            await fetch("/api/folders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: years[i], parentId: targetId, order: String(i), isCategory: false }) });
+            await fetch("/api/folders", { 
+              method: "POST", 
+              headers: { "Content-Type": "application/json" }, 
+              body: JSON.stringify({ name: years[i], parentId: targetId, order: String(i), isCategory: false }),
+              credentials: "include"
+            });
           }
         }
       }
@@ -1057,11 +1056,26 @@ export default function SchoolDocumentsPage() {
       if (!uploadFile) throw new Error("Please select a file");
       const fd = new FormData();
       fd.append("file", uploadFile);
-      const uploadRes = await fetch("/api/upload", { method: "POST", body: fd });
-      if (!uploadRes.ok) throw new Error("File upload failed");
+      const uploadRes = await fetch("/api/upload", { 
+        method: "POST", 
+        body: fd,
+        credentials: "include"
+      });
+      if (!uploadRes.ok) {
+        const err = await uploadRes.json().catch(() => ({}));
+        throw new Error(err.message || "File upload failed");
+      }
       const { url } = await uploadRes.json();
-      const docRes = await fetch("/api/documents", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title: newDoc.title, description: newDoc.description, section: newDoc.section, url, color: "blue", icon: "file" }) });
-      if (!docRes.ok) throw new Error("Failed to save document info");
+      const docRes = await fetch("/api/documents", { 
+        method: "POST", 
+        headers: { "Content-Type": "application/json" }, 
+        body: JSON.stringify({ title: newDoc.title, description: newDoc.description, section: newDoc.section, url, color: "blue", icon: "file" }),
+        credentials: "include"
+      });
+      if (!docRes.ok) {
+        const err = await docRes.json().catch(() => ({}));
+        throw new Error(err.message || "Failed to save document info");
+      }
       return docRes.json();
     },
     onSuccess: () => {
@@ -1076,8 +1090,16 @@ export default function SchoolDocumentsPage() {
 
   const updateMutation = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: any }) => {
-      const res = await fetch(`/api/documents/${id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
-      if (!res.ok) throw new Error("Failed to update document");
+      const res = await fetch(`/api/documents/${id}`, { 
+        method: "PATCH", 
+        headers: { "Content-Type": "application/json" }, 
+        body: JSON.stringify(data),
+        credentials: "include"
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || "Failed to update document");
+      }
       return res.json();
     },
     onSuccess: () => {
@@ -1087,12 +1109,19 @@ export default function SchoolDocumentsPage() {
       setNewDoc({ title: "", description: "", section: defaultSection });
       toast({ title: "Құжат жаңартылды" });
     },
+    onError: (err: Error) => toast({ title: "Қате", description: err.message, variant: "destructive" }),
   });
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const res = await fetch(`/api/documents/${id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Өшіру сәтсіз аяқталды");
+      const res = await fetch(`/api/documents/${id}`, { 
+        method: "DELETE",
+        credentials: "include"
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || "Өшіру сәтсіз аяқталды");
+      }
     },
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["/api/documents"] }); toast({ title: "Құжат өшірілді" }); },
     onError: (err: Error) => toast({ title: "Қате", description: err.message, variant: "destructive" }),
@@ -1100,8 +1129,14 @@ export default function SchoolDocumentsPage() {
 
   const deleteFolderMutation = useMutation({
     mutationFn: async (id: string) => {
-      const res = await fetch(`/api/folders/${id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Өшіру сәтсіз аяқталды");
+      const res = await fetch(`/api/folders/${id}`, { 
+        method: "DELETE",
+        credentials: "include"
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || "Өшіру сәтсіз аяқталды");
+      }
     },
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["/api/folders"] }); toast({ title: "Папка өшірілді" }); },
     onError: (err: Error) => toast({ title: "Қате", description: err.message, variant: "destructive" }),
@@ -1109,8 +1144,16 @@ export default function SchoolDocumentsPage() {
 
   const updateFolderMutation = useMutation({
     mutationFn: async ({ id, name }: { id: string; name: string }) => {
-      const res = await fetch(`/api/folders/${id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name }) });
-      if (!res.ok) throw new Error("Атауын өзгерту сәтсіз аяқталды");
+      const res = await fetch(`/api/folders/${id}`, { 
+        method: "PATCH", 
+        headers: { "Content-Type": "application/json" }, 
+        body: JSON.stringify({ name }),
+        credentials: "include"
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || "Атауын өзгерту сәтсіз аяқталды");
+      }
       return res.json();
     },
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["/api/folders"] }); toast({ title: "Папка атауы жаңартылды" }); },

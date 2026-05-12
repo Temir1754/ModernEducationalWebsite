@@ -30,6 +30,8 @@ export default function GalleryPage() {
   const [uploadFile, setUploadFile] = useState<File | null>(null);
   const [editingMediaId, setEditingMediaId] = useState<string | null>(null);
   const [editCaption, setEditCaption] = useState("");
+  const [uploadedSessionItems, setUploadedSessionItems] = useState<Media[]>([]);
+  const [uploadSuccessMsg, setUploadSuccessMsg] = useState<string | null>(null);
 
   const { data: mediaItems = [] } = useQuery<Media[]>({
     queryKey: ["/api/media", "gallery"],
@@ -52,9 +54,13 @@ export default function GalleryPage() {
       const uploadRes = await fetch("/api/upload", {
         method: "POST",
         body: formData,
+        credentials: "include",
       });
 
-      if (!uploadRes.ok) throw new Error("Upload failed");
+      if (!uploadRes.ok) {
+        const errorData = await uploadRes.json().catch(() => ({}));
+        throw new Error(errorData.message || "Файлды жүктеу қатесі (Upload failed)");
+      }
       const { url } = await uploadRes.json();
 
       const mediaRes = await fetch("/api/media", {
@@ -65,22 +71,36 @@ export default function GalleryPage() {
           url,
           section: "gallery"
         }),
+        credentials: "include",
       });
 
-      if (!mediaRes.ok) throw new Error("Failed to save media");
+      if (!mediaRes.ok) {
+        const errorData = await mediaRes.json().catch(() => ({}));
+        throw new Error(errorData.message || "Failed to save media");
+      }
       return mediaRes.json();
     },
-    onSuccess: () => {
+    onSuccess: (newMedia) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/media", "gallery"] });
       queryClient.invalidateQueries({ queryKey: ["/api/media"] });
-      setIsUploadOpen(false);
+      setUploadedSessionItems((prev) => [newMedia, ...prev]);
+      setUploadSuccessMsg("Фото сәтті жүктелді! Тағы сурет қоса аласыз. / Фото успешно загружено! Можете добавить еще.");
       setUploadFile(null);
+      // Очищаем input type="file" через сброс значения, если нужно, или пользователь просто выберет новый файл
+    },
+    onError: (error: Error) => {
+      console.error("Upload error:", error);
+      alert("Қате / Ошибка: " + error.message);
     }
   });
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
       console.log("Attempting to delete media with ID:", id);
-      const res = await fetch(`/api/media/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/media/${id}`, { 
+        method: "DELETE",
+        credentials: "include",
+      });
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
         throw new Error(errorData.message || "Удаление не удалось");
@@ -88,6 +108,7 @@ export default function GalleryPage() {
       return res.json();
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/media", "gallery"] });
       queryClient.invalidateQueries({ queryKey: ["/api/media"] });
       console.log("Media deleted successfully");
     },
@@ -107,11 +128,13 @@ export default function GalleryPage() {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ caption }),
+        credentials: "include",
       });
       if (!res.ok) throw new Error("Failed to update caption");
       return res.json();
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/media", "gallery"] });
       queryClient.invalidateQueries({ queryKey: ["/api/media"] });
       setEditingMediaId(null);
       setEditCaption("");
@@ -184,28 +207,45 @@ export default function GalleryPage() {
               
               {/* Admin Upload Button */}
               {user && (
-                <Dialog open={isUploadOpen} onOpenChange={setIsUploadOpen}>
+                <Dialog open={isUploadOpen} onOpenChange={(open) => {
+                  setIsUploadOpen(open);
+                  if (!open) {
+                    setUploadedSessionItems([]);
+                    setUploadSuccessMsg(null);
+                  }
+                }}>
                   <DialogTrigger asChild>
                     <Button>
                       <Plus className="w-4 h-4 mr-1" />
                       Фото қосу
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="bg-white dark:bg-slate-900 border-none shadow-2xl max-w-md w-[95vw]">
+                  <DialogContent className="bg-white dark:bg-slate-900 border-none shadow-2xl max-w-md w-[95vw] max-h-[85vh] overflow-y-auto custom-scrollbar">
                     <DialogHeader>
                       <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-white">Фото жүктеу</DialogTitle>
                       <DialogDescription className="text-gray-500 dark:text-gray-400">
                         Галереяға жаңа фотосурет жүктеңіз.
                       </DialogDescription>
                     </DialogHeader>
-                    <form onSubmit={(e) => uploadMutation.mutate(e)} className="space-y-6 pt-4">
+                    
+                    {uploadSuccessMsg && (
+                      <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl text-green-700 dark:text-green-300 text-xs font-medium animate-fade-in">
+                        {uploadSuccessMsg}
+                      </div>
+                    )}
+
+                    <form onSubmit={(e) => uploadMutation.mutate(e)} className="space-y-4 pt-2">
                       <div className="space-y-3">
                         <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Фото таңдау</Label>
                         <div className="relative">
                           <Input
+                            key={uploadedSessionItems.length}
                             type="file"
                             accept="image/*"
-                            onChange={(e) => setUploadFile(e.target.files?.[0] || null)}
+                            onChange={(e) => {
+                              setUploadFile(e.target.files?.[0] || null);
+                              if (uploadSuccessMsg) setUploadSuccessMsg(null);
+                            }}
                             required
                             className="bg-gray-50 dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-900 dark:text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer h-12 flex items-center"
                           />
@@ -231,6 +271,21 @@ export default function GalleryPage() {
                         )}
                       </Button>
                     </form>
+
+                    {uploadedSessionItems.length > 0 && (
+                      <div className="mt-6 pt-4 border-t border-gray-100 dark:border-slate-800">
+                        <h4 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
+                          Осы сессияда жүктелген фотолар ({uploadedSessionItems.length})
+                        </h4>
+                        <div className="grid grid-cols-3 gap-2">
+                          {uploadedSessionItems.map((item, idx) => (
+                            <div key={idx} className="relative aspect-square rounded-xl overflow-hidden border border-gray-200 dark:border-slate-700 shadow-sm">
+                              <img src={item.url} alt="preview" className="w-full h-full object-cover" />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </DialogContent>
                 </Dialog>
               )}

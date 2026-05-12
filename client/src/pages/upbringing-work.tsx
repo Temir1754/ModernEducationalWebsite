@@ -69,10 +69,10 @@ function AdminDocActions({ doc, updateMutation, scansDeleteMutation, onEdit }: {
       </Button>
 
       {/* 4. Қосу (Add/Upload scan) */}
-      <label htmlFor="admin-scan-upload" className="cursor-pointer">
+      <label htmlFor={`admin-scan-upload-${doc.id}`} className="cursor-pointer">
         <input
-          id="admin-scan-upload"
-          name="admin-scan-upload"
+          id={`admin-scan-upload-${doc.id}`}
+          name={`admin-scan-upload-${doc.id}`}
           type="file"
           className="hidden"
           accept=".pdf,image/*"
@@ -82,13 +82,24 @@ function AdminDocActions({ doc, updateMutation, scansDeleteMutation, onEdit }: {
             const formData = new FormData();
             formData.append("file", file);
             try {
-              const res = await fetch("/api/upload", { method: "POST", body: formData });
-              if (!res.ok) throw new Error("Upload failed");
+              const res = await fetch("/api/upload", { 
+                method: "POST", 
+                body: formData,
+                credentials: "include"
+              });
+              if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                throw new Error(err.message || "Upload failed");
+              }
               const { url } = await res.json();
               updateMutation.mutate({ id: doc.id, data: { scanUrl: url } });
-            } catch (err) {
+              alert("Скан сәтті жүктелді! / Скан успешно добавлен!");
+            } catch (err: any) {
               console.error(err);
+              alert("Қате / Ошибка: " + (err.message || "Сканды жүктеу сәтсіз аяқталды"));
             }
+            // Сбрасываем значение input, чтобы можно было загрузить тот же файл снова при необходимости
+            e.target.value = "";
           }}
         />
         <div className="h-7 w-7 flex items-center justify-center text-blue-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-md transition-colors" title="Скан қосу">
@@ -356,6 +367,8 @@ export default function UpbringingWorkPage() {
   const [expandedEvent, setExpandedEvent] = useState<string | null>(null);
   const [isGalleryUploadOpen, setIsGalleryUploadOpen] = useState(false);
   const [galleryUploadFile, setGalleryUploadFile] = useState<File | null>(null);
+  const [uploadedGallerySessionItems, setUploadedGallerySessionItems] = useState<Media[]>([]);
+  const [galleryUploadSuccessMsg, setGalleryUploadSuccessMsg] = useState<string | null>(null);
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
   const [isScansUploadOpen, setIsScansUploadOpen] = useState(false);
   const [scansUploadFile, setScansUploadFile] = useState<File | null>(null);
@@ -472,8 +485,15 @@ export default function UpbringingWorkPage() {
       if (!galleryUploadFile) return;
       const formData = new FormData();
       formData.append("file", galleryUploadFile);
-      const uploadRes = await fetch("/api/upload", { method: "POST", body: formData });
-      if (!uploadRes.ok) throw new Error("Upload failed");
+      const uploadRes = await fetch("/api/upload", { 
+        method: "POST", 
+        body: formData,
+        credentials: "include" 
+      });
+      if (!uploadRes.ok) {
+        const err = await uploadRes.json().catch(() => ({}));
+        throw new Error(err.message || "Upload failed");
+      }
       const { url } = await uploadRes.json();
       const mediaRes = await fetch("/api/media", {
         method: "POST",
@@ -484,24 +504,45 @@ export default function UpbringingWorkPage() {
           section: "events",
           eventId: activeEventId
         }),
+        credentials: "include"
       });
-      if (!mediaRes.ok) throw new Error("Failed to save");
+      if (!mediaRes.ok) {
+        const err = await mediaRes.json().catch(() => ({}));
+        throw new Error(err.message || "Failed to save");
+      }
       return mediaRes.json();
     },
-    onSuccess: () => {
+    onSuccess: (newMedia) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/media", "events"] });
       queryClient.invalidateQueries({ queryKey: ["/api/media"] });
-      setIsGalleryUploadOpen(false);
+      setUploadedGallerySessionItems((prev) => [newMedia, ...prev]);
+      setGalleryUploadSuccessMsg("Фото сәтті жүктелді! Осы іс-шараға тағы сурет қоса аласыз. / Фото успешно загружено! Можете добавить еще.");
       setGalleryUploadFile(null);
-      setActiveEventId(null);
+    },
+    onError: (error: Error) => {
+      console.error("Upload error:", error);
+      alert("Қате / Ошибка: " + error.message);
     }
   });
 
   const galleryDeleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      await fetch(`/api/media/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/media/${id}`, { 
+        method: "DELETE",
+        credentials: "include"
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || "Failed to delete");
+      }
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/media", "events"] });
       queryClient.invalidateQueries({ queryKey: ["/api/media"] });
+    },
+    onError: (error: Error) => {
+      console.error("Delete error:", error);
+      alert("Қате / Ошибка: " + error.message);
     }
   });
 
@@ -511,14 +552,22 @@ export default function UpbringingWorkPage() {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
+        credentials: "include"
       });
-      if (!res.ok) throw new Error("Event update failed");
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || "Event update failed");
+      }
       return res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/events"] });
       setIsEventEditDialogOpen(false);
       setEditingEvent(null);
+    },
+    onError: (error: Error) => {
+      console.error("Update error:", error);
+      alert("Қате / Ошибка: " + error.message);
     }
   });
 
@@ -528,24 +577,42 @@ export default function UpbringingWorkPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
+        credentials: "include"
       });
-      if (!res.ok) throw new Error("Event creation failed");
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || "Event creation failed");
+      }
       return res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/events"] });
       setIsAddEventDialogOpen(false);
       setNewEvent({ title: "", dateText: "", month: "Тамыз", description: "", academicYear: "2025-2026" });
+    },
+    onError: (error: Error) => {
+      console.error("Create error:", error);
+      alert("Қате / Ошибка: " + error.message);
     }
   });
 
   const eventDeleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const res = await fetch(`/api/events/${id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Failed to delete event");
+      const res = await fetch(`/api/events/${id}`, { 
+        method: "DELETE",
+        credentials: "include"
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || "Failed to delete event");
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/events"] });
+    },
+    onError: (error: Error) => {
+      console.error("Delete error:", error);
+      alert("Қате / Ошибка: " + error.message);
     }
   });
 
@@ -555,8 +622,15 @@ export default function UpbringingWorkPage() {
       if (!scansUploadFile) return;
       const formData = new FormData();
       formData.append("file", scansUploadFile);
-      const uploadRes = await fetch("/api/upload", { method: "POST", body: formData });
-      if (!uploadRes.ok) throw new Error("Upload failed");
+      const uploadRes = await fetch("/api/upload", { 
+        method: "POST", 
+        body: formData,
+        credentials: "include"
+      });
+      if (!uploadRes.ok) {
+        const err = await uploadRes.json().catch(() => ({}));
+        throw new Error(err.message || "Upload failed");
+      }
       const { url } = await uploadRes.json();
       const docRes = await fetch("/api/documents", {
         method: "POST",
@@ -570,24 +644,45 @@ export default function UpbringingWorkPage() {
           icon: "file",
           academicYear: uploadYear
         }),
+        credentials: "include"
       });
-      if (!docRes.ok) throw new Error("Failed to save");
+      if (!docRes.ok) {
+        const err = await docRes.json().catch(() => ({}));
+        throw new Error(err.message || "Failed to save");
+      }
       return docRes.json();
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/documents", "upbringing-scans"] });
       queryClient.invalidateQueries({ queryKey: ["/api/documents"] });
       setIsScansUploadOpen(false);
       setScansUploadFile(null);
       setScansTitle("");
+    },
+    onError: (error: Error) => {
+      console.error("Upload error:", error);
+      alert("Қате / Ошибка: " + error.message);
     }
   });
 
   const scansDeleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      await fetch(`/api/documents/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/documents/${id}`, { 
+        method: "DELETE",
+        credentials: "include"
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || "Failed to delete");
+      }
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/documents", "upbringing-scans"] });
       queryClient.invalidateQueries({ queryKey: ["/api/documents"] });
+    },
+    onError: (error: Error) => {
+      console.error("Delete error:", error);
+      alert("Қате / Ошибка: " + error.message);
     }
   });
 
@@ -597,12 +692,21 @@ export default function UpbringingWorkPage() {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
+        credentials: "include"
       });
-      if (!res.ok) throw new Error("Update failed");
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || "Update failed");
+      }
       return res.json();
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/documents", "upbringing-scans"] });
       queryClient.invalidateQueries({ queryKey: ["/api/documents"] });
+    },
+    onError: (error: Error) => {
+      console.error("Update error:", error);
+      alert("Қате / Ошибка: " + error.message);
     }
   });
 
@@ -743,8 +847,15 @@ export default function UpbringingWorkPage() {
       if (!scansUploadFile || !activeUploadSection) return;
       const formData = new FormData();
       formData.append("file", scansUploadFile);
-      const uploadRes = await fetch("/api/upload", { method: "POST", body: formData });
-      if (!uploadRes.ok) throw new Error("Upload failed");
+      const uploadRes = await fetch("/api/upload", { 
+        method: "POST", 
+        body: formData,
+        credentials: "include"
+      });
+      if (!uploadRes.ok) {
+        const err = await uploadRes.json().catch(() => ({}));
+        throw new Error(err.message || "Upload failed");
+      }
       const { url } = await uploadRes.json();
       const docRes = await fetch("/api/documents", {
         method: "POST",
@@ -758,9 +869,23 @@ export default function UpbringingWorkPage() {
           icon: "file",
           academicYear: uploadYear
         }),
+        credentials: "include"
       });
-      if (!docRes.ok) throw new Error("Failed to save");
+      if (!docRes.ok) {
+        const err = await docRes.json().catch(() => ({}));
+        throw new Error(err.message || "Failed to save");
+      }
       return docRes.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/documents"] });
+      setIsProgramUploadOpen(false);
+      setScansUploadFile(null);
+      setScansTitle("");
+    },
+    onError: (error: Error) => {
+      console.error("Program upload error:", error);
+      alert("Қате / Ошибка: " + error.message);
     }
   });
 
@@ -2130,21 +2255,39 @@ export default function UpbringingWorkPage() {
         </section>
 
         {/* Photo Gallery Upload Dialog */}
-        <Dialog open={isGalleryUploadOpen} onOpenChange={setIsGalleryUploadOpen}>
-          <DialogContent className="sm:max-w-[400px] bg-[#1e293b] border border-white/10 text-white" aria-describedby={undefined}>
+        <Dialog open={isGalleryUploadOpen} onOpenChange={(open) => {
+          setIsGalleryUploadOpen(open);
+          if (!open) {
+            setUploadedGallerySessionItems([]);
+            setGalleryUploadSuccessMsg(null);
+            setActiveEventId(null);
+          }
+        }}>
+          <DialogContent className="sm:max-w-[400px] bg-[#1e293b] border border-white/10 text-white max-h-[85vh] overflow-y-auto custom-scrollbar" aria-describedby={undefined}>
             <DialogTitle className="sr-only">Суретті үлкейту</DialogTitle>
             <DialogHeader>
               <DialogTitle className="text-white">Іс-шара суретін жүктеу</DialogTitle>
             </DialogHeader>
-            <form onSubmit={(e) => galleryUploadMutation.mutate(e)} className="space-y-4 pt-4">
+            
+            {galleryUploadSuccessMsg && (
+              <div className="p-3 bg-green-900/40 border border-green-500/30 rounded-xl text-green-300 text-xs font-medium animate-fade-in">
+                {galleryUploadSuccessMsg}
+              </div>
+            )}
+
+            <form onSubmit={(e) => galleryUploadMutation.mutate(e)} className="space-y-4 pt-2">
               <div className="space-y-2">
                 <Label className="text-gray-300">Сурет таңдау</Label>
                 <Input
+                  key={uploadedGallerySessionItems.length}
                   id="gallery-photo-upload"
                   name="photo"
                   type="file"
                   accept="image/*"
-                  onChange={e => setGalleryUploadFile(e.target.files?.[0] || null)}
+                  onChange={e => {
+                    setGalleryUploadFile(e.target.files?.[0] || null);
+                    if (galleryUploadSuccessMsg) setGalleryUploadSuccessMsg(null);
+                  }}
                   className="bg-[#0d1117] border-white/20 text-white cursor-pointer"
                   required
                 />
@@ -2152,7 +2295,7 @@ export default function UpbringingWorkPage() {
               <Button
                 type="submit"
                 className="w-full bg-purple-600 hover:bg-purple-700 mt-2"
-                disabled={galleryUploadMutation.isPending}
+                disabled={galleryUploadMutation.isPending || !galleryUploadFile}
               >
                 {galleryUploadMutation.isPending ? (
                   <>
@@ -2164,6 +2307,21 @@ export default function UpbringingWorkPage() {
                 )}
               </Button>
             </form>
+
+            {uploadedGallerySessionItems.length > 0 && (
+              <div className="mt-4 pt-3 border-t border-white/10">
+                <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">
+                  Осы сессияда жүктелгендер ({uploadedGallerySessionItems.length})
+                </h4>
+                <div className="grid grid-cols-3 gap-2">
+                  {uploadedGallerySessionItems.map((item, idx) => (
+                    <div key={idx} className="relative aspect-square rounded-lg overflow-hidden border border-white/10 shadow-sm bg-black/40">
+                      <img src={item.url} alt="preview" className="w-full h-full object-cover" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </DialogContent>
         </Dialog>
 
