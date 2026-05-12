@@ -587,33 +587,7 @@ export default function Home() {
                 </CardContent>
               </Card>
 
-              {/* Question 4 */}
-              <Card className="border-none shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl overflow-hidden dark:bg-slate-800/50">
-                <CardContent className="p-0">
-                  <details className="group">
-                    <summary className="flex justify-between items-center cursor-pointer p-6 text-lg font-bold text-white hover:bg-slate-800/50 transition-all">
-                      Мектепте тамақтану қалай ұйымдастырылған?
-                      <ChevronDown className="w-5 h-5 transform group-open:rotate-180 transition-transform duration-300 text-blue-500" />
-                    </summary>
-                    <div className="px-6 pb-6 text-gray-300 animate-in fade-in slide-in-from-top-2 duration-300">
-                      <p className="mb-4">Мектепте толыққанды тамақтану қамтамасыз етілген:</p>
-                      <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                        {[
-                          { title: "3 реттік тамақ", desc: "Таңғы, түскі және бесін ас" },
-                          { title: "Диетикалық мәзір", desc: "Диетолог мамандармен жасалған" },
-                          { title: "Сапалы өнімдер", desc: "Күнделікті жаңа піскен тағам" },
-                          { title: "Жеке тәсіл", desc: "Аллергиясы бар балаларға арнайы мәзір" }
-                        ].map((item, i) => (
-                          <div key={i} className="p-3 bg-slate-50 dark:bg-slate-900/50 rounded-xl">
-                            <p className="font-bold text-sm text-gray-800 dark:text-gray-200">{item.title}</p>
-                            <p className="text-xs text-gray-500">{item.desc}</p>
-                          </div>
-                        ))}
-                      </ul>
-                    </div>
-                  </details>
-                </CardContent>
-              </Card>
+
 
               {/* Question 5 */}
               <Card className="border-none shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl overflow-hidden dark:bg-slate-800/50">

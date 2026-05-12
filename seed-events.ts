@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { db } from "./server/db";
-import { events } from "@shared/schema";
+import { events } from "./shared/schema";
 import { eq } from "drizzle-orm";
 
 const schoolEvents = [
