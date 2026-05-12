@@ -975,8 +975,48 @@ export default function SchoolDocumentsPage() {
     });
   }, [dbFolders, sortBy, sortOrder, documents]);
 
+  // Get all flatten sections
   const allSections: { id: string; label: string }[] = React.useMemo(() => {
-    const flattenSub  const folderUploadMutation = useMutation({
+    const flattenSubfolders = (catLabel: string, sfs: any[]): { id: string; label: string }[] => {
+      return sfs.flatMap(sf => {
+        const currentLabel = `${catLabel} › ${sf.label}`;
+        const rest = sf.subfolders ? flattenSubfolders(currentLabel, sf.subfolders) : [];
+        return [{ id: sf.id, label: currentLabel }, ...rest];
+      });
+    };
+
+    return categories.flatMap((cat) => {
+      if (cat.type === "simple") {
+        return [{ id: cat.section!, label: cat.label }];
+      }
+      return [{ id: cat.id, label: cat.label }, ...flattenSubfolders(cat.label, cat.subfolders ?? [])];
+    });
+  }, [categories]);
+
+  const defaultSection = allSections[0]?.id || "";
+
+  const [isUploadOpen, setIsUploadOpen] = useState(false);
+  const [editingDocId, setEditingDocId] = useState<string | null>(null);
+  const [uploadFile, setUploadFile] = useState<File | null>(null);
+  const [newDoc, setNewDoc] = useState({
+    title: "",
+    description: "",
+    section: defaultSection,
+  });
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const [isFolderOpen, setIsFolderOpen] = useState(false);
+  const [newFolder, setNewFolder] = useState({
+    name: "",
+    subName: "",
+    parentId: "null",
+    autoCreateYears: false,
+  });
+
+  const selectedParent = dbFolders.find(f => f.id === newFolder.parentId);
+  const isParentYear = selectedParent && selectedParent.name.match(/20\d\d[\s\-–—]20\d\d/);
+
+  const folderUploadMutation = useMutation({
     mutationFn: async (e: React.FormEvent) => {
       e.preventDefault();
       const payload1: any = { name: newFolder.name, order: "0", isCategory: newFolder.parentId === "null" };

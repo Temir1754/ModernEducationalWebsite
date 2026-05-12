@@ -286,7 +286,7 @@ export default function Home() {
             alt="School background"
             className="absolute inset-0 w-full h-full object-cover object-center"
             loading="eager"
-            fetchpriority="high"
+            fetchPriority="high"
           />
 
           {/* Background Overlay - Enhanced for mobile visibility */}
