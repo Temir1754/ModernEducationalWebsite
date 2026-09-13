@@ -461,11 +461,9 @@ function CategoryAccordion({
       ? documents.filter((d) => d.section === category.section)
       : [];
 
-  // Official numbering (1-9) only applies to the first 9 categories by order
+  // Numbering badge reflects every category's position (1-based)
   const badgeNumber =
-    typeof category.order === "number" && category.order <= 8
-      ? category.order + 1
-      : undefined;
+    typeof category.order === "number" ? category.order + 1 : undefined;
 
   return (
     <div className="rounded-xl border border-gray-200 dark:border-white/10 overflow-hidden bg-white dark:bg-[#1e293b] shadow-sm">
@@ -572,7 +570,7 @@ function CategoryAccordion({
                     defaultValue={(category.order ?? categoryCount - 1) + 1}
                     className="bg-[#0d1117] border-white/20 text-white"
                   />
-                  <p className="text-xs text-gray-500 mt-1">1-ден {categoryCount}-ге дейін. Тек алғашқы 9 категорияда сайтта нөмір белгісі көрсетіледі.</p>
+                  <p className="text-xs text-gray-500 mt-1">1-ден {categoryCount}-ге дейін. Барлық категорияда сайтта нөмір белгісі көрсетіледі.</p>
                 </div>
                 {saveError && (
                   <p className="text-sm text-red-400 bg-red-900/20 border border-red-500/30 rounded-lg px-3 py-2">
