@@ -419,22 +419,26 @@ function SubFolderAccordion({
 
 function CategoryAccordion({
   category,
+  categoryCount,
   documents,
   user,
   updateMutation,
   deleteMutation,
   deleteFolderMutation,
   updateFolderMutation,
+  saveCategoryMutation,
   onEdit,
   toast,
 }: {
   category: CategoryDef;
+  categoryCount: number;
   documents: Document[];
   user: any;
   updateMutation: any;
   deleteMutation: any;
   deleteFolderMutation: any;
   updateFolderMutation: any;
+  saveCategoryMutation: any;
   onEdit: (doc: Document) => void;
   toast: any;
 }) {
@@ -538,23 +542,32 @@ function CategoryAccordion({
             </DialogTrigger>
             <DialogContent className="bg-[#111827] border-white/10 text-white" onClick={(e) => e.stopPropagation()}>
               <DialogHeader>
-                <DialogTitle>Категория атауын өзгерту</DialogTitle>
+                <DialogTitle>Категорияны өзгерту</DialogTitle>
                 <DialogDescription className="text-gray-400">
-                  Категорияның жаңа атауын енгізіңіз.
+                  Атауын және/немесе нөмірін (ретін) өзгертіңіз. Нөмірді өзгертсеңіз, басқа категориялар автоматты түрде ысырылады.
                 </DialogDescription>
               </DialogHeader>
-              <div className="py-4">
-                <Label htmlFor={`category-name-${category.id}`} className="text-gray-300 mb-2 block">Атауы</Label>
-                <Input
-                  id={`category-name-${category.id}`}
-                  defaultValue={category.label}
-                  className="bg-[#0d1117] border-white/20 text-white"
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      updateFolderMutation.mutate({ id: category.id, name: e.currentTarget.value });
-                    }
-                  }}
-                />
+              <div className="py-4 space-y-4">
+                <div>
+                  <Label htmlFor={`category-name-${category.id}`} className="text-gray-300 mb-2 block">Атауы</Label>
+                  <Input
+                    id={`category-name-${category.id}`}
+                    defaultValue={category.label}
+                    className="bg-[#0d1117] border-white/20 text-white"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor={`category-order-${category.id}`} className="text-gray-300 mb-2 block">Нөмірі (реті)</Label>
+                  <Input
+                    id={`category-order-${category.id}`}
+                    type="number"
+                    min={1}
+                    max={categoryCount}
+                    defaultValue={(category.order ?? categoryCount - 1) + 1}
+                    className="bg-[#0d1117] border-white/20 text-white"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">1-ден {categoryCount}-ге дейін. Тек алғашқы 9 категорияда сайтта нөмір белгісі көрсетіледі.</p>
+                </div>
               </div>
               <div className="flex justify-end gap-2">
                 <DialogTrigger asChild>
@@ -562,13 +575,17 @@ function CategoryAccordion({
                 </DialogTrigger>
                 <Button
                   onClick={(e) => {
-                    const input = e.currentTarget.closest('[role="dialog"]')?.querySelector('input');
-                    if (input) {
-                      updateFolderMutation.mutate({ id: category.id, name: input.value });
-                    }
+                    const dialog = e.currentTarget.closest('[role="dialog"]');
+                    const nameInput = dialog?.querySelector<HTMLInputElement>(`#category-name-${category.id}`);
+                    const orderInput = dialog?.querySelector<HTMLInputElement>(`#category-order-${category.id}`);
+                    const name = nameInput?.value?.trim() || category.label;
+                    const position = orderInput?.value ? parseInt(orderInput.value, 10) : undefined;
+                    saveCategoryMutation.mutate({ id: category.id, name, position });
                   }}
+                  disabled={saveCategoryMutation.isPending}
                   className="bg-blue-600 hover:bg-blue-700"
                 >
+                  {saveCategoryMutation.isPending && <Loader2 className="animate-spin mr-2 w-4 h-4" />}
                   Сақтау
                 </Button>
               </div>
@@ -1031,7 +1048,13 @@ export default function SchoolDocumentsPage() {
   const folderUploadMutation = useMutation({
     mutationFn: async (e: React.FormEvent) => {
       e.preventDefault();
-      const payload1: any = { name: newFolder.name, order: "0", isCategory: newFolder.parentId === "null" };
+      const isNewCategory = newFolder.parentId === "null";
+      const nextCategoryOrder = isNewCategory
+        ? dbFolders
+            .filter((f) => f.isCategory)
+            .reduce((max, f) => Math.max(max, Number(f.order) || 0), -1) + 1
+        : 0;
+      const payload1: any = { name: newFolder.name, order: String(nextCategoryOrder), isCategory: isNewCategory };
       if (newFolder.parentId !== "null") payload1.parentId = newFolder.parentId;
       const res1 = await fetch("/api/folders", { 
         method: "POST", 
@@ -1212,6 +1235,51 @@ export default function SchoolDocumentsPage() {
     onError: (err: Error) => toast({ title: "Қате", description: err.message, variant: "destructive" }),
   });
 
+  // Renames a top-level category and/or moves it to a new position (1-based).
+  // Moving a category automatically shifts all the others to close the gap /
+  // make room, so numbers never collide and never skip.
+  const saveCategoryMutation = useMutation({
+    mutationFn: async ({ id, name, position }: { id: string; name: string; position?: number }) => {
+      const nameRes = await fetch(`/api/folders/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name }),
+        credentials: "include",
+      });
+      if (!nameRes.ok) {
+        const err = await nameRes.json().catch(() => ({}));
+        throw new Error(err.message || "Сақтау сәтсіз аяқталды");
+      }
+
+      if (typeof position === "number" && Number.isFinite(position)) {
+        const categoriesByOrder = dbFolders
+          .filter((f) => f.isCategory)
+          .sort((a, b) => (Number(a.order) || 0) - (Number(b.order) || 0));
+        const moved = categoriesByOrder.find((c) => c.id === id);
+        const rest = categoriesByOrder.filter((c) => c.id !== id);
+        const targetIndex = Math.max(0, Math.min(position - 1, rest.length));
+        if (moved) rest.splice(targetIndex, 0, moved);
+
+        await Promise.all(
+          rest.map((c, idx) => {
+            if ((Number(c.order) || 0) === idx) return Promise.resolve();
+            return fetch(`/api/folders/${c.id}`, {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ order: String(idx) }),
+              credentials: "include",
+            });
+          })
+        );
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/folders"] });
+      toast({ title: "Категория сақталды" });
+    },
+    onError: (err: Error) => toast({ title: "Қате", description: err.message, variant: "destructive" }),
+  });
+
   const handleEdit = (doc: Document) => {
     setEditingDocId(doc.id);
     setNewDoc({ title: doc.title, description: doc.description || "", section: doc.section });
@@ -1314,7 +1382,7 @@ export default function SchoolDocumentsPage() {
           ) : (
             <div className="space-y-3">
               {categories.map((cat) => (
-                <CategoryAccordion key={cat.id} category={cat} documents={documents} user={user} updateMutation={updateMutation} deleteMutation={deleteMutation} deleteFolderMutation={deleteFolderMutation} updateFolderMutation={updateFolderMutation} onEdit={handleEdit} toast={toast} />
+                <CategoryAccordion key={cat.id} category={cat} categoryCount={categories.length} documents={documents} user={user} updateMutation={updateMutation} deleteMutation={deleteMutation} deleteFolderMutation={deleteFolderMutation} updateFolderMutation={updateFolderMutation} saveCategoryMutation={saveCategoryMutation} onEdit={handleEdit} toast={toast} />
               ))}
             </div>
           )}
