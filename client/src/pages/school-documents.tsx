@@ -15,7 +15,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient } from "@/lib/queryClient";
 
@@ -443,6 +443,9 @@ function CategoryAccordion({
   toast: any;
 }) {
   const [open, setOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const editNameRef = useRef<HTMLInputElement>(null);
+  const editOrderRef = useRef<HTMLInputElement>(null);
 
   const docCount =
     category.type === "simple"
@@ -528,7 +531,7 @@ function CategoryAccordion({
           </Dialog>
         )}
         {user && (
-          <Dialog>
+          <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
             <DialogTrigger asChild>
               <Button
                 variant="ghost"
@@ -552,6 +555,7 @@ function CategoryAccordion({
                   <Label htmlFor={`category-name-${category.id}`} className="text-gray-300 mb-2 block">Атауы</Label>
                   <Input
                     id={`category-name-${category.id}`}
+                    ref={editNameRef}
                     defaultValue={category.label}
                     className="bg-[#0d1117] border-white/20 text-white"
                   />
@@ -560,6 +564,7 @@ function CategoryAccordion({
                   <Label htmlFor={`category-order-${category.id}`} className="text-gray-300 mb-2 block">Нөмірі (реті)</Label>
                   <Input
                     id={`category-order-${category.id}`}
+                    ref={editOrderRef}
                     type="number"
                     min={1}
                     max={categoryCount}
@@ -574,13 +579,13 @@ function CategoryAccordion({
                   <Button variant="ghost">Болдырмау</Button>
                 </DialogTrigger>
                 <Button
-                  onClick={(e) => {
-                    const dialog = e.currentTarget.closest('[role="dialog"]');
-                    const nameInput = dialog?.querySelector<HTMLInputElement>(`#category-name-${category.id}`);
-                    const orderInput = dialog?.querySelector<HTMLInputElement>(`#category-order-${category.id}`);
-                    const name = nameInput?.value?.trim() || category.label;
-                    const position = orderInput?.value ? parseInt(orderInput.value, 10) : undefined;
-                    saveCategoryMutation.mutate({ id: category.id, name, position });
+                  onClick={() => {
+                    const name = editNameRef.current?.value?.trim() || category.label;
+                    const position = editOrderRef.current?.value ? parseInt(editOrderRef.current.value, 10) : undefined;
+                    saveCategoryMutation.mutate(
+                      { id: category.id, name, position },
+                      { onSuccess: () => setIsEditOpen(false) }
+                    );
                   }}
                   disabled={saveCategoryMutation.isPending}
                   className="bg-blue-600 hover:bg-blue-700"
