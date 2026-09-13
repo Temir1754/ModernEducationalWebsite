@@ -444,6 +444,7 @@ function CategoryAccordion({
 }) {
   const [open, setOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
   const editNameRef = useRef<HTMLInputElement>(null);
   const editOrderRef = useRef<HTMLInputElement>(null);
 
@@ -573,19 +574,33 @@ function CategoryAccordion({
                   />
                   <p className="text-xs text-gray-500 mt-1">1-ден {categoryCount}-ге дейін. Тек алғашқы 9 категорияда сайтта нөмір белгісі көрсетіледі.</p>
                 </div>
+                {saveError && (
+                  <p className="text-sm text-red-400 bg-red-900/20 border border-red-500/30 rounded-lg px-3 py-2">
+                    Қате: {saveError}
+                  </p>
+                )}
               </div>
               <div className="flex justify-end gap-2">
                 <DialogTrigger asChild>
-                  <Button variant="ghost">Болдырмау</Button>
+                  <Button variant="ghost" onClick={() => setSaveError(null)}>Болдырмау</Button>
                 </DialogTrigger>
                 <Button
                   onClick={() => {
-                    const name = editNameRef.current?.value?.trim() || category.label;
-                    const position = editOrderRef.current?.value ? parseInt(editOrderRef.current.value, 10) : undefined;
-                    saveCategoryMutation.mutate(
-                      { id: category.id, name, position },
-                      { onSuccess: () => setIsEditOpen(false) }
-                    );
+                    setSaveError(null);
+                    try {
+                      const name = editNameRef.current?.value?.trim() || category.label;
+                      const rawPosition = editOrderRef.current?.value;
+                      const position = rawPosition ? parseInt(rawPosition, 10) : undefined;
+                      saveCategoryMutation.mutate(
+                        { id: category.id, name, position },
+                        {
+                          onSuccess: () => setIsEditOpen(false),
+                          onError: (err: Error) => setSaveError(err?.message || "Белгісіз қате"),
+                        }
+                      );
+                    } catch (err: any) {
+                      setSaveError(err?.message || String(err));
+                    }
                   }}
                   disabled={saveCategoryMutation.isPending}
                   className="bg-blue-600 hover:bg-blue-700"
