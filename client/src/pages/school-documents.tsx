@@ -19,6 +19,21 @@ import React, { useRef, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient } from "@/lib/queryClient";
 
+// ─── Upload limits ───────────────────────────────────────────────────────────
+
+const MIN_DOC_FILE_SIZE = 1024 * 1024; // 1 MB
+const MAX_DOC_FILE_SIZE = 50 * 1024 * 1024; // 50 MB
+
+function validateDocFileSize(file: File): string | null {
+  if (file.size < MIN_DOC_FILE_SIZE) {
+    return "Файл өлшемі кемінде 1 МБ болуы керек";
+  }
+  if (file.size > MAX_DOC_FILE_SIZE) {
+    return "Файл өлшемі 50 МБ-тан аспауы керек";
+  }
+  return null;
+}
+
 // ─── Folder structure ────────────────────────────────────────────────────────
 
 interface SubFolder {
@@ -135,10 +150,16 @@ function DocRow({
                   onChange={async (e) => {
                     const file = e.target.files?.[0];
                     if (!file) return;
+                    const sizeError = validateDocFileSize(file);
+                    if (sizeError) {
+                      toast({ title: "Қате", description: sizeError, variant: "destructive" });
+                      e.target.value = "";
+                      return;
+                    }
                     try {
                       const fd = new FormData();
                       fd.append("file", file);
-                      const res = await fetch("/api/upload", { 
+                      const res = await fetch("/api/upload", {
                         method: "POST", 
                         body: fd,
                         credentials: "include"
@@ -1147,6 +1168,8 @@ export default function SchoolDocumentsPage() {
     mutationFn: async (e: React.FormEvent) => {
       e.preventDefault();
       if (!uploadFile) throw new Error("Please select a file");
+      const sizeError = validateDocFileSize(uploadFile);
+      if (sizeError) throw new Error(sizeError);
       const fd = new FormData();
       fd.append("file", uploadFile);
       const uploadRes = await fetch("/api/upload", { 
@@ -1370,7 +1393,19 @@ export default function SchoolDocumentsPage() {
                             <Label htmlFor="edit-doc-description" className="text-gray-300">Сипаттамасы</Label>
                             <Textarea id="edit-doc-description" name="docDescription" value={newDoc.description} onChange={(e) => setNewDoc({ ...newDoc, description: e.target.value })} className="bg-[#0d1117] border-white/20 text-white min-h-[100px]" placeholder="Қосымша мәліметтер (міндетті емес)..." />
                           </div>
-                          {!editingDocId && (<div className="space-y-2"><Label className="text-gray-300">Файл</Label><Input id="new-doc-file" name="docFile" type="file" onChange={(e) => setUploadFile(e.target.files?.[0] || null)} required className="bg-[#0d1117] border-white/20 text-white h-11 py-2" /></div>)}
+                          {!editingDocId && (<div className="space-y-2"><Label className="text-gray-300">Файл</Label><Input id="new-doc-file" name="docFile" type="file" onChange={(e) => {
+                            const file = e.target.files?.[0] || null;
+                            if (file) {
+                              const sizeError = validateDocFileSize(file);
+                              if (sizeError) {
+                                toast({ title: "Қате", description: sizeError, variant: "destructive" });
+                                e.target.value = "";
+                                setUploadFile(null);
+                                return;
+                              }
+                            }
+                            setUploadFile(file);
+                          }} required className="bg-[#0d1117] border-white/20 text-white h-11 py-2" /><p className="text-xs text-gray-500">Файл өлшемі 1 МБ-тан 50 МБ-ға дейін болуы керек.</p></div>)}
                           <div className="pt-2 sticky bottom-0 bg-[#111827] pb-2"><Button type="submit" className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-lg shadow-blue-900/20" disabled={uploadMutation.isPending || updateMutation.isPending}>{(uploadMutation.isPending || updateMutation.isPending) && (<Loader2 className="animate-spin mr-2" />)}{editingDocId ? "Жаңарту" : "Жүктеу"}</Button></div>
                         </form>
                       </div>
