@@ -34,6 +34,7 @@ interface CategoryDef {
   type: "simple" | "grouped";
   section?: string;        // used when type === "simple"
   subfolders?: SubFolder[]; // used when type === "grouped"
+  order?: number;
 }
 
 // Helper to get doc count for a subfolder
@@ -452,6 +453,12 @@ function CategoryAccordion({
       ? documents.filter((d) => d.section === category.section)
       : [];
 
+  // Official numbering (1-9) only applies to the first 9 categories by order
+  const badgeNumber =
+    typeof category.order === "number" && category.order <= 8
+      ? category.order + 1
+      : undefined;
+
   return (
     <div className="rounded-xl border border-gray-200 dark:border-white/10 overflow-hidden bg-white dark:bg-[#1e293b] shadow-sm">
       {/* Category header */}
@@ -460,6 +467,11 @@ function CategoryAccordion({
           onClick={() => setOpen((p) => !p)}
           className="flex items-center gap-3 w-full px-5 py-4 text-left"
         >
+          {badgeNumber !== undefined && (
+            <span className="flex items-center justify-center w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 text-white text-xs font-bold shadow-md shadow-blue-900/20 shrink-0">
+              {badgeNumber}
+            </span>
+          )}
           {open ? (
             <FolderOpen className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0" />
           ) : (
