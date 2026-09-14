@@ -828,7 +828,7 @@ const CanteenPage = () => {
                     </div>
                     <div className="flex items-center space-x-3">
                       <Mail className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                      <span className="dark:text-gray-300">canteen@bilimdi-urpaq.kz</span>
+                      <span className="dark:text-gray-300">fgs.school.2022@gmail.com</span>
                     </div>
                   </div>
                 </div>

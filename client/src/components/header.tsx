@@ -72,14 +72,14 @@ export default function Header() {
 
   const socialLinks = [
     {
-      href: "https://www.instagram.com/bilimdi_urpaq_shymkent/",
+      href: "https://www.instagram.com/fgs.schoolkz/",
       icon: "fab fa-instagram",
       className: "text-pink-500 hover:text-pink-600 transform hover:scale-110 transition-all duration-200",
       onClick: (e: React.MouseEvent) => {
         e.preventDefault();
-        window.location.href = 'instagram://user?username=bilimdi_urpaq_shymkent';
+        window.location.href = 'instagram://user?username=fgs.schoolkz';
         setTimeout(() => {
-          window.open('https://www.instagram.com/bilimdi_urpaq_shymkent/', '_blank');
+          window.open('https://www.instagram.com/fgs.schoolkz/', '_blank');
         }, 1000);
       }
     },
@@ -166,9 +166,9 @@ export default function Header() {
                     aria-label="Instagram"
                     onClick={(e) => {
                       e.preventDefault();
-                      window.location.href = 'instagram://user?username=bilimdi_urpaq_shymkent';
+                      window.location.href = 'instagram://user?username=fgs.schoolkz';
                       setTimeout(() => {
-                        window.open('https://www.instagram.com/bilimdi_urpaq_shymkent/', '_blank');
+                        window.open('https://www.instagram.com/fgs.schoolkz/', '_blank');
                       }, 1000);
                     }}
                     className="flex items-center bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1.5 rounded-full hover:from-purple-600 hover:to-pink-600 transform hover:scale-105 transition-all duration-200 text-xs font-medium shadow-md"
@@ -227,9 +227,9 @@ export default function Header() {
                 aria-label="Instagram"
                 onClick={(e) => {
                   e.preventDefault();
-                  window.location.href = 'instagram://user?username=bilimdi_urpaq_shymkent';
+                  window.location.href = 'instagram://user?username=fgs.schoolkz';
                   setTimeout(() => {
-                    window.open('https://www.instagram.com/bilimdi_urpaq_shymkent/', '_blank');
+                    window.open('https://www.instagram.com/fgs.schoolkz/', '_blank');
                   }, 1000);
                 }}
                 className="p-2 bg-pink-500 text-white rounded-full hover:bg-pink-600 transform hover:scale-110 transition-all duration-200 shadow-md"

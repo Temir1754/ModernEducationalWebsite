@@ -935,7 +935,7 @@ export default function UpbringingWorkPage() {
       name: "Утепбаева Махаббат Анарбековна",
       position: "Тәрбие жұмысы жөніндегі орынбасар",
       phone: "+7‒775‒790‒63‒63",
-      email: "school.bilimdi.urpaq@gmail.com",
+      email: "fgs.school.2022@gmail.com",
       icon: <User className="w-6 h-6" />,
       color: "bg-blue-50 border-blue-200"
     },
@@ -943,7 +943,7 @@ export default function UpbringingWorkPage() {
       name: "Катаева Молдир Сабырхановна",
       position: "Психолог",
       phone: "+7‒775‒790‒63‒63",
-      email: "school.bilimdi.urpaq@gmail.com",
+      email: "fgs.school.2022@gmail.com",
       icon: <Heart className="w-6 h-6" />,
       color: "bg-green-50 border-green-200"
     },
@@ -951,7 +951,7 @@ export default function UpbringingWorkPage() {
       name: "Бекболат Жасмин Жанаділқызы",
       position: "Әлеуметтік педагог",
       phone: "+7‒775‒790‒63‒63",
-      email: "school.bilimdi.urpaq@gmail.com",
+      email: "fgs.school.2022@gmail.com",
       icon: <Users className="w-6 h-6" />,
       color: "bg-purple-50 border-purple-200"
     },
@@ -959,7 +959,7 @@ export default function UpbringingWorkPage() {
       name: "Насурлаев Бауыржан Ташабаевич",
       position: '"Жас сарбаз" жетекшісі',
       phone: "+7‒775‒790‒63‒63",
-      email: "school.bilimdi.urpaq@gmail.com",
+      email: "fgs.school.2022@gmail.com",
       icon: <Star className="w-6 h-6" />,
       color: "bg-red-50 border-red-200"
     }

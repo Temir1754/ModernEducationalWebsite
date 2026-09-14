@@ -17,13 +17,13 @@ export const schoolInfo = {
   addressRu: "г. Шымкент, ул. Утегенова 43А",
   phoneKk: "+7-775-790-63-63",
   phoneRu: "+7-775-790-63-63",
-  emailKk: "info@bilimdi-urpaq.kz",
-  emailRu: "info@bilimdi-urpaq.kz",
+  emailKk: "fgs.school.2022@gmail.com",
+  emailRu: "fgs.school.2022@gmail.com",
   gradesKk: "0-9 сыныптары",
   gradesRu: "0-9 классы",
   foundedYear: "2022",
   socialMedia: {
-    instagram: "https://www.instagram.com/bilimdi_urpaq_shymkent/",
+    instagram: "https://www.instagram.com/fgs.schoolkz/",
     telegram: "https://t.me/bilimdi_urpaq",
     whatsapp: "https://wa.me/77757906363"
   }
@@ -199,7 +199,7 @@ export const organizationSchema = {
     "longitude": "69.5901"
   },
   "telephone": "+7-775-790-63-63",
-  "email": "info@bilimdi-urpaq.kz",
+  "email": "fgs.school.2022@gmail.com",
   "contactPoint": {
     "@type": "ContactPoint",
     "telephone": "+7-775-790-63-63",
@@ -213,7 +213,7 @@ export const organizationSchema = {
     }
   },
   "sameAs": [
-    "https://www.instagram.com/bilimdi_urpaq_shymkent/",
+    "https://www.instagram.com/fgs.schoolkz/",
     "https://t.me/bilimdi_urpaq",
     "https://wa.me/77757906363"
   ],

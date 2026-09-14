@@ -3,15 +3,15 @@ import { Link } from "wouter";
 export default function Footer() {
   const socialLinks = [
     {
-      href: "https://www.instagram.com/bilimdi_urpaq_shymkent/",
+      href: "https://www.instagram.com/fgs.schoolkz/",
       icon: "fab fa-instagram",
       label: "Instagram",
       className: "text-pink-400 hover:text-pink-500 transform hover:scale-110 transition-all duration-200",
       onClick: (e: React.MouseEvent) => {
         e.preventDefault();
-        window.location.href = 'instagram://user?username=bilimdi_urpaq_shymkent';
+        window.location.href = 'instagram://user?username=fgs.schoolkz';
         setTimeout(() => {
-          window.open('https://www.instagram.com/bilimdi_urpaq_shymkent/', '_blank');
+          window.open('https://www.instagram.com/fgs.schoolkz/', '_blank');
         }, 1000);
       }
     },

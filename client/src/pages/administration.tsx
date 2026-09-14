@@ -38,7 +38,7 @@ export default function AdministrationPage() {
       position: "Мектеп директоры",
       education: "Назарбаев Университет",
       experience: "2 жыл педагогикалық тәжірибе",
-      email: "director@bilimdi-urpaq.kz",
+      email: "fgs.school.2022@gmail.com",
       phone: "+7-775-790-63-63"
     },
     {
@@ -46,7 +46,7 @@ export default function AdministrationPage() {
       position: "Оқу ісі жөніндегі директордың орынбасары",
       education: "Халықаралық Қазақ Түрік университеті",
       experience: "32 жыл педагогикалық тәжірибе",
-      email: "education@bilimdi-urpaq.kz",
+      email: "fgs.school.2022@gmail.com",
       phone: "+7-775-790-63-63"
     },
     {
@@ -54,7 +54,7 @@ export default function AdministrationPage() {
       position: "Тәрбие ісі жөніндегі директордың орынбасары",
       education: "Халықаралық Қазақ Түрік университеті",
       experience: "37 жыл педагогикалық тәжірибе",
-      email: "upbringing@bilimdi-urpaq.kz",
+      email: "fgs.school.2022@gmail.com",
       phone: "+7-775-790-63-63"
     }
   ];
@@ -185,15 +185,6 @@ export default function AdministrationPage() {
                   <div>
                     <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Жұмыс уақыты</p>
                     <p className="font-medium">Дүйсенбі - жұма, 08:00 - 18:00</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4 text-white">
-                  <div className="w-10 h-10 bg-purple-500/20 rounded-xl flex items-center justify-center text-purple-500">
-                    <Users className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Қабылдау уақыты</p>
-                    <p className="font-medium">Сәрсенбі, 14:00 - 16:00</p>
                   </div>
                 </div>
               </div>

@@ -48,14 +48,14 @@ export default function ContactPage() {
     {
       icon: Mail,
       title: "Электрондық пошта",
-      content: "info@bilimdi-urpaq.kz",
+      content: "fgs.school.2022@gmail.com",
       subtitle: "Сұрақтарыңызды жібере аласыз"
     },
     {
       icon: Clock,
       title: "Жұмыс кестесі",
       content: "Дүйсенбі - Жұма: 08:00 - 17:00",
-      subtitle: "Сенбі: 09:00 - 15:00"
+      subtitle: ""
     }
   ];
 
@@ -63,7 +63,7 @@ export default function ContactPage() {
     {
       name: "Instagram",
       icon: Instagram,
-      url: "https://www.instagram.com/bilimdi_urpaq_shymkent/",
+      url: "https://www.instagram.com/fgs.schoolkz/",
       color: "hover:text-pink-500",
       bgColor: "hover:bg-pink-50"
     },
@@ -95,19 +95,19 @@ export default function ContactPage() {
       title: "Директор",
       name: "Бейсбаева Жұлдыз Мейіржанқызы",
       phone: "+7‒775‒790‒63‒63",
-      email: "director@bilimdi-urpaq.kz"
+      email: "fgs.school.2022@gmail.com"
     },
     {
       title: "Оқу ісі жөніндегі директор орынбасары",
       name: "Сарсенбаева Алия Раманкуловна",
       phone: "+7‒775‒790‒63‒63",
-      email: "education@bilimdi-urpaq.kz"
+      email: "fgs.school.2022@gmail.com"
     },
     {
       title: "Тәрбие ісі жөніндегі директор орынбасары",
       name: "Утепбаева Махаббат Анарбековна",
       phone: "+7‒775‒790‒63‒63",
-      email: "upbringing@bilimdi-urpaq.kz"
+      email: "fgs.school.2022@gmail.com"
     }
   ];
 
@@ -208,9 +208,11 @@ export default function ContactPage() {
                     <p className="text-blue-600 dark:text-blue-400 font-medium mb-1">
                       {info.content}
                     </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {info.subtitle}
-                    </p>
+                    {info.subtitle && (
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        {info.subtitle}
+                      </p>
+                    )}
                   </div>
                 </>
               );
@@ -319,7 +321,6 @@ export default function ContactPage() {
                     <div>
                       <p className="font-medium text-gray-900 dark:text-gray-100">Жұмыс уақыты:</p>
                       <p className="text-gray-600 dark:text-gray-300">Дүйсенбі - Жұма: 08:00 - 17:00</p>
-                      <p className="text-gray-600 dark:text-gray-300">Сенбі: 09:00 - 15:00</p>
                       <p className="text-gray-600 dark:text-gray-300">Жексенбі: Демалыс</p>
                     </div>
                   </div>
@@ -335,7 +336,7 @@ export default function ContactPage() {
                 </p>
                 <div className="space-y-2">
                   <p className="text-blue-100 dark:text-blue-200">📞 Телефон: +7‒775‒790‒63‒63</p>
-                  <p className="text-blue-100 dark:text-blue-200">📧 Email: info@bilimdi-urpaq.kz</p>
+                  <p className="text-blue-100 dark:text-blue-200">📧 Email: fgs.school.2022@gmail.com</p>
                 </div>
               </div>
             </div>

@@ -41,7 +41,7 @@ export default function SubjectTeachersPage() {
               </a>
               
               <a
-                href="https://www.instagram.com/bilimdi_urpaq_shymkent/"
+                href="https://www.instagram.com/fgs.schoolkz/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-8 h-8 bg-blue-500/30 hover:bg-blue-400 rounded-lg flex items-center justify-center transition-colors duration-200"
