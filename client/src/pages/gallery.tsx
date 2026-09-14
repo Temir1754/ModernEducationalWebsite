@@ -1,7 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { Link } from "wouter";
-import { ArrowLeft, ChevronLeft, ChevronRight, X, Plus, Trash2, Loader2, Upload, Pencil } from "lucide-react";
-import useEmblaCarousel from "embla-carousel-react";
+import { ChevronLeft, ChevronRight, X, Plus, Trash2, Loader2, Pencil } from "lucide-react";
 import { Dialog, DialogContent, DialogClose, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,16 +13,26 @@ import { queryClient } from "@/lib/queryClient";
 import type { Media } from "@shared/schema";
 import { motion, AnimatePresence } from "framer-motion";
 
+const EDITORIAL_CAPTIONS = ["Жеңімпаздар", "Білім — болашақ", "Бірге үйренеміз", "Спорт — денсаулық кепілі"];
+const PAGE_SIZE = 9;
+
+// 9-slot editorial mosaic: 1 hero + 4-cell right mosaic + 4-cell bottom row (12-col grid)
+const MOSAIC_SPANS = [
+  "lg:col-span-6 lg:row-span-8",
+  "lg:col-span-3 lg:row-span-4",
+  "lg:col-span-3 lg:row-span-4",
+  "lg:col-span-3 lg:row-span-4",
+  "lg:col-span-3 lg:row-span-4",
+  "lg:col-span-3 lg:row-span-4",
+  "lg:col-span-3 lg:row-span-4",
+  "lg:col-span-3 lg:row-span-4",
+  "lg:col-span-3 lg:row-span-4",
+];
+
 export default function GalleryPage() {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: false,
-    align: "start",
-    slidesToScroll: 1,
-    breakpoints: {
-      "(min-width: 1024px)": { slidesToScroll: 4 },
-    },
-  });
+  const [page, setPage] = useState(0);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const { user } = useAuth();
   const [isUploadOpen, setIsUploadOpen] = useState(false);
@@ -167,29 +176,12 @@ export default function GalleryPage() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedIndex, handleNext, handlePrev]);
 
-  const [prevBtnEnabled, setPrevBtnEnabled] = useState(false);
-  const [nextBtnEnabled, setNextBtnEnabled] = useState(false);
+  const pageCount = Math.max(1, Math.ceil(mediaItems.length / PAGE_SIZE));
+  const currentPage = Math.min(page, pageCount - 1);
+  const pageItems = mediaItems.slice(currentPage * PAGE_SIZE, currentPage * PAGE_SIZE + PAGE_SIZE);
 
-  const scrollPrev = useCallback(() => {
-    if (emblaApi) emblaApi.scrollPrev();
-  }, [emblaApi]);
-
-  const scrollNext = useCallback(() => {
-    if (emblaApi) emblaApi.scrollNext();
-  }, [emblaApi]);
-
-  const onSelect = useCallback(() => {
-    if (!emblaApi) return;
-    setPrevBtnEnabled(emblaApi.canScrollPrev());
-    setNextBtnEnabled(emblaApi.canScrollNext());
-  }, [emblaApi]);
-
-  useEffect(() => {
-    if (!emblaApi) return;
-    onSelect();
-    emblaApi.on("select", onSelect);
-    emblaApi.on("reInit", onSelect);
-  }, [emblaApi, onSelect]);
+  const goToPrevPage = () => setPage((p) => (p - 1 + pageCount) % pageCount);
+  const goToNextPage = () => setPage((p) => (p + 1) % pageCount);
 
   return (
     <>
@@ -199,14 +191,32 @@ export default function GalleryPage() {
         customDescription="Білімді ұрпақ жекеменшік мектебінің өмірінен қызықты сәттер мен іс-шаралар галереясы. Біздің мектептегі оқу үдерісі мен іс-шаралардың суреттері."
         customKeywords="Білімді ұрпақ жекеменшік мектебі фотогалерея, мектеп суреттері, іс-шаралар, оқушылар, Шымкент мектеп"
       />
-      <div className="min-h-screen bg-gray-50 dark:bg-[#0f172a]">
-        {/* Header with Back Button */}
-        <div className="bg-transparent border-b border-gray-200 dark:border-gray-800">
-          <div className="container mx-auto px-4 py-4">
-            <div className="flex items-center">
-              
-              {/* Admin Upload Button */}
-              {user && (
+      <div className="min-h-screen" style={{ backgroundColor: "#0f172a" }}>
+        {/* Editorial Hero */}
+        <div className="w-full px-4 sm:px-8 lg:px-12 pt-14 pb-8 sm:pt-20 sm:pb-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
+          <div>
+            <div className="flex items-center gap-3 mb-4">
+              <span className="h-px w-10" style={{ backgroundColor: "#D4B98C" }} />
+              <span
+                className="text-xs font-bold uppercase tracking-[0.3em]"
+                style={{ color: "#D4B98C" }}
+              >
+                Фотогалерея
+              </span>
+            </div>
+            <h1
+              className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.05]"
+              style={{ color: "#FAF6EE", fontFamily: "Georgia, 'Times New Roman', serif" }}
+            >
+              Біздің мектеп өмірі
+            </h1>
+            <p className="mt-5 text-base sm:text-lg max-w-xl" style={{ color: "#9AA4B8" }}>
+              Білімді ұрпақ жекеменшік мектебінің өмірінен қызықты сәттер мен іс-шаралар галереясы
+            </p>
+          </div>
+
+          {/* Admin Upload Button */}
+          {user && (
                 <Dialog open={isUploadOpen} onOpenChange={(open) => {
                   setIsUploadOpen(open);
                   if (!open) {
@@ -215,7 +225,10 @@ export default function GalleryPage() {
                   }
                 }}>
                   <DialogTrigger asChild>
-                    <Button>
+                    <Button
+                      className="rounded-full px-5 h-11 font-semibold shadow-md hover:opacity-90 transition-opacity"
+                      style={{ backgroundColor: "#D4B98C", color: "#14213D" }}
+                    >
                       <Plus className="w-4 h-4 mr-1" />
                       Фото қосу
                     </Button>
@@ -322,122 +335,105 @@ export default function GalleryPage() {
                   </DialogContent>
                 </Dialog>
               )}
-            </div>
-          </div>
         </div>
 
-        {/* Main Content */}
-        <div className="container mx-auto px-4 pt-12 pb-6 sm:pt-16 sm:pb-8">
-          <div className="text-center mb-8">
-            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-              Білімді ұрпақ жекеменшік мектебінің өмірінен қызықты сәттер мен іс-шаралар галереясы
-            </p>
-          </div>
-
-          {/* Carousel Container */}
+        {/* Editorial Mosaic */}
+        <div className="w-full px-4 sm:px-8 lg:px-12 pb-16 sm:pb-20">
           <div className="relative">
             {mediaItems.length === 0 ? (
-              <div className="text-center py-10 text-gray-500">
+              <div className="text-center py-20" style={{ color: "#8A93A3" }}>
                 Суреттер әзірге жоқ
               </div>
             ) : (
-              <div className="overflow-hidden" ref={emblaRef}>
-                <div className="flex touch-pan-y">
-                  {mediaItems.map((media, index) => (
+              <>
+              <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-12 lg:[grid-auto-rows:56px] lg:gap-4">
+                {pageItems.map((media, localIndex) => {
+                  const globalIndex = currentPage * PAGE_SIZE + localIndex;
+                  const caption = media.caption || EDITORIAL_CAPTIONS[globalIndex % EDITORIAL_CAPTIONS.length];
+                  const isDimmed = hoveredIndex !== null && hoveredIndex !== globalIndex;
+                  return (
                     <div
                       key={media.id}
-                      className="flex-[0_0_100%] min-w-0 px-2 lg:flex-[0_0_25%]"
+                      className={`relative group cursor-pointer overflow-hidden rounded-md ${localIndex === 0 ? "col-span-2" : ""} ${MOSAIC_SPANS[localIndex] || ""} h-[220px] sm:h-[260px] lg:h-auto transition-opacity duration-300`}
+                      style={{ opacity: isDimmed ? 0.45 : 1 }}
+                      onMouseEnter={() => setHoveredIndex(globalIndex)}
+                      onMouseLeave={() => setHoveredIndex(null)}
+                      onClick={() => setSelectedIndex(globalIndex)}
                     >
-                      <div
-                        className="relative group cursor-pointer bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg transition-all duration-500 hover:shadow-2xl hover:scale-[1.02]"
-                        onClick={() => setSelectedIndex(index)}
-                      >
-                        {/* Admin Header Bar */}
-                        {user && (
-                          <div className="flex justify-end gap-2 p-2 bg-slate-100 dark:bg-slate-800 border-b border-gray-200 dark:border-gray-700">
-                             <Button
-                              variant="ghost"
-                              size="icon"
-                              className="w-8 h-8 rounded-full hover:bg-blue-100 dark:hover:bg-blue-900/30 text-blue-600 dark:text-blue-400"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                handleEditCaption(media);
-                              }}
-                            >
-                              <Pencil className="w-4 h-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="w-8 h-8 rounded-full hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                if (window.confirm("Бұл суретті өшіруді растайсыз ба? (Confirm delete?)")) {
-                                  deleteMutation.mutate(media.id);
-                                }
-                              }}
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
-                          </div>
-                        )}
-                        
-                        <div className="h-[300px] lg:h-[280px]">
-                          <img
-                            src={media.url}
-                            alt="Галерея"
-                            className="w-full h-full object-cover"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      {/* Admin controls */}
+                      {user && (
+                        <div className="absolute top-2 right-2 z-10 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button
+                            className="w-8 h-8 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow"
+                            style={{ color: "#14213D" }}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleEditCaption(media);
+                            }}
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </button>
+                          <button
+                            className="w-8 h-8 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow text-red-600"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              if (window.confirm("Бұл суретті өшіруді растайсыз ба? (Confirm delete?)")) {
+                                deleteMutation.mutate(media.id);
+                              }
+                            }}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
                         </div>
+                      )}
+
+                      <img
+                        src={media.url}
+                        alt={caption}
+                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="absolute bottom-0 left-0 right-0 p-4 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                        <span
+                          className="inline-block text-white text-xs sm:text-sm font-semibold uppercase tracking-widest border-l-2 pl-2"
+                          style={{ borderColor: "#D4B98C" }}
+                        >
+                          {caption}
+                        </span>
                       </div>
                     </div>
-                  ))}
-                </div>
+                  );
+                })}
               </div>
-            )}
 
-            {/* Navigation Buttons */}
-            {mediaItems.length > 0 && (
-              <>
-                <button
-                  className={`hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 items-center justify-center w-12 h-12 rounded-full bg-white dark:bg-gray-800 shadow-xl hover:shadow-2xl transition-all duration-300 z-10 ${!prevBtnEnabled ? "opacity-30 cursor-not-allowed" : "hover:scale-110"
-                    }`}
-                  onClick={scrollPrev}
-                  disabled={!prevBtnEnabled}
-                >
-                  <ChevronLeft className="w-6 h-6 text-gray-800 dark:text-gray-100" />
-                </button>
-
-                <button
-                  className={`hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 items-center justify-center w-12 h-12 rounded-full bg-white dark:bg-gray-800 shadow-xl hover:shadow-2xl transition-all duration-300 z-10 ${!nextBtnEnabled ? "opacity-30 cursor-not-allowed" : "hover:scale-110"
-                    }`}
-                  onClick={scrollNext}
-                  disabled={!nextBtnEnabled}
-                >
-                  <ChevronRight className="w-6 h-6 text-gray-800 dark:text-gray-100" />
-                </button>
+              {/* Pager */}
+              {pageCount > 1 && (
+                <div className="flex items-center justify-center gap-6 mt-10">
+                  <button
+                    onClick={goToPrevPage}
+                    className="w-11 h-11 rounded-full flex items-center justify-center border transition-colors hover:bg-white/10"
+                    style={{ borderColor: "#D4B98C", color: "#D4B98C" }}
+                    aria-label="Алдыңғы"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                  <span className="text-sm font-mono tracking-widest" style={{ color: "#9AA4B8" }}>
+                    {String(currentPage + 1).padStart(2, "0")} / {String(pageCount).padStart(2, "0")}
+                  </span>
+                  <button
+                    onClick={goToNextPage}
+                    className="w-11 h-11 rounded-full flex items-center justify-center border transition-colors hover:bg-white/10"
+                    style={{ borderColor: "#D4B98C", color: "#D4B98C" }}
+                    aria-label="Келесі"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </div>
+              )}
               </>
             )}
-
-            {/* Mobile Swipe Indicator */}
-            {mediaItems.length > 0 && (
-              <div className="lg:hidden text-center mt-6">
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  ← Көру үшін сырғытыңыз →
-                </p>
-              </div>
-            )}
-          </div>
-
-          {/* Desktop Navigation Hint */}
-          <div className="hidden lg:flex justify-center items-center gap-2 mt-8">
-            <div className={`h-2 w-2 rounded-full transition-all duration-300 ${!prevBtnEnabled ? "bg-blue-600 dark:bg-blue-400" : "bg-gray-300 dark:bg-gray-600"
-              }`} />
-            <div className={`h-2 w-2 rounded-full transition-all duration-300 ${nextBtnEnabled ? "bg-gray-300 dark:bg-gray-600" : "bg-blue-600 dark:bg-blue-400"
-              }`} />
           </div>
         </div>
       </div>

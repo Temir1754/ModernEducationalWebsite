@@ -54,7 +54,7 @@ export default function ContactPage() {
     {
       icon: Clock,
       title: "Жұмыс кестесі",
-      content: "Дүйсенбі - Жұма: 08:00 - 17:00",
+      content: "Дүйсенбі - Жұма: 08:00 - 18:00",
       subtitle: ""
     }
   ];
@@ -320,7 +320,7 @@ export default function ContactPage() {
                     <Clock className="w-6 h-6 text-blue-600 dark:text-blue-400 mt-1" />
                     <div>
                       <p className="font-medium text-gray-900 dark:text-gray-100">Жұмыс уақыты:</p>
-                      <p className="text-gray-600 dark:text-gray-300">Дүйсенбі - Жұма: 08:00 - 17:00</p>
+                      <p className="text-gray-600 dark:text-gray-300">Дүйсенбі - Жұма: 08:00 - 18:00</p>
                     </div>
                   </div>
                 </div>

@@ -436,8 +436,8 @@ export default function AboutSchoolPage() {
           <div id="stats" className="mb-20 scroll-mt-24">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto px-4">
               {[
-                { number: 180, label: "Оқушылар саны", icon: Users, color: "blue" },
-                { number: 9, label: "Сынып деңгейлері", icon: GraduationCap, color: "purple", suffix: " (0-9)" },
+                { number: 238, label: "Оқушылар саны", icon: Users, color: "blue" },
+                { number: 9, label: "Сынып деңгейлері", icon: GraduationCap, color: "purple", prefix: "(1-", suffix: ")" },
                 { number: 18, label: "Сыныптағы оқушылар", icon: BookOpen, color: "emerald", prefix: "12-" },
                 { number: 95, label: "Табысты бітірушілер", icon: Award, color: "amber", suffix: "%" }
               ].map((stat, index) => (

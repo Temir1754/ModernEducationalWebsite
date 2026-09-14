@@ -147,7 +147,7 @@ export default function Header() {
               </button>
               <span className="flex items-center">
                 <Clock className="w-4 h-4 text-primary mr-1" />
-                08:00 - 18:00
+                Дүйсенбі - Жұма: 08:00 - 18:00
               </span>
               <button
                 className="hidden sm:flex items-center text-gray-600 hover:text-primary transition-colors duration-200 hover:bg-gray-50 px-2 py-1 rounded"

@@ -202,7 +202,7 @@ export default function AdministrationPage() {
                   </div>
                   <div>
                     <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Жұмыс уақыты</p>
-                    <p className="font-medium">Дүйсенбі - жұма, 08:00 - 18:00</p>
+                    <p className="font-medium">Дүйсенбі - Жұма: 08:00 - 18:00</p>
                   </div>
                 </div>
               </div>

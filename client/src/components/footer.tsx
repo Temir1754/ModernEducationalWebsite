@@ -138,7 +138,7 @@ export default function Footer() {
               </button>
               <p>
                 <i className="fas fa-clock mr-2"></i>
-                Дүйсенбі - жұма: 08:00 - 18:00
+                Жұмыс уақыты: Дүйсенбі - Жұма: 08:00 - 18:00
               </p>
             </div>
           </div>
