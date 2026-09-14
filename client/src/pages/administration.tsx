@@ -34,28 +34,34 @@ export default function AdministrationPage() {
   }, []);
   const administrators = [
     {
-      name: "Бейсбаева Жұлдыз Мейіржанқызы",
-      position: "Мектеп директоры",
-      education: "Назарбаев Университет",
-      experience: "2 жыл педагогикалық тәжірибе",
-      email: "fgs.school.2022@gmail.com",
-      phone: "+7-775-790-63-63"
-    },
-    {
       name: "Сарсенбаева Алия Раманкуловна",
-      position: "Оқу ісі жөніндегі директордың орынбасары",
+      position: "Мектеп директоры",
       education: "Халықаралық Қазақ Түрік университеті",
       experience: "32 жыл педагогикалық тәжірибе",
+      category: "Педагог-зерттеуші",
       email: "fgs.school.2022@gmail.com",
-      phone: "+7-775-790-63-63"
+      phone: "+7-775-790-63-63",
+      photo: "/staff/director.jpg"
+    },
+    {
+      name: "Абжанова Шарапат Молдахановна",
+      position: "Тәрбие ісі жөніндегі директордың орынбасары",
+      education: "Аймақтық әлеуметтік-инновациялық университеті",
+      experience: "35 жыл педагогикалық тәжірибе",
+      category: "Педагог-зерттеуші",
+      email: "fgs.school.2022@gmail.com",
+      phone: "+7-775-790-63-63",
+      photo: "/staff/deputy-upbringing.jpg"
     },
     {
       name: "Утепбаева Махаббат Анарбековна",
-      position: "Тәрбие ісі жөніндегі директордың орынбасары",
+      position: "Педагог-әлеуметтанушы",
       education: "Халықаралық Қазақ Түрік университеті",
       experience: "37 жыл педагогикалық тәжірибе",
+      category: "Педагог-зерттеуші",
       email: "fgs.school.2022@gmail.com",
-      phone: "+7-775-790-63-63"
+      phone: "+7-775-790-63-63",
+      photo: "/staff/social-pedagogue.jpg"
     }
   ];
 
@@ -114,7 +120,15 @@ export default function AdministrationPage() {
                     <div className="relative">
                       <div className="w-48 h-48 rounded-[2rem] bg-gradient-to-br from-blue-500 to-purple-600 p-1 shadow-2xl transform group-hover:rotate-3 transition-transform duration-500">
                         <div className="w-full h-full bg-slate-100 dark:bg-slate-950 rounded-[1.8rem] flex items-center justify-center overflow-hidden">
-                          <Users className="w-24 h-24 text-slate-300 dark:text-slate-800" />
+                          {admin.photo ? (
+                            <img
+                              src={admin.photo}
+                              alt={admin.name}
+                              className="w-full h-full object-cover"
+                              onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling?.classList.remove('hidden'); }}
+                            />
+                          ) : null}
+                          <Users className={`w-24 h-24 text-slate-300 dark:text-slate-800 ${admin.photo ? 'hidden' : ''}`} />
                         </div>
                       </div>
                       <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-white dark:bg-slate-900 px-4 py-2 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 whitespace-nowrap">
@@ -131,7 +145,7 @@ export default function AdministrationPage() {
                         </div>
                       </div>
                       
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8 text-left">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8 text-left">
                         <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
                           <p className="text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 mb-2 tracking-widest">Білімі</p>
                           <p className="text-slate-700 dark:text-slate-200 font-medium leading-tight">{admin.education}</p>
@@ -139,6 +153,10 @@ export default function AdministrationPage() {
                         <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
                           <p className="text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 mb-2 tracking-widest">Тәжірибе</p>
                           <p className="text-slate-700 dark:text-slate-200 font-medium leading-tight">{admin.experience}</p>
+                        </div>
+                        <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
+                          <p className="text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 mb-2 tracking-widest">Санаты</p>
+                          <p className="text-slate-700 dark:text-slate-200 font-medium leading-tight">{admin.category}</p>
                         </div>
                       </div>
                       

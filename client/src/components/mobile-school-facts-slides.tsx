@@ -43,7 +43,7 @@ const schoolFacts: SchoolFact[] = [
   {
     id: 4,
     title: "Білікті директор",
-    description: "Директор РФМШ және Назарбаев университетінің түлегі",
+    description: "Директор — 32 жыл педагогикалық тәжірибесі бар білікті маман",
     number: "Жоғары",
     unit: "білім",
     color: "text-yellow-600",

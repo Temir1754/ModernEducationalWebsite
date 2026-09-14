@@ -36,7 +36,7 @@ export default function ContactPage() {
     {
       icon: MapPin,
       title: "Мекенжайымыз",
-      content: "Шымкент қаласы, Енбекші ауданы",
+      content: "Шымкент қ., Абай ауданы, Самал-1 ш.а., Тұрсынқұл Өтегенов көшесі, 43А ғимараты",
       subtitle: "Білімді ұрпақ жекеменшік мектебі"
     },
     {
@@ -93,18 +93,18 @@ export default function ContactPage() {
   const departments = [
     {
       title: "Директор",
-      name: "Бейсбаева Жұлдыз Мейіржанқызы",
-      phone: "+7‒775‒790‒63‒63",
-      email: "fgs.school.2022@gmail.com"
-    },
-    {
-      title: "Оқу ісі жөніндегі директор орынбасары",
       name: "Сарсенбаева Алия Раманкуловна",
       phone: "+7‒775‒790‒63‒63",
       email: "fgs.school.2022@gmail.com"
     },
     {
       title: "Тәрбие ісі жөніндегі директор орынбасары",
+      name: "Абжанова Шарапат Молдахановна",
+      phone: "+7‒775‒790‒63‒63",
+      email: "fgs.school.2022@gmail.com"
+    },
+    {
+      title: "Педагог-әлеуметтанушы",
       name: "Утепбаева Махаббат Анарбековна",
       phone: "+7‒775‒790‒63‒63",
       email: "fgs.school.2022@gmail.com"
@@ -312,7 +312,7 @@ export default function ContactPage() {
                         Білімді ұрпақ жекеменшік мектебі
                       </p>
                       <p className="text-gray-600 dark:text-gray-300">
-                        Шымкент қаласы, Енбекші ауданы
+                        Шымкент қ., Абай ауданы, Самал-1 ш.а., Тұрсынқұл Өтегенов көшесі, 43А ғимараты
                       </p>
                     </div>
                   </div>
@@ -321,7 +321,6 @@ export default function ContactPage() {
                     <div>
                       <p className="font-medium text-gray-900 dark:text-gray-100">Жұмыс уақыты:</p>
                       <p className="text-gray-600 dark:text-gray-300">Дүйсенбі - Жұма: 08:00 - 17:00</p>
-                      <p className="text-gray-600 dark:text-gray-300">Жексенбі: Демалыс</p>
                     </div>
                   </div>
                 </div>

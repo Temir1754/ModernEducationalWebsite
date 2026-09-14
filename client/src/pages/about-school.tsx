@@ -486,15 +486,21 @@ export default function AboutSchoolPage() {
                       <div className="relative mb-6">
                         <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full blur-lg opacity-50" />
                         <div className="relative w-24 h-24 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 p-1">
-                          <div className="w-full h-full rounded-full bg-slate-900 flex items-center justify-center text-white text-3xl font-black">
-                            Б
+                          <div className="w-full h-full rounded-full bg-slate-900 flex items-center justify-center text-white text-3xl font-black overflow-hidden">
+                            <img
+                              src="/staff/director.jpg"
+                              alt="Сарсенбаева А.Р."
+                              className="w-full h-full object-cover"
+                              onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling?.classList.remove('hidden'); }}
+                            />
+                            <span className="hidden">С</span>
                           </div>
                         </div>
                       </div>
-                      
+
                       <div className="space-y-1">
                         <p className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-                          Бейсбаева Ж.М.
+                          Сарсенбаева А.Р.
                         </p>
                         <p className="text-blue-500 font-bold uppercase tracking-widest text-xs">
                           Білімді ұрпақ жекеменшік мектебінің директоры

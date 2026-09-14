@@ -157,7 +157,7 @@ export default function Header() {
                 aria-label="Мектеп мекенжайын картадан көру"
               >
                 <MapPin className="w-4 h-4 text-primary mr-1" />
-                Шымкент, Өтегенова 43А
+                Шымкент қ., Абай ауданы, Самал-1 ш.а., Тұрсынқұл Өтегенов көшесі, 43А ғимараты
               </button>
 
               {/* Prominent Social Media buttons */}

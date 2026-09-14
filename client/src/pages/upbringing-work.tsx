@@ -932,7 +932,7 @@ export default function UpbringingWorkPage() {
   // Responsible Persons Contacts
   const responsiblePersons = [
     {
-      name: "Утепбаева Махаббат Анарбековна",
+      name: "Абжанова Шарапат Молдахановна",
       position: "Тәрбие жұмысы жөніндегі орынбасар",
       phone: "+7‒775‒790‒63‒63",
       email: "fgs.school.2022@gmail.com",

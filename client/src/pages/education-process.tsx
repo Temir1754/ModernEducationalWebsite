@@ -265,7 +265,7 @@ export default function EducationProcessPage() {
           {/* Electronic Journal Link */}
           <Card id="kundelik" className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700 scroll-mt-24">
             <CardHeader>
-              <CardTitle className="text-green-800 dark:text-green-300">Күнделік ЭЖ (Электронды журнал)</CardTitle>
+              <CardTitle className="text-green-800 dark:text-green-300">Bilimclass (Электронды журнал)</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center">
@@ -279,10 +279,10 @@ export default function EducationProcessPage() {
                 </div>
                 <Button 
                   className="bg-green-600 dark:bg-green-700 hover:bg-green-700 dark:hover:bg-green-600"
-                  onClick={() => window.open('https://portal.kundelik.kz/v2', '_blank')}
+                  onClick={() => window.open('https://www.bilimclass.kz/login', '_blank')}
                 >
                   <ExternalLink className="w-4 h-4 mr-2" />
-                  Күнделікке өту
+                  Bilimclass өту
                 </Button>
               </div>
             </CardContent>

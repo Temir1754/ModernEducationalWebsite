@@ -56,36 +56,9 @@ export default function Footer() {
   return (
     <footer className="bg-gray-800 text-white py-12">
       <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-4 gap-8">
+        <div className="grid md:grid-cols-3 gap-8">
           <div>
-            <div className="flex items-center mb-4">
-              <div className="bg-primary text-white rounded-lg p-2 mr-3">
-                <i className="fas fa-graduation-cap text-xl"></i>
-              </div>
-              <div>
-                <h3 className="text-xl font-bold">Білімді ұрпақ жекеменшік мектебі</h3>
-                <p className="text-sm text-gray-300">Болашақ ұрпақ мектебі</p>
-              </div>
-            </div>
-            <p className="text-gray-300 mb-4">
-              Балаларыңыздың болашағына инвестиция жасау үшін дұрыс таңдау - Білімді ұрпақ жекеменшік мектебі.
-            </p>
-            <div className="flex flex-wrap gap-3">
-              {socialLinks.map((link, index) => (
-                <a
-                  key={index}
-                  href={link.href}
-                  className={link.className}
-                  onClick={link.onClick}
-                  aria-label={link.label}
-                >
-                  <i className={`${link.icon} text-xl`}></i>
-                </a>
-              ))}
-            </div>
-          </div>
-
-          <div>
+            <h4 className="text-lg font-semibold mb-4">Мектеп</h4>
             <ul className="space-y-2 text-gray-300">
               <li>
                 <Link href="/about-school" className="hover:text-white">
@@ -154,7 +127,7 @@ export default function Footer() {
                 className="flex items-center hover:text-white transition-colors duration-200 text-left"
               >
                 <i className="fas fa-map-marker-alt mr-2"></i>
-                Өтегенов 43А, Шымкент
+                Шымкент қ., Абай ауданы, Самал-1 ш.а., Тұрсынқұл Өтегенов көшесі, 43А ғимараты
               </button>
               <button
                 onClick={() => window.location.href = 'tel:+77757906363'}
@@ -171,8 +144,21 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-300">
-          <p>&copy; 2024 Білімді ұрпақ жекеменшік мектебі. Барлық құқықтар сақталған.</p>
+        <div className="border-t border-gray-700 mt-8 pt-8 flex flex-col-reverse md:flex-row items-center justify-between gap-4 text-gray-300">
+          <p>&copy; 2024. Барлық құқықтар сақталған.</p>
+          <div className="flex flex-wrap gap-4">
+            {socialLinks.map((link, index) => (
+              <a
+                key={index}
+                href={link.href}
+                className={link.className}
+                onClick={link.onClick}
+                aria-label={link.label}
+              >
+                <i className={`${link.icon} text-xl`}></i>
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </footer>
