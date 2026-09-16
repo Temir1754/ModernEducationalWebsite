@@ -745,7 +745,7 @@ const CanteenPage = () => {
               <CardContent>
                 <div className="space-y-4">
                   <div>
-                    <h4 className="font-semibold text-gray-800 dark:text-gray-100">Амирова Айгүл Серікқызы</h4>
+                    <h4 className="font-semibold text-gray-800 dark:text-gray-100">Тастанова Айгерім</h4>
                     <p className="text-gray-600 dark:text-gray-300">Асхана жетекшісі</p>
                   </div>
                   <div className="space-y-2">
