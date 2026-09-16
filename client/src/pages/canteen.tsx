@@ -10,28 +10,21 @@ import {
   Clock, 
   DollarSign, 
   Shield, 
-  Phone, 
-  Mail, 
-  Camera, 
-  Apple, 
-  Users, 
+  Phone,
+  Mail,
+  Apple,
+  Users,
   MessageSquare,
   ChefHat,
   Heart,
   AlertTriangle,
   ArrowLeft,
-  X,
-  Loader2,
   ChevronDown
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useQuery } from "@tanstack/react-query";
-import { Dialog, DialogContent, DialogClose, DialogTitle } from "@/components/ui/dialog";
-import type { Media } from "@shared/schema";
 
 const CanteenPage = () => {
   const [selectedWeek, setSelectedWeek] = useState(1);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [activeSection, setActiveSection] = useState<string>("");
 
   useEffect(() => {
@@ -50,7 +43,7 @@ const CanteenPage = () => {
     };
 
     const observer = new IntersectionObserver(handleIntersect, observerOptions);
-    const sections = ['menu', 'schedule', 'gallery', 'norms', 'faq'];
+    const sections = ['menu', 'schedule', 'norms', 'faq'];
     
     sections.forEach(id => {
       const el = document.getElementById(id);
@@ -59,24 +52,6 @@ const CanteenPage = () => {
 
     return () => observer.disconnect();
   }, []);
-
-  const { data: canteenMedia = [], isLoading } = useQuery<Media[]>({
-    queryKey: ["/api/media", "canteen"],
-    queryFn: async () => {
-      const res = await fetch("/api/media?section=canteen");
-      if (!res.ok) return [];
-      return res.json();
-    }
-  });
-
-  // Fallback images if database is empty
-  const defaultMedia = [
-    { url: "/canteen-hall.png", caption: "Асхана залы" },
-    { url: "/canteen-kitchen.png", caption: "Тамақ дайындау" },
-    { url: "/canteen-lunch.png", caption: "Дайын тағамдар" }
-  ];
-
-  const displayMedia = canteenMedia.length > 0 ? canteenMedia : defaultMedia;
 
   // 4 weeks menu data
   const menuByWeek: Record<number, Array<{
@@ -496,18 +471,6 @@ const CanteenPage = () => {
               </button>
 
               <button
-                onClick={() => document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' })}
-                className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
-                  activeSection === 'gallery' 
-                  ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
-                  : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
-                }`}
-              >
-                Фотогалерея
-                <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'gallery' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
-              </button>
-
-              <button
                 onClick={() => document.getElementById('norms')?.scrollIntoView({ behavior: 'smooth' })}
                 className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
                   activeSection === 'norms' 
@@ -725,7 +688,7 @@ const CanteenPage = () => {
                 <div className="space-y-4">
                   <div className="flex justify-between items-center p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
                     <span className="font-medium dark:text-gray-200">Таңғы ас</span>
-                    <span className="text-blue-600 dark:text-blue-400 font-bold">08:30 - 09:00</span>
+                    <span className="text-blue-600 dark:text-blue-400 font-bold">07:00 - 08:00</span>
                   </div>
                   <div className="flex justify-between items-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
                     <span className="font-medium dark:text-gray-200">Түскі ас</span>
@@ -739,42 +702,6 @@ const CanteenPage = () => {
               </CardContent>
             </Card>
           </div>
-
-          {/* Photos Section */}
-          <Card id="gallery" className="mb-6 dark:bg-[#1e293b] dark:border-gray-700 scroll-mt-24">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2 dark:text-gray-100">
-                <Camera className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-                <span>Асхана фотогалереясы</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {isLoading ? (
-                <div className="flex justify-center py-12">
-                  <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-                </div>
-              ) : (
-                <div className="grid md:grid-cols-3 gap-4">
-                  {displayMedia.map((media, index) => (
-                    <div 
-                      key={index} 
-                      className="relative rounded-lg overflow-hidden cursor-pointer group"
-                      onClick={() => setSelectedImage(media.url)}
-                    >
-                      <img 
-                        src={media.url} 
-                        alt={media.caption || "Асхана фотосы"}
-                        className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
-                      />
-                      <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <p className="text-sm font-medium">{media.caption || "Асхана фотосы"}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
 
           <div id="norms" className="grid lg:grid-cols-2 gap-8 mb-6 scroll-mt-24">
             {/* Sanitary Norms */}
@@ -993,24 +920,6 @@ const CanteenPage = () => {
         </div>
       </div>
 
-      {/* Image Modal Dialog */}
-      <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
-        <DialogContent className="max-w-7xl w-full p-0 bg-transparent border-none" aria-describedby={undefined}>
-          <DialogTitle className="sr-only">Суретті толық көлемде көру</DialogTitle>
-          <div className="relative">
-            <DialogClose className="absolute -top-12 right-0 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full p-2 hover:bg-white dark:hover:bg-gray-700 transition-colors z-50">
-              <X className="w-6 h-6 text-gray-800 dark:text-gray-100" />
-            </DialogClose>
-            {selectedImage && (
-              <img
-                src={selectedImage}
-                alt="Үлкейтілген сурет"
-                className="w-full h-auto max-h-[90vh] object-contain rounded-lg shadow-2xl"
-              />
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
     </>
   );
 };
