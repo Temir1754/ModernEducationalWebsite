@@ -32,23 +32,32 @@ export default function AdministrationPage() {
 
     return () => observer.disconnect();
   }, []);
-  const administrators = [
+  const administrators: {
+    name: string;
+    position: string;
+    education: string;
+    experience: string;
+    category?: string;
+    email: string;
+    phone: string;
+    photo: string;
+  }[] = [
     {
       name: "Сарсенбаева Алия Раманкуловна",
       position: "Мектеп директоры",
       education: "Халықаралық Қазақ Түрік университеті",
       experience: "32 жыл педагогикалық тәжірибе",
-      category: "Педагог-зерттеуші",
+      category: "Зерттеуші",
       email: "fgs.school.2022@gmail.com",
       phone: "+7-775-790-63-63",
       photo: "/staff/director.jpg"
     },
     {
       name: "Абжанова Шарапат Молдахановна",
-      position: "Тәрбие ісі жөніндегі директордың орынбасары",
+      position: "Бірінші санатты басшы орынбасары",
       education: "Аймақтық әлеуметтік-инновациялық университеті",
       experience: "35 жыл педагогикалық тәжірибе",
-      category: "Педагог-зерттеуші",
+      category: "Зерттеуші",
       email: "fgs.school.2022@gmail.com",
       phone: "+7-775-790-63-63",
       photo: "/staff/deputy-upbringing.jpg"
@@ -58,10 +67,27 @@ export default function AdministrationPage() {
       position: "Педагог-әлеуметтанушы",
       education: "Халықаралық Қазақ Түрік университеті",
       experience: "37 жыл педагогикалық тәжірибе",
-      category: "Педагог-зерттеуші",
       email: "fgs.school.2022@gmail.com",
       phone: "+7-775-790-63-63",
       photo: "/staff/social-pedagogue.jpg"
+    },
+    {
+      name: "Романқұл Салтанат Көшербайқызы",
+      position: "Іс қағаздарын жүргізуші",
+      education: "Абай атындағы Қазақ ұлттық педагогикалық университеті",
+      experience: "7 жыл жұмыс тәжірибесі",
+      email: "fgs.school.2022@gmail.com",
+      phone: "+7-775-790-63-63",
+      photo: ""
+    },
+    {
+      name: "Еркеқұл Жансая Молдабекқызы",
+      position: "Педагог-психолог",
+      education: "Қазақ ұлттық қыздар педагогикалық университеті",
+      experience: "6 жыл педагогикалық тәжірибе",
+      email: "fgs.school.2022@gmail.com",
+      phone: "+7-775-790-63-63",
+      photo: ""
     }
   ];
 
@@ -145,7 +171,7 @@ export default function AdministrationPage() {
                         </div>
                       </div>
                       
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8 text-left">
+                      <div className={`grid grid-cols-1 ${admin.category ? 'sm:grid-cols-3' : 'sm:grid-cols-2'} gap-6 mb-8 text-left`}>
                         <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
                           <p className="text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 mb-2 tracking-widest">Білімі</p>
                           <p className="text-slate-700 dark:text-slate-200 font-medium leading-tight">{admin.education}</p>
@@ -154,10 +180,12 @@ export default function AdministrationPage() {
                           <p className="text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 mb-2 tracking-widest">Тәжірибе</p>
                           <p className="text-slate-700 dark:text-slate-200 font-medium leading-tight">{admin.experience}</p>
                         </div>
-                        <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
-                          <p className="text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 mb-2 tracking-widest">Санаты</p>
-                          <p className="text-slate-700 dark:text-slate-200 font-medium leading-tight">{admin.category}</p>
-                        </div>
+                        {admin.category && (
+                          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
+                            <p className="text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 mb-2 tracking-widest">Санаты</p>
+                            <p className="text-slate-700 dark:text-slate-200 font-medium leading-tight">{admin.category}</p>
+                          </div>
+                        )}
                       </div>
                       
                       <div className="flex flex-wrap justify-center md:justify-start gap-4">
