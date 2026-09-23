@@ -52,7 +52,7 @@ export default function StateAttestationPage() {
   return (
     <>
       <SEOHead page="stateAttestation" />
-      <div className="min-h-screen bg-gray-50 dark:bg-[#0f172a]">
+      <div className="min-h-screen bg-white dark:bg-[#0f172a]">
         {/* Header with Back Button - Enhanced for mobile */}
         
 

@@ -6,7 +6,7 @@ export default function Footer() {
       href: "https://www.instagram.com/fgs.schoolkz/",
       icon: "fab fa-instagram",
       label: "Instagram",
-      className: "text-pink-400 hover:text-pink-500 transform hover:scale-110 transition-all duration-200",
+      className: "text-pink-600 hover:text-pink-500 transform hover:scale-110 transition-all duration-200",
       onClick: (e: React.MouseEvent) => {
         e.preventDefault();
         window.location.href = 'instagram://user?username=fgs.schoolkz';
@@ -19,7 +19,7 @@ export default function Footer() {
       href: "#",
       icon: "fab fa-telegram",
       label: "Telegram",
-      className: "text-blue-400 hover:text-blue-500 transform hover:scale-110 transition-all duration-200",
+      className: "text-blue-600 hover:text-blue-500 transform hover:scale-110 transition-all duration-200",
       onClick: (e: React.MouseEvent) => {
         e.preventDefault();
         const telegramLink = prompt('Телеграм каналы немесе топ сілтемесін енгізіңіз (мысалы: https://t.me/bilimdi_urpaq):');
@@ -36,7 +36,7 @@ export default function Footer() {
       href: "https://wa.me/77757906363",
       icon: "fab fa-whatsapp",
       label: "WhatsApp",
-      className: "text-green-400 hover:text-green-500 transform hover:scale-110 transition-all duration-200",
+      className: "text-green-600 hover:text-green-500 transform hover:scale-110 transition-all duration-200",
       onClick: (e: React.MouseEvent) => {
         e.preventDefault();
         window.location.href = 'whatsapp://send?phone=77757906363';
@@ -49,17 +49,44 @@ export default function Footer() {
       href: "https://www.facebook.com/people/Bilimdi-Urpaq-School/pfbid0b3bkVb2Vz1B59RdK3PfLQR7DcKwJ92XaxfMXdB5kK7wv1AwTBBUbtUZ5uj1oAN7ul/",
       icon: "fab fa-facebook-f",
       label: "Facebook",
-      className: "text-blue-400 hover:text-blue-500 transform hover:scale-110 transition-all duration-200",
+      className: "text-blue-600 hover:text-blue-500 transform hover:scale-110 transition-all duration-200",
     },
   ];
 
   return (
-    <footer className="bg-gray-800 text-white py-12">
+    <footer className="bg-white text-black py-12">
       <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-4 gap-8">
           <div>
-            <h4 className="text-lg font-semibold mb-4">Мектеп</h4>
-            <ul className="space-y-2 text-gray-300">
+            <div className="flex items-center mb-4">
+              <div className="bg-primary text-white rounded-lg p-2 mr-3">
+                <i className="fas fa-graduation-cap text-xl"></i>
+              </div>
+              <div>
+                <h3 className="text-xl font-bold">Білімді ұрпақ жекеменшік мектебі</h3>
+                <p className="text-sm text-black">Болашақ ұрпақ мектебі</p>
+              </div>
+            </div>
+            <p className="text-black mb-4">
+              Балаларыңыздың болашағына инвестиция жасау үшін дұрыс таңдау - Білімді ұрпақ жекеменшік мектебі.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              {socialLinks.map((link, index) => (
+                <a
+                  key={index}
+                  href={link.href}
+                  className={link.className}
+                  onClick={link.onClick}
+                  aria-label={link.label}
+                >
+                  <i className={`${link.icon} text-xl`}></i>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <ul className="space-y-2 text-black">
               <li>
                 <Link href="/about-school" className="hover:text-white">
                   Мектеп туралы
@@ -85,7 +112,7 @@ export default function Footer() {
 
           <div>
             <h4 className="text-lg font-semibold mb-4">Қызметтер</h4>
-            <ul className="space-y-2 text-gray-300">
+            <ul className="space-y-2 text-black">
               <li>
                 <Link href="/education-process" className="hover:text-white">
                   Оқу үдерісі
@@ -121,13 +148,13 @@ export default function Footer() {
 
           <div>
             <h4 className="text-lg font-semibold mb-4">Байланыс</h4>
-            <div className="space-y-2 text-gray-300">
+            <div className="space-y-2 text-black">
               <button
                 onClick={() => window.open('https://go.2gis.com/DoFle', '_blank')}
                 className="flex items-center hover:text-white transition-colors duration-200 text-left"
               >
                 <i className="fas fa-map-marker-alt mr-2"></i>
-                Шымкент қ., Абай ауданы, Самал-1 ш.а., Тұрсынқұл Өтегенов көшесі, 43А ғимараты
+                Өтегенов 43А, Шымкент
               </button>
               <button
                 onClick={() => window.location.href = 'tel:+77757906363'}
@@ -138,27 +165,14 @@ export default function Footer() {
               </button>
               <p>
                 <i className="fas fa-clock mr-2"></i>
-                Жұмыс уақыты: Дүйсенбі - Жұма: 08:00 - 18:00
+                Дүйсенбі - жұма: 08:00 - 18:00
               </p>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-gray-700 mt-8 pt-8 flex flex-col-reverse md:flex-row items-center justify-between gap-4 text-gray-300">
-          <p>&copy; 2024. Барлық құқықтар сақталған.</p>
-          <div className="flex flex-wrap gap-4">
-            {socialLinks.map((link, index) => (
-              <a
-                key={index}
-                href={link.href}
-                className={link.className}
-                onClick={link.onClick}
-                aria-label={link.label}
-              >
-                <i className={`${link.icon} text-xl`}></i>
-              </a>
-            ))}
-          </div>
+        <div className="border-t border-gray-700 mt-8 pt-8 text-center text-black">
+          <p>&copy; 2024 Білімді ұрпақ жекеменшік мектебі. Барлық құқықтар сақталған.</p>
         </div>
       </div>
     </footer>

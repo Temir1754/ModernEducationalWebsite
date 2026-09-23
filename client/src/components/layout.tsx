@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+﻿import { ReactNode } from "react";
 import { Link, useLocation } from "wouter";
 import ResponsiveNavbar from "./responsive-navbar";
 import Footer from "./footer";
@@ -13,7 +13,7 @@ export default function Layout({ children }: LayoutProps) {
   const isHomePage = location === '/';
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-[#0f172a]">
+    <div className="min-h-screen bg-white">
       {/* Responsive Navigation */}
       <ResponsiveNavbar />
 

@@ -173,7 +173,7 @@ export default function Sidebar() {
             </div>
             <div>
               <h1 className="text-[10px] font-bold leading-tight">Білімді ұрпақ<br/>жекеменшік мектебі</h1>
-              <p className="text-sm text-blue-100">Болашақ ұрпақ мектебі</p>
+              <p className="text-sm text-gray-700">Болашақ ұрпақ мектебі</p>
             </div>
           </div>
         </Link>
@@ -265,7 +265,7 @@ export default function Sidebar() {
       {isMobileOpen && (
         <div className="md:hidden fixed inset-0 z-60">
           <div
-            className="absolute inset-0 bg-black bg-opacity-50"
+            className="absolute inset-0 bg-white bg-opacity-50"
             onClick={() => setIsMobileOpen(false)}
             data-testid="mobile-sidebar-overlay"
           />

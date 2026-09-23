@@ -355,13 +355,13 @@ export default function Home() {
         </section>
 
         {/* Three Directions Section - Mobile/Desktop Responsive */}
-        <section className="pt-16 pb-10 bg-[#0f172a] relative overflow-hidden min-h-[450px]">
+        <section className="pt-16 pb-10 bg-white relative overflow-hidden min-h-[450px]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="text-center mb-12">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black mb-4">
                 Үш бағыт арқылы жеке тұлғаны дамыту
               </h2>
-              <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
+              <p className="text-lg md:text-xl text-black max-w-3xl mx-auto">
                 Балаларыңыздың шығармашылық, интеллектуалды және дене дамуын қамтамасыз ету арқылы толыққанды тұлға қалыптастырамыз
               </p>
             </div>
@@ -398,7 +398,7 @@ export default function Home() {
 
                 {/* Description - 80% width of card */}
                 <div className="w-full mx-auto">
-                  <p className="text-gray-300 text-base leading-relaxed text-center">
+                  <p className="text-black text-base leading-relaxed text-center">
                     Балалардың эстетикалық талғамын, шығармашылық ойлауын және көркем қабілеттерін дамыту.
                     Хореография, домбыра, дизайн және глинолепка сияқты үйірмелер арқылы өнерге деген сүйіспеншілікті ояту.
                   </p>
@@ -429,7 +429,7 @@ export default function Home() {
 
                 {/* Description - 80% width of card */}
                 <div className="w-full mx-auto">
-                  <p className="text-gray-300 text-base leading-relaxed text-center">
+                  <p className="text-black text-base leading-relaxed text-center">
                     Логикалық ойлау, аналитикалық қабілет және проблемаларды шешу дағдыларын дамыту.
                     Робототехника, шахмат, дебат және Speaking Club арқылы зият дамуын қамтамасыз ету.
                   </p>
@@ -460,7 +460,7 @@ export default function Home() {
 
                 {/* Description - 80% width of card */}
                 <div className="max-w-[80%] mx-auto">
-                  <p className="text-gray-300 text-base leading-relaxed text-center">
+                  <p className="text-black text-base leading-relaxed text-center">
                     Дене шынықтыру, командалық жұмыс және жеңіске деген ұмтылысты дамыту.
                     Тэквондо, футбол және басқа спорт түрлері арқылы денсаулықты нығайту және жігер ашу.
                   </p>
@@ -503,14 +503,14 @@ export default function Home() {
 
 
         {/* FAQ Section - Consistent Dark Background */}
-        <section className="py-10 bg-[#0f172a]">
+        <section className="py-10 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="text-center mb-16 animate-fade-in-up">
               <div className="inline-flex items-center justify-center p-3 mb-4 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
                 <HelpCircle className="w-8 h-8" />
               </div>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-6 tracking-tight">
-                Жиі қойылатын <span className="text-blue-600 dark:text-blue-400">сұрақтар</span>
+                Жиі қойылатын сұрақтар
               </h2>
             </div>
 
@@ -523,7 +523,7 @@ export default function Home() {
                       Мектепке қабылдау үшін қандай құжаттар керек?
                       <ChevronDown className="w-5 h-5 transform group-open:rotate-180 transition-transform duration-300 text-blue-500" />
                     </summary>
-                    <div className="px-6 pb-6 text-gray-300 animate-in fade-in slide-in-from-top-2 duration-300">
+                    <div className="px-6 pb-6 text-black animate-in fade-in slide-in-from-top-2 duration-300">
                       <div className="pt-2 space-y-2 leading-relaxed">
                         <p>Баланы мектепке қабылдау үшін келесі құжаттар қажет:</p>
                         <ul className="list-disc ml-6 space-y-2 mt-2">
@@ -542,11 +542,11 @@ export default function Home() {
               <Card className="border-none shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl overflow-hidden dark:bg-slate-800/50">
                 <CardContent className="p-0">
                   <details className="group">
-                    <summary className="flex justify-between items-center cursor-pointer p-6 text-lg font-bold text-white hover:bg-slate-800/50 transition-all">
+                    <summary className="flex justify-between items-center cursor-pointer p-6 text-lg font-bold text-black hover:bg-gray-100 transition-all">
                       Білімді ұрпақ жекеменшік мектебі - жеке мектебі: төлем және шарттар
                       <ChevronDown className="w-5 h-5 transform group-open:rotate-180 transition-transform duration-300 text-blue-500" />
                     </summary>
-                    <div className="px-6 pb-6 text-gray-300 animate-in fade-in slide-in-from-top-2 duration-300">
+                    <div className="px-6 pb-6 text-black animate-in fade-in slide-in-from-top-2 duration-300">
 
                       <p className="mb-3 font-bold">Оқу ақысына кіреді:</p>
                       <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
@@ -576,11 +576,11 @@ export default function Home() {
               <Card className="border-none shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl overflow-hidden dark:bg-slate-800/50">
                 <CardContent className="p-0">
                   <details className="group">
-                    <summary className="flex justify-between items-center cursor-pointer p-6 text-lg font-bold text-white hover:bg-slate-800/50 transition-all">
+                    <summary className="flex justify-between items-center cursor-pointer p-6 text-lg font-bold text-black hover:bg-gray-100 transition-all">
                       Сыныптарда неше бала оқиды?
                       <ChevronDown className="w-5 h-5 transform group-open:rotate-180 transition-transform duration-300 text-blue-500" />
                     </summary>
-                    <div className="px-6 pb-6 text-gray-300 animate-in fade-in slide-in-from-top-2 duration-300">
+                    <div className="px-6 pb-6 text-black animate-in fade-in slide-in-from-top-2 duration-300">
                       <p className="leading-relaxed">Біздің мектепте әр сыныпта <span className="font-bold text-blue-600 dark:text-blue-400 text-lg">12-18 бала</span> оқиды. Бұл мұғалімнің әр балаға жеке көңіл бөлуіне және сапалы білім беруге мүмкіндік береді. Кішігірім сыныптар балалардың дамуын жақсы бақылауға және олардың жеке қабілеттерін ашуға көмектеседі.</p>
                     </div>
                   </details>
@@ -593,11 +593,11 @@ export default function Home() {
               <Card className="border-none shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl overflow-hidden dark:bg-slate-800/50">
                 <CardContent className="p-0">
                   <details className="group">
-                    <summary className="flex justify-between items-center cursor-pointer p-6 text-lg font-bold text-white hover:bg-slate-800/50 transition-all">
+                    <summary className="flex justify-between items-center cursor-pointer p-6 text-lg font-bold text-black hover:bg-gray-100 transition-all">
                       Оқу тілі қандай? Орыс тілді сынып бар ма?
                       <ChevronDown className="w-5 h-5 transform group-open:rotate-180 transition-transform duration-300 text-blue-500" />
                     </summary>
-                    <div className="px-6 pb-6 text-gray-300 animate-in fade-in slide-in-from-top-2 duration-300">
+                    <div className="px-6 pb-6 text-black animate-in fade-in slide-in-from-top-2 duration-300">
                       <div className="flex flex-col md:flex-row gap-4 mb-4">
                         <div className="flex-1 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-2xl border border-blue-100 dark:border-blue-800">
                           <p className="font-bold text-blue-700 dark:text-blue-400 mb-1">Қазақ бөлімі</p>
@@ -618,11 +618,11 @@ export default function Home() {
               <Card className="border-none shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl overflow-hidden dark:bg-slate-800/50">
                 <CardContent className="p-0">
                   <details className="group">
-                    <summary className="flex justify-between items-center cursor-pointer p-6 text-lg font-bold text-white hover:bg-slate-800/50 transition-all">
+                    <summary className="flex justify-between items-center cursor-pointer p-6 text-lg font-bold text-black hover:bg-gray-100 transition-all">
                       НИШ пен РФМШ дайындық бағдарламасы туралы көбірек ақпарат
                       <ChevronDown className="w-5 h-5 transform group-open:rotate-180 transition-transform duration-300 text-blue-500" />
                     </summary>
-                    <div className="px-6 pb-6 text-gray-300 animate-in fade-in slide-in-from-top-2 duration-300">
+                    <div className="px-6 pb-6 text-black animate-in fade-in slide-in-from-top-2 duration-300">
                       <div className="space-y-4 pt-2">
                         <p className="font-bold text-gray-800 dark:text-gray-200 leading-relaxed">Біздің дайындық бағдарламасы 6-8 сыныптар үшін арнайы жасалған және келесілерді қамтиды:</p>
                         <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -649,11 +649,11 @@ export default function Home() {
               <Card className="border-none shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl overflow-hidden dark:bg-slate-800/50">
                 <CardContent className="p-0">
                   <details className="group">
-                    <summary className="flex justify-between items-center cursor-pointer p-6 text-lg font-bold text-white hover:bg-slate-800/50 transition-all">
+                    <summary className="flex justify-between items-center cursor-pointer p-6 text-lg font-bold text-black hover:bg-gray-100 transition-all">
                       Үйірмелерге қатысу міндетті ме?
                       <ChevronDown className="w-5 h-5 transform group-open:rotate-180 transition-transform duration-300 text-blue-500" />
                     </summary>
-                    <div className="px-6 pb-6 text-gray-300 animate-in fade-in slide-in-from-top-2 duration-300">
+                    <div className="px-6 pb-6 text-black animate-in fade-in slide-in-from-top-2 duration-300">
                       <p>Үйірмелерге қатысу міндетті емес, бірақ балалардың жан-жақты дамуы үшін өте пайдалы. Біз ұсынамыз:</p>
                       <ul className="list-disc ml-6 mt-2 space-y-1">
                         <li>Әр бала кемінде 1-2 үйірмені таңдау</li>
@@ -670,11 +670,11 @@ export default function Home() {
               <Card className="border-none shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl overflow-hidden dark:bg-slate-800/50">
                 <CardContent className="p-0">
                   <details className="group">
-                    <summary className="flex justify-between items-center cursor-pointer p-6 text-lg font-bold text-white hover:bg-slate-800/50 transition-all">
+                    <summary className="flex justify-between items-center cursor-pointer p-6 text-lg font-bold text-black hover:bg-gray-100 transition-all">
                       Ата-аналармен байланыс қалай жүзеге асырылады?
                       <ChevronDown className="w-5 h-5 transform group-open:rotate-180 transition-transform duration-300 text-blue-500" />
                     </summary>
-                    <div className="px-6 pb-6 text-gray-300 animate-in fade-in slide-in-from-top-2 duration-300">
+                    <div className="px-6 pb-6 text-black animate-in fade-in slide-in-from-top-2 duration-300">
                       <p className="mb-4">Біз ата-аналармен тығыз байланыс орнатамыз:</p>
                       <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
                         {[
@@ -700,7 +700,7 @@ export default function Home() {
         </section>
 
         {/* Application Form - Consistent Dark Background */}
-        <section id="apply" className="pt-10 pb-16 bg-[#0f172a]">
+        <section id="apply" className="pt-10 pb-16 bg-white">
           <ApplicationForm />
         </section>
       </div>

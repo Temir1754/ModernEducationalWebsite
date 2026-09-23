@@ -78,7 +78,7 @@ export default function InstagramFeed({ widgetId }: InstagramFeedProps) {
   }, []);
 
   return (
-    <section className="pt-8 pb-16 bg-gray-50 dark:bg-[#0f172a]/50">
+    <section className="pt-8 pb-16 bg-white dark:bg-[#0f172a]/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
 
 

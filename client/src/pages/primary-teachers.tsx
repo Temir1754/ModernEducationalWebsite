@@ -158,7 +158,7 @@ export default function PrimaryTeachersPage() {
     return colorMap[color] || "bg-blue-100 text-blue-800";
   };
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-[#0f172a]">
+    <div className="min-h-screen bg-white dark:bg-[#0f172a]">
       {/* Header with Back Button - Enhanced for mobile */}
       
 
@@ -231,7 +231,7 @@ export default function PrimaryTeachersPage() {
             {filteredTeachers.length === 0 ? (
               <div className="text-center py-12">
                 <div className="w-24 h-24 mx-auto mb-4 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
-                  <Filter className="w-8 h-8 text-gray-400 dark:text-gray-500" />
+                  <Filter className="w-8 h-8 text-gray-600 dark:text-gray-500" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-600 dark:text-gray-300 mb-2">
                   Мұғалімдер табылмады

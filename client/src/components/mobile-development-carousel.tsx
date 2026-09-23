@@ -160,7 +160,7 @@ export default function MobileDevelopmentCarousel() {
           className={`text-xs px-3 py-1 rounded-full transition-all duration-200 ${
             isAutoPlaying 
               ? 'bg-blue-600 text-white shadow-md' 
-              : 'bg-gray-700 text-white hover:bg-gray-800 shadow-sm'
+              : 'bg-white text-black hover:bg-gray-100 shadow-sm'
           }`}
           aria-label={isAutoPlaying ? "Автоматты ауысуды тоқтату" : "Автоматты ауысуды қосу"}
         >

@@ -1,7 +1,6 @@
 import SEOHead from "@/components/seo-head";
-import { Link } from "wouter";
 import { useState, useEffect } from "react";
-import { Users, Award, BookOpen, Trophy, Calendar, GraduationCap, ArrowLeft, Clock, Coins, Smartphone, Globe, Apple, ChevronDown } from "lucide-react";
+import { Users, Award, BookOpen, Trophy, Calendar, GraduationCap, Coins, Smartphone, Globe, Apple, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { QRCodeSVG } from "qrcode.react";
 
@@ -24,7 +23,7 @@ export default function StudentsPage() {
     };
 
     const observer = new IntersectionObserver(handleIntersect, observerOptions);
-    const sections = ['upay', 'schedule-link', 'achievements', 'life'];
+    const sections = ['upay', 'achievements', 'life'];
     
     sections.forEach(id => {
       const el = document.getElementById(id);
@@ -79,71 +78,16 @@ export default function StudentsPage() {
     <>
       <SEOHead page="students" />
 
-      <div className="min-h-screen bg-gray-50 dark:bg-[#0f172a]">
+      <div className="min-h-screen bg-white dark:bg-[#0f172a]">
         {/* Header with Back Button - Enhanced for mobile */}
         
-
-        {/* Sub-Navigation Menu */}
-        <div className="sticky top-16 sm:top-20 lg:top-24 z-30 bg-white/90 dark:bg-[#0f172a]/95 backdrop-blur-xl border-b border-gray-200 dark:border-blue-500/20 shadow-lg transition-all duration-500">
-          <div className="container mx-auto px-4">
-            <nav className="flex items-center justify-start md:justify-center space-x-1 py-3 whitespace-nowrap overflow-x-auto scrollbar-hide w-full [&>*]:shrink-0">
-              <button
-                onClick={() => document.getElementById('upay')?.scrollIntoView({ behavior: 'smooth' })}
-                className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
-                  activeSection === 'upay' 
-                  ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
-                  : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
-                }`}
-              >
-                UPay жүйесі
-                <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'upay' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
-              </button>
-
-              <button
-                onClick={() => document.getElementById('schedule-link')?.scrollIntoView({ behavior: 'smooth' })}
-                className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
-                  activeSection === 'schedule-link' 
-                  ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
-                  : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
-                }`}
-              >
-                Сабақ кестесі
-                <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'schedule-link' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
-              </button>
-
-              <button
-                onClick={() => document.getElementById('achievements')?.scrollIntoView({ behavior: 'smooth' })}
-                className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
-                  activeSection === 'achievements' 
-                  ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
-                  : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
-                }`}
-              >
-                Жетістіктер
-                <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'achievements' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
-              </button>
-
-              <button
-                onClick={() => document.getElementById('life')?.scrollIntoView({ behavior: 'smooth' })}
-                className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
-                  activeSection === 'life' 
-                  ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
-                  : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
-                }`}
-              >
-                Күнделікті өмір
-                <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'life' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
-              </button>
-            </nav>
-          </div>
-        </div>
 
         {/* Main Content */}
         <div className="container mx-auto px-4 pt-12 pb-6 sm:pb-8">
         {/* Page Header */}
         <div className="text-center mb-16">
-          <h1 className="text-3xl md:text-5xl font-bold text-center mb-6 text-gray-800 dark:text-gray-100" style={{ fontFamily: "'Poppins', sans-serif" }}>
-            Оқушыларға <span className="text-blue-500">арналған</span>
+          <h1 className="text-3xl md:text-5xl font-bold text-center mb-6 text-black" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+            Оқушыларға <span className="text-black">арналған</span>
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
             Білімді ұрпақ жекеменшік мектебінің оқушылары үшін пайдалы ақпарат пен мүмкіндіктер
@@ -208,7 +152,7 @@ export default function StudentsPage() {
                 href="https://apps.apple.com/us/app/%D2%B1%D0%BF%D0%B0%D0%B9-%C5%ABpay/id6741690963"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center space-x-3 bg-gray-800 dark:bg-gray-700 hover:bg-gray-900 dark:hover:bg-gray-600 text-white font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                className="flex items-center justify-center space-x-3 bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-black font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                 data-testid="link-upay-ios"
               >
                 <Apple className="w-6 h-6" />
@@ -272,24 +216,6 @@ export default function StudentsPage() {
 
 
 
-          {/* Schedule Link Card */}
-          <div id="schedule-link" className="scroll-mt-24">
-            <Link href="/schedule">
-            <div className="mb-6 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-700 dark:to-purple-700 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-105" data-testid="link-schedule">
-              <div className="flex items-center justify-between text-white">
-                <div className="flex items-center space-x-4">
-                  <Clock className="w-12 h-12" />
-                  <div>
-                    <h3 className="text-2xl font-bold mb-1">Сабақ кестесі</h3>
-                    <p className="text-blue-100 dark:text-blue-200">Сабақ уақыттары және үйірмелер кестесі</p>
-                  </div>
-                </div>
-                <ArrowLeft className="w-6 h-6 transform rotate-180" />
-              </div>
-            </div>
-          </Link>
-          </div>
-
           {/* Achievements Section */}
           <div id="achievements" className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 mb-6 border dark:border-gray-700 scroll-mt-24">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 text-center mb-4">
@@ -334,11 +260,11 @@ export default function StudentsPage() {
                   </li>
                 </ul>
               </div>
-              <div className="bg-blue-600 dark:bg-blue-700 text-white p-6 rounded-xl">
+              <div className="bg-white border border-gray-200 text-black p-6 rounded-xl">
                 <h3 className="text-xl font-semibold mb-4">
                   Біздің мақтанышымыз
                 </h3>
-                <p className="text-blue-100 dark:text-blue-200 leading-relaxed">
+                <p className="text-gray-700 dark:text-blue-200 leading-relaxed">
                   Әрбір оқушымыз бізге үлкен мақтаныш әкеледі. Олардың білімге құштарлығы, 
                   белсенділігі және жетістіктері мектебіміздің беделін арттырады.
                 </p>

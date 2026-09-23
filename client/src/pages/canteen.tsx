@@ -438,71 +438,16 @@ const CanteenPage = () => {
     <>
       <SEOHead page="home" />
 
-      <div className="min-h-screen bg-gray-50 dark:bg-[#0f172a]">
+      <div className="min-h-screen bg-white dark:bg-[#0f172a]">
         {/* Header with Back Button - Enhanced for mobile */}
         
-
-        {/* Sub-Navigation Menu */}
-        <div className="sticky top-16 sm:top-20 lg:top-24 z-30 bg-white/90 dark:bg-[#0f172a]/95 backdrop-blur-xl border-b border-gray-200 dark:border-blue-500/20 shadow-lg transition-all duration-500">
-          <div className="container mx-auto px-4">
-            <nav className="flex items-center justify-start md:justify-center space-x-1 py-3 whitespace-nowrap overflow-x-auto scrollbar-hide w-full [&>*]:shrink-0">
-              <button
-                onClick={() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })}
-                className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
-                  activeSection === 'menu' 
-                  ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
-                  : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
-                }`}
-              >
-                Апталық мәзір
-                <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'menu' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
-              </button>
-
-              <button
-                onClick={() => document.getElementById('schedule')?.scrollIntoView({ behavior: 'smooth' })}
-                className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
-                  activeSection === 'schedule' 
-                  ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
-                  : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
-                }`}
-              >
-                Жұмыс кестесі
-                <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'schedule' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
-              </button>
-
-              <button
-                onClick={() => document.getElementById('norms')?.scrollIntoView({ behavior: 'smooth' })}
-                className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
-                  activeSection === 'norms' 
-                  ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
-                  : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
-                }`}
-              >
-                Нормалар мен құрам
-                <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'norms' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
-              </button>
-
-              <button
-                onClick={() => document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' })}
-                className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
-                  activeSection === 'faq' 
-                  ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
-                  : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
-                }`}
-              >
-                Сұрақтар мен жаңалықтар
-                <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'faq' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
-              </button>
-            </nav>
-          </div>
-        </div>
 
         {/* Main Content */}
         <div className="container mx-auto px-4 pt-12 pb-6 sm:pb-8">
         {/* Page Header */}
         <div className="text-center mb-16">
-          <h1 className="text-3xl md:text-5xl font-bold text-center mb-6 text-gray-800 dark:text-gray-100" style={{ fontFamily: "'Poppins', sans-serif" }}>
-            Мектеп <span className="text-blue-500">асханасы</span>
+          <h1 className="text-3xl md:text-5xl font-bold text-center mb-6 text-black" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+            Мектеп <span className="text-black">асханасы</span>
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
             Сапалы және пайдалы тамақтану – балалардың денсаулығының кепілі
@@ -543,7 +488,7 @@ const CanteenPage = () => {
                 {/* Mobile View - Stacked Cards */}
                 <div className="block md:hidden space-y-4">
                   {weeklyMenu.map((item, index) => (
-                    <div key={index} className="bg-gray-50 dark:bg-[#0f172a] rounded-lg p-4 border dark:border-gray-700">
+                    <div key={index} className="bg-white dark:bg-[#0f172a] rounded-lg p-4 border dark:border-gray-700">
                       <h4 className="font-bold text-blue-600 dark:text-blue-400 mb-3 text-center">{item.day}</h4>
                       <div className="space-y-3">
                         <div className="bg-white dark:bg-[#1e293b] p-3 rounded border-l-4 border-yellow-400">
@@ -875,7 +820,7 @@ const CanteenPage = () => {
             <CardContent>
               <div className="space-y-4">
                 {faqData.map((item, index) => (
-                  <details key={index} className="group bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+                  <details key={index} className="group bg-white dark:bg-gray-800 rounded-lg p-4">
                     <summary className="flex justify-between items-center cursor-pointer text-lg font-semibold text-gray-800 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
                       {item.question}
                       <span className="transform group-open:rotate-180 transition-transform duration-200">

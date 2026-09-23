@@ -1,23 +1,23 @@
-import { createContext, useContext, useEffect } from "react";
+﻿import { createContext, useContext, useEffect } from "react";
 
 interface ThemeContextType {
-  theme: "dark";
-  actualTheme: "dark";
+  theme: "light";
+  actualTheme: "light";
 }
 
-const ThemeContext = createContext<ThemeContextType>({ theme: "dark", actualTheme: "dark" });
+const ThemeContext = createContext<ThemeContextType>({ theme: "light", actualTheme: "light" });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.remove("light");
-    root.classList.add("dark");
-    root.setAttribute("data-theme", "dark");
-    localStorage.setItem("school-theme", "dark");
+    root.classList.remove("dark");
+    root.classList.add("light");
+    root.setAttribute("data-theme", "light");
+    localStorage.setItem("school-theme", "light");
   }, []);
 
   return (
-    <ThemeContext.Provider value={{ theme: "dark", actualTheme: "dark" }}>
+    <ThemeContext.Provider value={{ theme: "light", actualTheme: "light" }}>
       {children}
     </ThemeContext.Provider>
   );

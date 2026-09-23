@@ -68,44 +68,24 @@ function AdminDocActions({ doc, updateMutation, scansDeleteMutation, onEdit }: {
         <FileText className="w-3.5 h-3.5" />
       </Button>
 
-      {/* 4. Қосу (Add/Upload scan) */}
-      <label htmlFor={`admin-scan-upload-${doc.id}`} className="cursor-pointer">
-        <input
-          id={`admin-scan-upload-${doc.id}`}
-          name={`admin-scan-upload-${doc.id}`}
-          type="file"
-          className="hidden"
-          accept=".pdf,image/*"
-          onChange={async (e) => {
-            const file = e.target.files?.[0];
-            if (!file) return;
-            const formData = new FormData();
-            formData.append("file", file);
-            try {
-              const res = await fetch("/api/upload", { 
-                method: "POST", 
-                body: formData,
-                credentials: "include"
-              });
-              if (!res.ok) {
-                const err = await res.json().catch(() => ({}));
-                throw new Error(err.message || "Upload failed");
-              }
-              const { url } = await res.json();
-              updateMutation.mutate({ id: doc.id, data: { scanUrl: url } });
-              alert("Скан сәтті жүктелді! / Скан успешно добавлен!");
-            } catch (err: any) {
-              console.error(err);
-              alert("Қате / Ошибка: " + (err.message || "Сканды жүктеу сәтсіз аяқталды"));
-            }
-            // Сбрасываем значение input, чтобы можно было загрузить тот же файл снова при необходимости
-            e.target.value = "";
-          }}
-        />
-        <div className="h-7 w-7 flex items-center justify-center text-blue-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-md transition-colors" title="Скан қосу">
-          <Plus className="w-3.5 h-3.5" />
-        </div>
-      </label>
+      {/* 4. Сілтеме қосу (Add link to the scan) */}
+      <Button
+        size="sm"
+        variant="ghost"
+        className="h-7 w-7 p-0 text-blue-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+        onClick={() => {
+          const link = window.prompt("Сілтемені енгізіңіз (Google Drive):", doc.scanUrl || "");
+          if (link === null) return;
+          if (!/^https?:\/\/\S+$/i.test(link.trim())) {
+            alert("Қате / Ошибка: сілтеме https:// деп басталуы керек");
+            return;
+          }
+          updateMutation.mutate({ id: doc.id, data: { scanUrl: link.trim() } });
+        }}
+        title="Сілтеме қосу"
+      >
+        <Plus className="w-3.5 h-3.5" />
+      </Button>
 
       {/* 5. Өңдеу (Edit document title/url) */}
       <Button
@@ -233,7 +213,7 @@ function DocumentItem({
                 link.click();
                 document.body.removeChild(link);
               }}>
-                <Download className="w-3 h-3 mr-1" /> Жүктеу
+                <Download className="w-3 h-3 mr-1" /> Сақтау
               </Button>
             </>
           )}
@@ -269,7 +249,7 @@ function DocumentItem({
                 document.body.removeChild(link);
               }}
             >
-              <Download className="w-3 h-3 mr-1" />Жүктеу
+              <Download className="w-3 h-3 mr-1" />Сақтау
             </Button>
           </>
         )}
@@ -371,7 +351,7 @@ export default function UpbringingWorkPage() {
   const [galleryUploadSuccessMsg, setGalleryUploadSuccessMsg] = useState<string | null>(null);
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
   const [isScansUploadOpen, setIsScansUploadOpen] = useState(false);
-  const [scansUploadFile, setScansUploadFile] = useState<File | null>(null);
+  const [scansLink, setScansLink] = useState("");
   const [scansTitle, setScansTitle] = useState("");
   const [activeUploadSection, setActiveUploadSection] = useState<string | null>(null);
   const [activeEventId, setActiveEventId] = useState<string | null>(null);
@@ -619,24 +599,13 @@ export default function UpbringingWorkPage() {
   const scansUploadMutation = useMutation({
     mutationFn: async (e: React.FormEvent) => {
       e.preventDefault();
-      if (!scansUploadFile) return;
-      const formData = new FormData();
-      formData.append("file", scansUploadFile);
-      const uploadRes = await fetch("/api/upload", { 
-        method: "POST", 
-        body: formData,
-        credentials: "include"
-      });
-      if (!uploadRes.ok) {
-        const err = await uploadRes.json().catch(() => ({}));
-        throw new Error(err.message || "Upload failed");
-      }
-      const { url } = await uploadRes.json();
+      const url = scansLink.trim();
+      if (!/^https?:\/\/\S+$/i.test(url)) throw new Error("Сілтеме https:// деп басталуы керек");
       const docRes = await fetch("/api/documents", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          title: scansTitle || scansUploadFile.name,
+          title: scansTitle || scansLink.trim(),
           description: "",
           section: "upbringing-scans",
           url,
@@ -656,7 +625,7 @@ export default function UpbringingWorkPage() {
       queryClient.invalidateQueries({ queryKey: ["/api/documents", "upbringing-scans"] });
       queryClient.invalidateQueries({ queryKey: ["/api/documents"] });
       setIsScansUploadOpen(false);
-      setScansUploadFile(null);
+      setScansLink("");
       setScansTitle("");
     },
     onError: (error: Error) => {
@@ -844,24 +813,14 @@ export default function UpbringingWorkPage() {
   const programUploadMutation = useMutation({
     mutationFn: async (e: React.FormEvent) => {
       e.preventDefault();
-      if (!scansUploadFile || !activeUploadSection) return;
-      const formData = new FormData();
-      formData.append("file", scansUploadFile);
-      const uploadRes = await fetch("/api/upload", { 
-        method: "POST", 
-        body: formData,
-        credentials: "include"
-      });
-      if (!uploadRes.ok) {
-        const err = await uploadRes.json().catch(() => ({}));
-        throw new Error(err.message || "Upload failed");
-      }
-      const { url } = await uploadRes.json();
+      if (!activeUploadSection) return;
+      const url = scansLink.trim();
+      if (!/^https?:\/\/\S+$/i.test(url)) throw new Error("Сілтеме https:// деп басталуы керек");
       const docRes = await fetch("/api/documents", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          title: scansTitle || scansUploadFile.name,
+          title: scansTitle || scansLink.trim(),
           description: "",
           section: activeUploadSection,
           url,
@@ -880,7 +839,7 @@ export default function UpbringingWorkPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/documents"] });
       setIsProgramUploadOpen(false);
-      setScansUploadFile(null);
+      setScansLink("");
       setScansTitle("");
     },
     onError: (error: Error) => {
@@ -891,7 +850,7 @@ export default function UpbringingWorkPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#0f172a]">
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-[#0f172a]">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     );
@@ -1098,132 +1057,13 @@ export default function UpbringingWorkPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-[#0f172a]">
-      {/* Sub-Navigation Menu */}
-      <div className="sticky top-16 sm:top-20 lg:top-24 z-30 bg-white/90 dark:bg-[#0f172a]/95 backdrop-blur-xl border-b border-gray-200 dark:border-blue-500/20 shadow-lg transition-all duration-500">
-        <div className="container mx-auto px-4">
-          <nav className="flex items-center justify-start md:justify-center space-x-1 py-3 whitespace-nowrap overflow-x-auto scrollbar-hide w-full [&>*]:shrink-0">
-            <button
-              onClick={() => document.getElementById('goals')?.scrollIntoView({ behavior: 'smooth' })}
-              className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
-                activeSection === 'goals' 
-                ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
-                : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
-              }`}
-            >
-              Мектеп тынысының мақсаты
-              <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'goals' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
-            </button>
-
-            <div className="h-4 w-px bg-gray-300 dark:bg-gray-700 mx-1"></div>
-
-            <div className="relative dropdown-container">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsProgramsDropdownOpen(!isProgramsDropdownOpen);
-                  document.getElementById('programs')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 flex items-center gap-2 relative group/nav ${
-                  (activeSection === 'programs' || activeSection.startsWith('program-')) || isProgramsDropdownOpen
-                  ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
-                  : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
-                }`}
-              >
-                Тәрбие бағдарламалары
-                <ChevronDown className={`w-4 h-4 transition-transform ${isProgramsDropdownOpen ? 'rotate-180 text-blue-500' : ''} ${activeSection === 'programs' ? 'text-blue-500' : ''}`} />
-                <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'programs' || isProgramsDropdownOpen ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
-              </button>
-              
-              <AnimatePresence>
-                {isProgramsDropdownOpen && (
-                  <motion.div 
-                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                    className="absolute left-1/2 -translate-x-1/2 mt-3 w-72 bg-white dark:bg-[#1e293b] backdrop-blur-2xl border border-gray-200 dark:border-blue-500/30 rounded-2xl shadow-2xl z-50 p-2 overflow-hidden"
-                  >
-                    <div className="grid gap-0.5">
-                      {programs.map((prog, idx) => (
-                        <button
-                          key={idx}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            const el = document.getElementById(`program-${idx}`);
-                            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            setIsProgramsDropdownOpen(false);
-                          }}
-                          className="w-full text-left px-4 py-2.5 text-xs font-bold text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/40 rounded-xl transition-all flex items-center gap-3 group/item"
-                        >
-                          <div className="w-1.5 h-1.5 rounded-full bg-blue-500/20 group-hover/item:bg-blue-500 group-hover/item:scale-150 transition-all duration-300"></div>
-                          {prog.title}
-                        </button>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            <div className="h-4 w-px bg-gray-300 dark:bg-gray-700 mx-1"></div>
-
-            <button
-              onClick={() => document.getElementById('contacts')?.scrollIntoView({ behavior: 'smooth' })}
-              className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
-                activeSection === 'contacts' 
-                ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
-                : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
-              }`}
-            >
-              Байланыстар
-              <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'contacts' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
-            </button>
-
-            <button
-              onClick={() => document.getElementById('code')?.scrollIntoView({ behavior: 'smooth' })}
-              className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
-                activeSection === 'code' 
-                ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
-                : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
-              }`}
-            >
-              Шәкірттердің кодексі
-              <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'code' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
-            </button>
-
-            <button
-              onClick={() => document.getElementById('prevention')?.scrollIntoView({ behavior: 'smooth' })}
-              className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
-                activeSection === 'prevention' 
-                ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
-                : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
-              }`}
-            >
-              Құқықбұзушылықтың алдын алу
-              <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'prevention' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
-            </button>
-
-            <button
-              onClick={() => document.getElementById('events')?.scrollIntoView({ behavior: 'smooth' })}
-              className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
-                activeSection === 'events' 
-                ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
-                : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
-              }`}
-            >
-              Іс-шаралар
-              <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'events' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
-            </button>
-          </nav>
-        </div>
-      </div>
-
+    <div className="min-h-screen bg-white dark:bg-[#0f172a]">
       {/* Main Content */}
       <div className="container mx-auto px-4 pt-12 pb-6 sm:pb-8">
         {/* Page Header */}
         <div className="text-center mb-16">
-          <h1 className="text-3xl md:text-5xl font-bold text-center mb-6 text-gray-800 dark:text-gray-100" style={{ fontFamily: "'Poppins', sans-serif" }}>
-            Мектеп <span className="text-blue-500">өмірі</span>
+          <h1 className="text-3xl md:text-5xl font-bold text-center mb-6 text-black" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+            Мектеп <span className="text-black">өмірі</span>
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
             Біздің мектептің күнделікті өміріне көз жүгіртіңіз
@@ -1241,7 +1081,7 @@ export default function UpbringingWorkPage() {
                 data-testid={`stat-card-${index}`}
               >
                 <CardContent className="p-6 text-center">
-                  <div className={`w-16 h-16 ${stat.bgColor} dark:opacity-90 rounded-full flex items-center justify-center mx-auto mb-4 text-white`}>
+                  <div className={`w-16 h-16 ${stat.bgColor} dark:opacity-90 rounded-full flex items-center justify-center mx-auto mb-4 text-black`}>
                     {stat.icon}
                   </div>
                   <div className="text-3xl font-bold mb-2 dark:text-gray-100">{stat.number}</div>
@@ -1272,9 +1112,9 @@ export default function UpbringingWorkPage() {
         {/* Programs */}
         <section id="programs" className="mb-12 scroll-mt-24">
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 flex items-center space-x-3">
+            <h2 className="text-2xl md:text-3xl font-bold text-black flex items-center space-x-3">
               <Users className="w-8 h-8 text-blue-600" />
-              <span>Тәрбие <span className="text-blue-500">бағдарламалары</span></span>
+              <span>Тәрбие <span className="text-black">бағдарламалары</span></span>
             </h2>
 
             <div className="flex flex-wrap items-center gap-3">
@@ -1335,7 +1175,7 @@ export default function UpbringingWorkPage() {
                               }}
                             >
                               <Plus className="w-3 h-3 mr-1" />
-                              Скан қосу
+                              Сілтеме қосу
                             </Button>
                           )}
                         </div>
@@ -1395,7 +1235,7 @@ export default function UpbringingWorkPage() {
                 }}
               >
                 <Plus className="w-4 h-4 mr-2" />
-                Скан қосу
+                Сілтеме қосу
               </Button>
             )}
           </div>
@@ -1478,39 +1318,40 @@ export default function UpbringingWorkPage() {
                     setIsScansUploadOpen(true);
                   }}>
                     <Plus className="w-4 h-4 mr-2" />
-                    Скан қосу
+                    Сілтеме қосу
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[400px] bg-[#1e293b] border border-white/10">
+                <DialogContent className="sm:max-w-[400px] bg-white border border-white/10">
                   <DialogHeader>
-                  <DialogTitle className="text-white">Құжатты жүктеу</DialogTitle>
-                  <DialogDescription className="text-gray-400">
-                    Тәрбие жұмысының жоспарлары мен бағдарламаларын жүктеңіз.
+                  <DialogTitle className="text-black">Құжат сілтемесін қосу</DialogTitle>
+                  <DialogDescription className="text-gray-600">
+                    Тәрбие жұмысының жоспарлары мен бағдарламаларына сілтеме қосыңыз.
                   </DialogDescription>
                 </DialogHeader>
                   <form onSubmit={(e) => scansUploadMutation.mutate(e)} className="space-y-4">
                     <div className="space-y-2">
-                      <Label className="text-gray-300">Атауы (міндетті)</Label>
+                      <Label className="text-black">Атауы (міндетті)</Label>
                       <Input
                         id="admin-program-title"
                         name="title"
                         value={scansTitle}
                         onChange={e => setScansTitle(e.target.value)}
                         placeholder="Әзірші атау..."
-                        className="bg-[#0d1117] border-white/20 text-white placeholder:text-gray-500"
+                        className="bg-white border-white/20 text-black placeholder:text-gray-500"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label className="text-gray-300">Файл (PDF немесе сурет)</Label>
-                      <Input
-                        id="admin-program-file"
-                        name="file"
-                        type="file"
-                        accept=".pdf,image/*"
-                        onChange={e => setScansUploadFile(e.target.files?.[0] || null)}
-                        required
-                        className="bg-[#0d1117] border-white/20 text-white"
-                      />
+                      <Label htmlFor="admin-program-file" className="text-black">Google Drive сілтемесі</Label>
+                <Input
+                  id="admin-program-file"
+                  name="link"
+                  type="url"
+                  value={scansLink}
+                  onChange={e => setScansLink(e.target.value)}
+                  placeholder="https://drive.google.com/..."
+                  className="bg-white border-white/20 text-black placeholder:text-gray-500"
+                  required
+                />
                     </div>
                     <Button
                       type="submit"
@@ -1518,7 +1359,7 @@ export default function UpbringingWorkPage() {
                       disabled={scansUploadMutation.isPending}
                     >
                       {scansUploadMutation.isPending && <Loader2 className="animate-spin mr-2 w-4 h-4" />}
-                      Жүктеу
+                      Сақтау
                     </Button>
                   </form>
                 </DialogContent>
@@ -1541,7 +1382,7 @@ export default function UpbringingWorkPage() {
                     className="group flex items-center justify-between px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 dark:bg-gray-800/50 dark:hover:bg-gray-800 transition-colors"
                   >
                     <div className="flex items-center gap-3 flex-1 min-w-0">
-                      <span className="text-sm text-gray-400 w-6 shrink-0">{index + 1}.</span>
+                      <span className="text-sm text-gray-600 w-6 shrink-0">{index + 1}.</span>
                       <p className="font-medium text-gray-800 dark:text-white truncate">{doc.title}</p>
                     </div>
                     <div className="flex items-center gap-1 shrink-0 ml-4">
@@ -1568,7 +1409,7 @@ export default function UpbringingWorkPage() {
                         className="text-green-400 hover:text-green-300 hover:bg-green-500/10 h-8 px-3 text-xs"
                       >
                         <Download className="w-3.5 h-3.5 mr-1" />
-                        Жүктеу
+                        Сақтау
                       </Button>
                       <Button
                         variant="ghost"
@@ -1607,7 +1448,7 @@ export default function UpbringingWorkPage() {
                 }}
               >
                 <Plus className="w-4 h-4 mr-2" />
-                Скан қосу
+                Сілтеме қосу
               </Button>
             )}
           </div>
@@ -1829,9 +1670,9 @@ export default function UpbringingWorkPage() {
         <section id="prevention" className="mb-20 scroll-mt-24">
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 border-b border-gray-100 dark:border-gray-800 pb-6">
             <div className="text-left">
-              <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 flex items-center space-x-3 mb-2">
+              <h2 className="text-3xl font-bold text-black flex items-center space-x-3 mb-2">
                 <Shield className="w-8 h-8 text-blue-600" />
-                <span>Құқықбұзушылықтың <span className="text-blue-500">алдын алу</span></span>
+                <span>Құқықбұзушылықтың <span className="text-black">алдын алу</span></span>
               </h2>
               <p className="text-gray-600 dark:text-gray-400 max-w-xl">
                 Оқушылардың қауіпсіздігі мен құқықтық сауаттылығын арттыруға бағытталған шаралар жүйесі
@@ -1897,7 +1738,7 @@ export default function UpbringingWorkPage() {
                           }}
                         >
                           <Plus className="w-3 h-3 mr-1" />
-                          Скан қосу
+                          Сілтеме қосу
                         </Button>
                       )}
                     </div>
@@ -1933,9 +1774,9 @@ export default function UpbringingWorkPage() {
         {/* Expanded Annual Events */}
         <section id="events" className="mb-12 scroll-mt-24">
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 flex items-center space-x-3">
+            <h2 className="text-2xl md:text-3xl font-bold text-black flex items-center space-x-3">
               <Calendar className="w-8 h-8 text-blue-600" />
-              <span>Жылдық <span className="text-blue-500">іс-шаралар</span></span>
+              <span>Жылдық <span className="text-black">іс-шаралар</span></span>
             </h2>
             
             <div className="flex flex-wrap items-center gap-3">
@@ -2012,10 +1853,10 @@ export default function UpbringingWorkPage() {
                       <Calendar className="w-5 h-5" />
                     </div>
                     <span className="text-lg font-bold text-gray-800 dark:text-gray-100">{monthData.month}</span>
-                    <span className="text-xs text-gray-400 ml-2">({monthData.events.length} іс-шара)</span>
+                    <span className="text-xs text-gray-600 ml-2">({monthData.events.length} іс-шара)</span>
                   </div>
                   <div className={`transition-transform duration-300 ${expandedMonths.has(monthData.month) ? "rotate-180" : ""}`}>
-                    <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-blue-500" />
+                    <ChevronDown className="w-5 h-5 text-gray-600 group-hover:text-blue-500" />
                   </div>
                 </button>
                 <AnimatePresence>
@@ -2085,7 +1926,7 @@ export default function UpbringingWorkPage() {
                           </Button>
                         </div>
                         {expandedEvent === event.id && (
-                          <div className="p-4 bg-gray-50 dark:bg-gray-800/50 border-t border-gray-200 dark:border-gray-700">
+                          <div className="p-4 bg-white dark:bg-gray-800/50 border-t border-gray-200 dark:border-gray-700">
                             {isAdmin && (
                               <div className="mb-4">
                                 <Button
@@ -2263,21 +2104,21 @@ export default function UpbringingWorkPage() {
             setActiveEventId(null);
           }
         }}>
-          <DialogContent className="sm:max-w-[400px] bg-[#1e293b] border border-white/10 text-white max-h-[85vh] overflow-y-auto custom-scrollbar" aria-describedby={undefined}>
+          <DialogContent className="sm:max-w-[400px] bg-white border border-white/10 text-black max-h-[85vh] overflow-y-auto custom-scrollbar" aria-describedby={undefined}>
             <DialogTitle className="sr-only">Суретті үлкейту</DialogTitle>
             <DialogHeader>
-              <DialogTitle className="text-white">Іс-шара суретін жүктеу</DialogTitle>
+              <DialogTitle className="text-black">Іс-шара суретін жүктеу</DialogTitle>
             </DialogHeader>
             
             {galleryUploadSuccessMsg && (
-              <div className="p-3 bg-green-900/40 border border-green-500/30 rounded-xl text-green-300 text-xs font-medium animate-fade-in">
+              <div className="p-3 bg-green-50 border border-green-500/30 rounded-xl text-green-300 text-xs font-medium animate-fade-in">
                 {galleryUploadSuccessMsg}
               </div>
             )}
 
             <form onSubmit={(e) => galleryUploadMutation.mutate(e)} className="space-y-4 pt-2">
               <div className="space-y-2">
-                <Label className="text-gray-300">Сурет таңдау</Label>
+                <Label className="text-black">Сурет таңдау</Label>
                 <Input
                   key={uploadedGallerySessionItems.length}
                   id="gallery-photo-upload"
@@ -2288,7 +2129,7 @@ export default function UpbringingWorkPage() {
                     setGalleryUploadFile(e.target.files?.[0] || null);
                     if (galleryUploadSuccessMsg) setGalleryUploadSuccessMsg(null);
                   }}
-                  className="bg-[#0d1117] border-white/20 text-white cursor-pointer"
+                  className="bg-white border-white/20 text-black cursor-pointer"
                   required
                 />
               </div>
@@ -2300,22 +2141,22 @@ export default function UpbringingWorkPage() {
                 {galleryUploadMutation.isPending ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Жүктелуде...
+                    Сақталуда...
                   </>
                 ) : (
-                  "Жүктеу"
+                  "Сақтау"
                 )}
               </Button>
             </form>
 
             {uploadedGallerySessionItems.length > 0 && (
               <div className="mt-4 pt-3 border-t border-white/10">
-                <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">
+                <h4 className="text-[11px] font-bold text-gray-600 uppercase tracking-wider mb-2">
                   Осы сессияда жүктелгендер ({uploadedGallerySessionItems.length})
                 </h4>
                 <div className="grid grid-cols-3 gap-2">
                   {uploadedGallerySessionItems.map((item, idx) => (
-                    <div key={idx} className="relative aspect-square rounded-lg overflow-hidden border border-white/10 shadow-sm bg-black/40">
+                    <div key={idx} className="relative aspect-square rounded-lg overflow-hidden border border-white/10 shadow-sm bg-white">
                       <img src={item.url} alt="preview" className="w-full h-full object-cover" />
                     </div>
                   ))}
@@ -2327,39 +2168,40 @@ export default function UpbringingWorkPage() {
 
         {/* Global Program Scan Dialog */}
         <Dialog open={isProgramUploadOpen} onOpenChange={setIsProgramUploadOpen}>
-          <DialogContent className="sm:max-w-[400px] bg-[#1e293b] border border-white/10 text-white">
+          <DialogContent className="sm:max-w-[400px] bg-white border border-white/10 text-black">
             <DialogHeader>
-              <DialogTitle className="text-white">Сқан жүктеу</DialogTitle>
+              <DialogTitle className="text-black">Сілтеме қосу</DialogTitle>
             </DialogHeader>
             <form onSubmit={(e) => programUploadMutation.mutate(e)} className="space-y-4 pt-4">
               <div className="space-y-2">
-                <Label htmlFor="program-doc-title" className="text-gray-300">Құжат атауы</Label>
+                <Label htmlFor="program-doc-title" className="text-black">Құжат атауы</Label>
                 <Input
                   id="program-doc-title"
                   name="title"
                   placeholder="Мәселен: Іс-шара жоспары"
                   value={scansTitle}
                   onChange={e => setScansTitle(e.target.value)}
-                  className="bg-[#0d1117] border-white/20 text-white placeholder:text-gray-500"
+                  className="bg-white border-white/20 text-black placeholder:text-gray-500"
                   required
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="program-doc-file" className="text-gray-300">Файл (PDF/Сурет)</Label>
+                <Label htmlFor="program-doc-file" className="text-black">Google Drive сілтемесі</Label>
                 <Input
                   id="program-doc-file"
-                  name="file"
-                  type="file"
-                  accept=".pdf,image/*"
-                  onChange={e => setScansUploadFile(e.target.files?.[0] || null)}
-                  className="bg-[#0d1117] border-white/20 text-white cursor-pointer"
+                  name="link"
+                  type="url"
+                  value={scansLink}
+                  onChange={e => setScansLink(e.target.value)}
+                  placeholder="https://drive.google.com/..."
+                  className="bg-white border-white/20 text-black placeholder:text-gray-500"
                   required
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-gray-300">Оқу жылы</Label>
+                <Label className="text-black">Оқу жылы</Label>
                 <select
-                  className="w-full bg-[#0d1117] border border-white/20 text-white rounded-md p-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none"
+                  className="w-full bg-white border border-white/20 text-black rounded-md p-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none"
                   value={uploadYear}
                   onChange={(e) => setUploadYear(e.target.value)}
                 >
@@ -2385,10 +2227,10 @@ export default function UpbringingWorkPage() {
         </Dialog>
         {/* Edit Document Dialog */}
         <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-          <DialogContent className="sm:max-w-[400px] bg-[#1e293b] border border-white/10 text-white">
+          <DialogContent className="sm:max-w-[400px] bg-white border border-white/10 text-black">
             <DialogHeader>
-            <DialogTitle className="text-white">Құжатты өңдеу</DialogTitle>
-            <DialogDescription className="text-gray-400">
+            <DialogTitle className="text-black">Құжатты өңдеу</DialogTitle>
+            <DialogDescription className="text-gray-600">
               Құжаттың атауы мен сілтемесін өзгертіңіз.
             </DialogDescription>
           </DialogHeader>
@@ -2406,31 +2248,31 @@ export default function UpbringingWorkPage() {
               setIsEditDialogOpen(false);
             }} className="space-y-4 pt-4">
               <div className="space-y-2">
-                <Label htmlFor="edit-doc-title" className="text-gray-300">Құжат атауы</Label>
+                <Label htmlFor="edit-doc-title" className="text-black">Құжат атауы</Label>
                 <Input
                   id="edit-doc-title"
                   name="title"
                   value={editingDoc?.title || ""}
                   onChange={e => setEditingDoc({ ...editingDoc, title: e.target.value })}
-                  className="bg-[#0d1117] border-white/20 text-white"
+                  className="bg-white border-white/20 text-black"
                   required
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="edit-doc-url" className="text-gray-300">Сілтеме (URL)</Label>
+                <Label htmlFor="edit-doc-url" className="text-black">Сілтеме (URL)</Label>
                 <Input
                   id="edit-doc-url"
                   name="url"
                   value={editingDoc?.url || ""}
                   onChange={e => setEditingDoc({ ...editingDoc, url: e.target.value })}
-                  className="bg-[#0d1117] border-white/20 text-white"
+                  className="bg-white border-white/20 text-black"
                   required
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-gray-300">Оқу жылы</Label>
+                <Label className="text-black">Оқу жылы</Label>
                 <select
-                  className="w-full bg-[#0d1117] border border-white/20 text-white rounded-md p-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none"
+                  className="w-full bg-white border border-white/20 text-black rounded-md p-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none"
                   value={editingDoc?.academicYear || "2025-2026"}
                   onChange={(e) => setEditingDoc({ ...editingDoc, academicYear: e.target.value })}
                 >
@@ -2458,40 +2300,40 @@ export default function UpbringingWorkPage() {
 
         {/* Annual Event Edit Dialog */}
         <Dialog open={isEventEditDialogOpen} onOpenChange={setIsEventEditDialogOpen}>
-          <DialogContent className="sm:max-w-[500px] bg-[#1e293b] border border-white/10 text-white">
+          <DialogContent className="sm:max-w-[500px] bg-white border border-white/10 text-black">
             <DialogHeader>
-            <DialogTitle className="text-white">Іс-шараны өңдеу</DialogTitle>
-            <DialogDescription className="text-gray-400">
+            <DialogTitle className="text-black">Іс-шараны өңдеу</DialogTitle>
+            <DialogDescription className="text-gray-600">
               Іс-шараның атауы мен мерзімін өзгертіңіз.
             </DialogDescription>
           </DialogHeader>
             <div className="space-y-4 pt-4">
               <div className="space-y-2">
-                <Label htmlFor="edit-event-title" className="text-gray-300">Тақырыбы</Label>
+                <Label htmlFor="edit-event-title" className="text-black">Тақырыбы</Label>
                 <Input
                   id="edit-event-title"
                   name="title"
                   value={editingEvent?.title || ""}
                   onChange={(e) => setEditingEvent({ ...editingEvent, title: e.target.value })}
-                  className="bg-[#0d1117] border-white/20 text-white"
+                  className="bg-white border-white/20 text-black"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="edit-event-date" className="text-gray-300">Күні</Label>
+                <Label htmlFor="edit-event-date" className="text-black">Күні</Label>
                 <Input
                   id="edit-event-date"
                   name="date"
                   value={editingEvent?.dateText || editingEvent?.date || ""}
                   onChange={(e) => setEditingEvent({ ...editingEvent, dateText: e.target.value })}
-                  className="bg-[#0d1117] border-white/20 text-white"
+                  className="bg-white border-white/20 text-black"
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-gray-300">Айы</Label>
+                <Label className="text-black">Айы</Label>
                 <select
                   id="edit-event-month"
                   name="month"
-                  className="w-full bg-[#0d1117] border border-white/20 text-white rounded-md p-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none"
+                  className="w-full bg-white border border-white/20 text-black rounded-md p-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none"
                   value={editingEvent?.month || "Тамыз"}
                   onChange={(e) => setEditingEvent({ ...editingEvent, month: e.target.value })}
                 >
@@ -2499,21 +2341,21 @@ export default function UpbringingWorkPage() {
                 </select>
               </div>
               <div className="space-y-2">
-                <Label className="text-gray-300">Сипаттамасы</Label>
+                <Label className="text-black">Сипаттамасы</Label>
                 <textarea
                   id="edit-event-description"
                   name="description"
-                  className="w-full bg-[#0d1117] border border-white/20 text-white rounded-md p-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none min-h-[100px]"
+                  className="w-full bg-white border border-white/20 text-black rounded-md p-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none min-h-[100px]"
                   value={editingEvent?.description || ""}
                   onChange={(e) => setEditingEvent({ ...editingEvent, description: e.target.value })}
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-gray-300">Оқу жылы</Label>
+                <Label className="text-black">Оқу жылы</Label>
                 <select
                   id="edit-event-year"
                   name="academicYear"
-                  className="w-full bg-[#0d1117] border border-white/20 text-white rounded-md p-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none"
+                  className="w-full bg-white border border-white/20 text-black rounded-md p-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none"
                   value={editingEvent?.academicYear || "2025-2026"}
                   onChange={(e) => setEditingEvent({ ...editingEvent, academicYear: e.target.value })}
                 >
@@ -2539,7 +2381,7 @@ export default function UpbringingWorkPage() {
                 </Button>
                 <Button
                   variant="outline"
-                  className="flex-1 bg-[#1e293b] text-white border-white/10 hover:bg-white/5"
+                  className="flex-1 bg-white text-black border-white/10 hover:bg-white/5"
                   onClick={() => setIsEventEditDialogOpen(false)}
                 >
                   Болдырмау
@@ -2551,42 +2393,42 @@ export default function UpbringingWorkPage() {
 
         {/* Annual Event Add Dialog */}
         <Dialog open={isAddEventDialogOpen} onOpenChange={setIsAddEventDialogOpen}>
-          <DialogContent className="sm:max-w-[500px] bg-[#1e293b] border border-white/10 text-white">
+          <DialogContent className="sm:max-w-[500px] bg-white border border-white/10 text-black">
             <DialogHeader>
-            <DialogTitle className="text-white">Жаңа іс-шара қосу</DialogTitle>
-            <DialogDescription className="text-gray-400">
+            <DialogTitle className="text-black">Жаңа іс-шара қосу</DialogTitle>
+            <DialogDescription className="text-gray-600">
               Күнтізбеге жаңа іс-шара мәліметтерін енгізіңіз.
             </DialogDescription>
           </DialogHeader>
             <div className="space-y-4 pt-4">
               <div className="space-y-2">
-                <Label htmlFor="new-event-title" className="text-gray-300">Тақырыбы</Label>
+                <Label htmlFor="new-event-title" className="text-black">Тақырыбы</Label>
                 <Input
                   id="new-event-title"
                   name="title"
                   placeholder="Мәселен: Білім күні"
                   value={newEvent.title}
                   onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
-                  className="bg-[#0d1117] border-white/20 text-white placeholder:text-gray-500"
+                  className="bg-white border-white/20 text-black placeholder:text-gray-500"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="new-event-date" className="text-gray-300">Күні</Label>
+                <Label htmlFor="new-event-date" className="text-black">Күні</Label>
                 <Input
                   id="new-event-date"
                   name="date"
                   placeholder="Мәселен: 1 қыркүйек"
                   value={newEvent.dateText}
                   onChange={(e) => setNewEvent({ ...newEvent, dateText: e.target.value })}
-                  className="bg-[#0d1117] border-white/20 text-white placeholder:text-gray-500"
+                  className="bg-white border-white/20 text-black placeholder:text-gray-500"
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-gray-300">Айы</Label>
+                <Label className="text-black">Айы</Label>
                 <select
                   id="new-event-month"
                   name="month"
-                  className="w-full bg-[#0d1117] border border-white/20 text-white rounded-md p-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none"
+                  className="w-full bg-white border border-white/20 text-black rounded-md p-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none"
                   value={newEvent.month}
                   onChange={(e) => setNewEvent({ ...newEvent, month: e.target.value })}
                 >
@@ -2594,22 +2436,22 @@ export default function UpbringingWorkPage() {
                 </select>
               </div>
               <div className="space-y-2">
-                <Label className="text-gray-300">Сипаттамасы</Label>
+                <Label className="text-black">Сипаттамасы</Label>
                 <textarea
                   id="new-event-description"
                   name="description"
                   placeholder="Іс-шара туралы қысқаша мәлімет..."
-                  className="w-full bg-[#0d1117] border border-white/20 text-white rounded-md p-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none min-h-[100px] placeholder:text-gray-500"
+                  className="w-full bg-white border border-white/20 text-black rounded-md p-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none min-h-[100px] placeholder:text-gray-500"
                   value={newEvent.description}
                   onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-gray-300">Оқу жылы</Label>
+                <Label className="text-black">Оқу жылы</Label>
                 <select
                   id="new-event-year"
                   name="academicYear"
-                  className="w-full bg-[#0d1117] border border-white/20 text-white rounded-md p-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none"
+                  className="w-full bg-white border border-white/20 text-black rounded-md p-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none"
                   value={newEvent.academicYear}
                   onChange={(e) => setNewEvent({ ...newEvent, academicYear: e.target.value })}
                 >
@@ -2626,7 +2468,7 @@ export default function UpbringingWorkPage() {
                 </Button>
                 <Button
                   variant="outline"
-                  className="flex-1 bg-[#1e293b] text-white border-white/10 hover:bg-white/5"
+                  className="flex-1 bg-white text-black border-white/10 hover:bg-white/5"
                   onClick={() => setIsAddEventDialogOpen(false)}
                 >
                   Болдырмау
@@ -2638,11 +2480,11 @@ export default function UpbringingWorkPage() {
         {/* Global Lightbox for galleries */}
         {lightboxImage && (
           <div
-            className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4"
+            className="fixed inset-0 z-[100] bg-white flex items-center justify-center p-4"
             onClick={() => setLightboxImage(null)}
           >
             <button
-              className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors"
+              className="absolute top-4 right-4 text-black hover:text-gray-300 transition-colors"
               onClick={() => setLightboxImage(null)}
             >
               <X className="w-8 h-8" />

@@ -25,7 +25,7 @@ const EventsPage = () => {
   const months = Array.from(new Set(events.map(e => e.month)));
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-[#0f172a]">
+    <div className="min-h-screen bg-white dark:bg-[#0f172a]">
       <SEOHead page="home" customTitle="Іс-шаралар күнтізбесі | Білімді ұрпақ жекеменшік мектебі" />
 
       
@@ -37,7 +37,7 @@ const EventsPage = () => {
           </div>
         ) : events.length === 0 ? (
           <div className="text-center py-20 bg-white dark:bg-[#1e293b] rounded-xl shadow-sm">
-            <CalendarIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+            <CalendarIcon className="w-16 h-16 text-black mx-auto mb-4" />
             <p className="text-xl text-gray-500">Жақын арада іс-шаралар жоспарланбаған</p>
           </div>
         ) : (
@@ -86,18 +86,18 @@ const EventsPage = () => {
 
       {/* Planning Info */}
       <div className="container mx-auto px-4 pb-12">
-        <Card className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-6 sm:p-10 rounded-2xl shadow-xl overflow-hidden relative">
+        <Card className="bg-white border border-gray-200 text-black p-6 sm:p-10 rounded-2xl shadow-xl overflow-hidden relative">
           <div className="relative z-10">
             <h3 className="text-2xl font-bold mb-4">Іс-шараны өткізуді жоспарлайсыз ба?</h3>
-            <p className="text-blue-100 mb-6 max-w-xl">
+            <p className="text-gray-700 mb-6 max-w-xl">
               Мектеп іс-шараларына қатысуға немесе өз ұсынысыңызды білдіруге әрдайым мүмкіндігіңіз бар. 
               Мектеп әкімшілігімен хабарласып, толық ақпарат алыңыз.
             </p>
             <div className="flex flex-wrap gap-4">
-              <Button className="bg-white text-blue-700 hover:bg-blue-50">Хабарласу</Button>
+              <Button className="bg-blue-600 text-white hover:bg-blue-700">Хабарласу</Button>
             </div>
           </div>
-          <CalendarIcon className="absolute -bottom-10 -right-10 w-64 h-64 text-white/10 rotate-12" />
+          <CalendarIcon className="absolute -bottom-10 -right-10 w-64 h-64 text-gray-700 rotate-12" />
         </Card>
       </div>
     </div>

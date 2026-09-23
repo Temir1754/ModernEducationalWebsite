@@ -18,12 +18,13 @@ const hideTeachers = true;
 // ========================================
 
 const navigation: NavItem[] = [
+  { label: "Басты бет", href: "/" },
   { label: "Мектеп туралы", href: "/about-school" },
   { label: "Басқарма", href: "/administration" },
   { label: "Мұғалімдер", href: "/primary-teachers" },
   { label: "Оқушылар", href: "/students" },
   { label: "Асхана", href: "/canteen" },
-  { label: "Құжаттар", href: "/school-documents" },
+  { label: "Мемлекеттік аттестация", href: "/school-documents" },
   { label: "Мектеп тынысы", href: "/upbringing-work" },
   { label: "Фотогалерея", href: "/gallery" },
   { label: "Байланыс", href: "/contact" }
@@ -32,7 +33,7 @@ const navigation: NavItem[] = [
 const ResponsiveNavbar = () => {
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(true);
   const [location] = useLocation();
 
   // Фильтруем навигацию в зависимости от флага hideTeachers
@@ -43,7 +44,7 @@ const ResponsiveNavbar = () => {
   // Handle scroll effect for glassmorphism
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(true);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -88,11 +89,11 @@ const ResponsiveNavbar = () => {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         className={`navbar h-16 sm:h-20 lg:h-24 fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
-          ? 'bg-white/70 dark:bg-[#0f172a]/70 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] border-b border-white/20 dark:border-blue-500/10'
+          ? 'bg-white dark:bg-[#0f172a]/70 shadow-[0_8px_32px_rgba(0,0,0,0.12)] border-b border-white/20 dark:border-blue-500/10'
           : 'bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 dark:from-blue-800 dark:via-indigo-800 dark:to-blue-900 shadow-lg'
           }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="max-w-[1700px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="flex items-center justify-between h-16 sm:h-20 lg:h-24">
 
             {/* Logo area */}
@@ -104,19 +105,28 @@ const ResponsiveNavbar = () => {
                 transition={{ duration: 0.4, ease: "easeOut" }}
                 className="cursor-pointer flex-shrink-0 transition-all active:scale-95 flex items-center"
               >
+                {/* Wide logo (name + emblem): phones/tablets and large screens. Emblem only where the menu is crowded. */}
+                <img
+                  src="/logo-wide.webp"
+                  alt="Білімді ұрпақ жекеменшік мектебі"
+                  width={180}
+                  height={56}
+                  className="block h-10 w-auto max-w-none shrink-0 object-contain sm:h-12 xl:hidden min-[1366px]:block min-[1700px]:h-14"
+                  data-testid="nav-logo"
+                />
                 <img
                   src="/logo.png"
-                  alt="Білімді ұрпақ жекеменшік мектебі Logo"
+                  alt="Білімді ұрпақ жекеменшік мектебі"
                   width={64}
                   height={64}
-                  className="h-10 w-10 sm:h-12 sm:w-12 lg:h-16 lg:w-16 object-contain drop-shadow-md"
-                  data-testid="nav-logo"
+                  className="hidden h-16 w-16 max-w-none shrink-0 object-contain drop-shadow-md xl:block min-[1366px]:hidden"
+                  data-testid="nav-logo-emblem"
                 />
               </motion.div>
             </Link>
 
             {/* Desktop Navigation Links */}
-            <div className="hidden lg:flex items-center justify-center gap-1 flex-1 px-8">
+            <div className="hidden xl:flex items-center justify-center gap-0.5 min-[1700px]:gap-1 flex-1 px-4 min-[1700px]:px-8">
               {visibleNavigation.map((item, index) => (
                 <motion.div
                   key={item.href}
@@ -130,13 +140,13 @@ const ResponsiveNavbar = () => {
                   <Link href={item.href}>
                     <span
                       data-testid={`nav-link-${item.label.toLowerCase().replace(/ /g, '-')}`}
-                      className={`group relative px-4 py-2 font-bold text-[13px] tracking-wide transition-all duration-300 cursor-pointer whitespace-nowrap block rounded-full ${isActiveRoute(item.href)
+                      className={`group relative px-2.5 min-[1700px]:px-4 py-2 font-bold text-[12px] min-[1700px]:text-[13px] tracking-wide transition-all duration-300 cursor-pointer whitespace-nowrap block rounded-full ${isActiveRoute(item.href)
                         ? isScrolled
                           ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 shadow-sm'
                           : 'text-white bg-white/20 backdrop-blur-md shadow-md ring-1 ring-white/30'
                         : isScrolled
                           ? 'text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100/50 dark:hover:bg-slate-800/50'
-                          : 'text-white/80 hover:text-white hover:bg-white/10'
+                          : 'text-gray-700 hover:text-white hover:bg-white/10'
                         }`}
                     >
                       <span className="relative z-10">{item.label}</span>
@@ -154,7 +164,7 @@ const ResponsiveNavbar = () => {
             </div>
 
             {/* Mobile Burger Menu Button */}
-            <div className="lg:hidden flex items-center gap-2">
+            <div className="xl:hidden flex items-center gap-2">
               <motion.button
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -194,7 +204,7 @@ const ResponsiveNavbar = () => {
             </div>
 
             {/* Desktop Contact Icons */}
-            <div className="hidden lg:flex items-center gap-3">
+            <div className="hidden xl:flex items-center gap-2 min-[1700px]:gap-3">
 
               <motion.a
                 initial={{ scale: 0.8, opacity: 0 }}
@@ -202,7 +212,7 @@ const ResponsiveNavbar = () => {
                 transition={{ duration: 0.5, delay: 0.35 }}
                 href="tel:+77757906363"
                 data-testid="contact-phone"
-                className={`w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 ${isScrolled
+                className={`w-9 h-9 min-[1700px]:w-11 min-[1700px]:h-11 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 ${isScrolled
                   ? 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500 hover:text-white'
                   : 'bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm'
                   }`}
@@ -217,7 +227,7 @@ const ResponsiveNavbar = () => {
                 transition={{ duration: 0.5, delay: 0.4 }}
                 href="https://wa.me/77757906363"
                 data-testid="contact-whatsapp"
-                className={`w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 ${isScrolled
+                className={`w-9 h-9 min-[1700px]:w-11 min-[1700px]:h-11 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 ${isScrolled
                   ? 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-green-500 hover:text-white'
                   : 'bg-white/20 text-white hover:bg-green-500 backdrop-blur-sm'
                   }`}
@@ -232,7 +242,7 @@ const ResponsiveNavbar = () => {
                 transition={{ duration: 0.5, delay: 0.45 }}
                 href="https://t.me/bilimdi_urpaq"
                 data-testid="contact-telegram"
-                className={`w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 ${isScrolled
+                className={`w-9 h-9 min-[1700px]:w-11 min-[1700px]:h-11 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 ${isScrolled
                   ? 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-blue-500 hover:text-white'
                   : 'bg-white/20 text-white hover:bg-blue-500 backdrop-blur-sm'
                   }`}
@@ -246,7 +256,7 @@ const ResponsiveNavbar = () => {
                 transition={{ duration: 0.5, delay: 0.5 }}
                 href="https://www.facebook.com/people/Bilimdi-Urpaq-School/pfbid0b3bkVb2Vz1B59RdK3PfLQR7DcKwJ92XaxfMXdB5kK7wv1AwTBBUbtUZ5uj1oAN7ul/"
                 data-testid="contact-facebook"
-                className={`w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 ${isScrolled
+                className={`w-9 h-9 min-[1700px]:w-11 min-[1700px]:h-11 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 ${isScrolled
                   ? 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-blue-600 hover:text-white'
                   : 'bg-white/20 text-white hover:bg-blue-600 backdrop-blur-sm'
                   }`}
@@ -268,7 +278,7 @@ const ResponsiveNavbar = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+            className="fixed inset-0 bg-white backdrop-blur-sm z-40 xl:hidden"
             onClick={toggleMobileMenu}
           />
         )}
@@ -283,7 +293,7 @@ const ResponsiveNavbar = () => {
             exit={{ x: "100%", opacity: 0 }}
             transition={{ duration: 0.4, ease: "easeInOut" }}
             data-testid="mobile-contact-dropdown"
-            className="lg:hidden fixed top-16 sm:top-20 right-0 bottom-0 w-80 max-w-[85vw] bg-white/95 dark:bg-[#1a1c23]/95 backdrop-blur-xl shadow-2xl z-50 overflow-y-auto"
+            className="xl:hidden fixed top-16 sm:top-20 lg:top-24 right-0 bottom-0 w-80 max-w-[85vw] bg-white/95 dark:bg-[#1a1c23]/95 backdrop-blur-xl shadow-2xl z-50 overflow-y-auto"
           >
             {/* Mobile Menu Content */}
             <div className="p-6 space-y-6">

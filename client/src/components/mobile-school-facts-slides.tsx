@@ -20,7 +20,7 @@ const schoolFacts: SchoolFact[] = [
     number: "2022",
     unit: "жылдан",
     color: "text-purple-600",
-    bgGradient: "bg-gradient-to-br from-purple-100 to-purple-200"
+    bgGradient: "bg-white border border-gray-200"
   },
   {
     id: 2,
@@ -29,7 +29,7 @@ const schoolFacts: SchoolFact[] = [
     number: "Дамыту",
     unit: "ойындары",
     color: "text-green-600",
-    bgGradient: "bg-gradient-to-br from-green-100 to-green-200"
+    bgGradient: "bg-white border border-gray-200"
   },
   {
     id: 3,
@@ -38,16 +38,16 @@ const schoolFacts: SchoolFact[] = [
     number: "3",
     unit: "жыл",
     color: "text-blue-600",
-    bgGradient: "bg-gradient-to-br from-blue-100 to-blue-200"
+    bgGradient: "bg-white border border-gray-200"
   },
   {
     id: 4,
     title: "Білікті директор",
-    description: "Директор — 32 жыл педагогикалық тәжірибесі бар білікті маман",
+    description: "Директор РФМШ және Назарбаев университетінің түлегі",
     number: "Жоғары",
     unit: "білім",
     color: "text-yellow-600",
-    bgGradient: "bg-gradient-to-br from-yellow-100 to-yellow-200"
+    bgGradient: "bg-white border border-gray-200"
   },
   {
     id: 5,
@@ -56,7 +56,7 @@ const schoolFacts: SchoolFact[] = [
     number: "Толық",
     unit: "бақылау",
     color: "text-pink-600",
-    bgGradient: "bg-gradient-to-br from-pink-100 to-pink-200"
+    bgGradient: "bg-white border border-gray-200"
   },
   {
     id: 6,
@@ -65,7 +65,7 @@ const schoolFacts: SchoolFact[] = [
     number: "Жеке",
     unit: "қолдау",
     color: "text-teal-600",
-    bgGradient: "bg-gradient-to-br from-teal-100 to-teal-200"
+    bgGradient: "bg-white border border-gray-200"
   },
   {
     id: 7,
@@ -74,7 +74,7 @@ const schoolFacts: SchoolFact[] = [
     number: "Мотив",
     unit: "жүйесі",
     color: "text-amber-600",
-    bgGradient: "bg-gradient-to-br from-amber-100 to-amber-200"
+    bgGradient: "bg-white border border-gray-200"
   }
 ];
 
@@ -186,7 +186,7 @@ export default function MobileSchoolFactsSlides() {
           className={`text-xs px-3 py-1 rounded-full transition-all duration-200 ${
             isAutoPlaying 
               ? 'bg-blue-600 text-white shadow-md' 
-              : 'bg-gray-700 text-white hover:bg-gray-800 shadow-sm'
+              : 'bg-white text-black hover:bg-gray-100 shadow-sm'
           }`}
           aria-label={isAutoPlaying ? "Автоматты ауысуды тоқтату" : "Автоматты ауысуды қосу"}
         >

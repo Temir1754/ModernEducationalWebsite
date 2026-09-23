@@ -115,71 +115,16 @@ export default function ContactPage() {
     <>
       <SEOHead page="contact" />
 
-      <div className="min-h-screen bg-gray-50 dark:bg-[#0f172a]">
+      <div className="min-h-screen bg-white dark:bg-[#0f172a]">
         {/* Header with Back Button - Enhanced for mobile */}
         
-
-        {/* Sub-Navigation Menu */}
-        <div className="sticky top-16 sm:top-20 lg:top-24 z-30 bg-white/90 dark:bg-[#0f172a]/95 backdrop-blur-xl border-b border-gray-200 dark:border-blue-500/20 shadow-lg transition-all duration-500">
-          <div className="container mx-auto px-4">
-            <nav className="flex items-center justify-start md:justify-center space-x-1 py-3 whitespace-nowrap overflow-x-auto scrollbar-hide w-full [&>*]:shrink-0">
-              <button
-                onClick={() => document.getElementById('info')?.scrollIntoView({ behavior: 'smooth' })}
-                className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
-                  activeSection === 'info' 
-                  ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
-                  : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
-                }`}
-              >
-                Байланыс деректері
-                <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'info' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
-              </button>
-
-              <button
-                onClick={() => document.getElementById('social')?.scrollIntoView({ behavior: 'smooth' })}
-                className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
-                  activeSection === 'social' 
-                  ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
-                  : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
-                }`}
-              >
-                Әлеуметтік желілер
-                <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'social' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
-              </button>
-
-              <button
-                onClick={() => document.getElementById('management')?.scrollIntoView({ behavior: 'smooth' })}
-                className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
-                  activeSection === 'management' 
-                  ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
-                  : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
-                }`}
-              >
-                Басшылық
-                <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'management' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
-              </button>
-
-              <button
-                onClick={() => document.getElementById('location')?.scrollIntoView({ behavior: 'smooth' })}
-                className={`px-5 py-2.5 text-[13px] font-bold rounded-full transition-all active:scale-95 relative group/nav ${
-                  activeSection === 'location' 
-                  ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40" 
-                  : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20"
-                }`}
-              >
-                Мекенжай
-                <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 rounded-full transition-all ${activeSection === 'location' ? 'w-1/2' : 'w-0 group-hover/nav:w-1/2'}`}></span>
-              </button>
-            </nav>
-          </div>
-        </div>
 
         {/* Main Content */}
         <div className="container mx-auto px-4 pt-12 pb-6 sm:pb-8">
         {/* Page Header */}
         <div className="text-center mb-16">
-          <h1 className="text-3xl md:text-5xl font-bold text-center mb-6 text-gray-800 dark:text-gray-100" style={{ fontFamily: "'Poppins', sans-serif" }}>
-            Бізбен <span className="text-blue-500">байланыс</span>
+          <h1 className="text-3xl md:text-5xl font-bold text-center mb-6 text-black" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+            Бізбен <span className="text-black">байланыс</span>
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
             Бізбен хабарласып, сұрақтарыңызды қойыңыз. Біз сіздерге көмектесуге әрдайым дайынбыз.
@@ -325,17 +270,17 @@ export default function ContactPage() {
                   </div>
                 </div>
               </div>
-              <div className="bg-blue-600 dark:bg-blue-900/30 text-white p-6 rounded-xl border dark:border-blue-700">
+              <div className="bg-white text-black p-6 rounded-xl border border-gray-200">
                 <h3 className="text-xl font-semibold mb-4">
                   Келіп көріңіз!
                 </h3>
-                <p className="text-blue-100 dark:text-blue-200 leading-relaxed mb-4">
+                <p className="text-gray-700 dark:text-blue-200 leading-relaxed mb-4">
                   Мектебімізбен танысу үшін алдын ала хабарласып, кездесу уақытын
                   белгілеуіңізді сұраймыз.
                 </p>
                 <div className="space-y-2">
-                  <p className="text-blue-100 dark:text-blue-200">📞 Телефон: +7‒775‒790‒63‒63</p>
-                  <p className="text-blue-100 dark:text-blue-200">📧 Email: fgs.school.2022@gmail.com</p>
+                  <p className="text-gray-700 dark:text-blue-200">📞 Телефон: +7‒775‒790‒63‒63</p>
+                  <p className="text-gray-700 dark:text-blue-200">📧 Email: fgs.school.2022@gmail.com</p>
                 </div>
               </div>
             </div>

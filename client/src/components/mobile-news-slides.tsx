@@ -83,7 +83,7 @@ export default function MobileNewsSlides({ items }: MobileNewsSlidesProps) {
           ) : (
             <div className="w-full h-full bg-gradient-to-r from-blue-500 to-blue-600" />
           )}
-          <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+          <div className="absolute inset-0 bg-white bg-opacity-20"></div>
           {currentNews.category && (
             <div className="absolute top-4 left-4">
               <span className={`px-3 py-1 rounded-full text-xs font-medium ${getCategoryColor(currentNews.category)}`}>
@@ -92,7 +92,7 @@ export default function MobileNewsSlides({ items }: MobileNewsSlidesProps) {
             </div>
           )}
           <div className="absolute bottom-4 left-4 right-4">
-            <div className="flex items-center text-white text-sm">
+            <div className="flex items-center text-black text-sm">
               <Calendar className="w-4 h-4 mr-2" />
               {currentNews.date}
             </div>
@@ -163,7 +163,7 @@ export default function MobileNewsSlides({ items }: MobileNewsSlidesProps) {
           onClick={() => setIsAutoPlaying(!isAutoPlaying)}
           className={`text-xs px-3 py-1 rounded-full transition-all duration-200 ${isAutoPlaying
               ? 'bg-blue-600 text-white shadow-md'
-              : 'bg-gray-700 text-white hover:bg-gray-800 shadow-sm'
+              : 'bg-white text-black hover:bg-gray-100 shadow-sm'
             }`}
           aria-label={isAutoPlaying ? "Автоматты ауысуды тоқтату" : "Автоматты ауысуды қосу"}
         >

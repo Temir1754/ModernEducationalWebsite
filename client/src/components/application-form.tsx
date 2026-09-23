@@ -92,13 +92,13 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
     <div className="w-full">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4 text-white">Мектепке өтінім жіберу</h2>
-            <p className="text-xl text-gray-300">
+            <h2 className="text-3xl font-bold mb-4 text-black">Мектепке өтінім жіберу</h2>
+            <p className="text-xl text-black">
               Балаңызды Білімді ұрпақ жекеменшік мектебіне орналастыру үшін өтінім толтырыңыз
             </p>
           </div>
 
-          <div className="bg-slate-800/80 backdrop-blur-sm rounded-2xl shadow-2xl p-8 border border-white/10 text-white">
+          <div className="bg-white backdrop-blur-sm rounded-2xl shadow-2xl p-8 border border-white/10 text-black">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="grid md:grid-cols-2 gap-6">
                 <FormField
@@ -110,7 +110,7 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
                       <FormControl>
                         <Input 
                           id="studentName"
-                          className="bg-slate-900 border-slate-700 text-white placeholder:text-gray-400" 
+                          className="bg-white border-slate-700 text-black placeholder:text-gray-400" 
                           placeholder="Толық аты-жөніні енгізіңіз" 
                           autoComplete="name"
                           {...field} 
@@ -135,8 +135,8 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
                                 id="birthDate"
                                 variant={"outline"}
                                 className={cn(
-                                  "w-full pl-3 text-left font-normal bg-slate-900 border-slate-700 text-white hover:bg-slate-800 hover:text-white transition-all duration-200",
-                                  !field.value && "text-gray-400"
+                                  "w-full pl-3 text-left font-normal bg-white border-slate-700 text-black hover:bg-gray-100 hover:text-white transition-all duration-200",
+                                  !field.value && "text-gray-600"
                                 )}
                               >
                                 {field.value ? (
@@ -148,7 +148,7 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
                               </Button>
                           </FormControl>
                         </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0 bg-slate-900 border-slate-700 shadow-2xl" align="start">
+                        <PopoverContent className="w-auto p-0 bg-white border-slate-700 shadow-2xl" align="start">
                           <Calendar
                             mode="single"
                             selected={field.value ? new Date(field.value.split('.').reverse().join('-')) : undefined}
@@ -161,7 +161,7 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
                               date > new Date() || date < new Date("1900-01-01")
                             }
                             initialFocus
-                            className="bg-slate-900 text-white rounded-md border border-slate-700"
+                            className="bg-white text-black rounded-md border border-slate-700"
                           />
                         </PopoverContent>
                       </Popover>
@@ -182,7 +182,7 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
                             <SelectValue placeholder="Сыныпты таңдаңыз" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent className="bg-slate-800 border-slate-700 text-white">
+                        <SelectContent className="bg-white border-slate-700 text-black">
                           <SelectItem value="0" className="focus:bg-slate-700 focus:text-white">0 сынып</SelectItem>
                           <SelectItem value="1" className="focus:bg-slate-700 focus:text-white">1 сынып</SelectItem>
                           <SelectItem value="2" className="focus:bg-slate-700 focus:text-white">2 сынып</SelectItem>
@@ -211,7 +211,7 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
                             <SelectValue placeholder="Тілді таңдаңыз" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent className="bg-slate-800 border-slate-700 text-white">
+                        <SelectContent className="bg-white border-slate-700 text-black">
                           <SelectItem value="kz" className="focus:bg-slate-700 focus:text-white">Қазақ тілі</SelectItem>
                           <SelectItem value="ru" className="focus:bg-slate-700 focus:text-white">Орыс тілі</SelectItem>
                         </SelectContent>
@@ -230,7 +230,7 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
                       <FormControl>
                         <Input 
                           id="parentName"
-                          className="bg-slate-900 border-slate-700 text-white placeholder:text-gray-400" 
+                          className="bg-white border-slate-700 text-black placeholder:text-gray-400" 
                           placeholder="Ата-ананың толық аты-жөні" 
                           autoComplete="name"
                           {...field} 
@@ -251,7 +251,7 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
                         <FormControl>
                           <Input 
                             id="phone"
-                            className="bg-slate-900 border-slate-700 text-white placeholder:text-gray-400" 
+                            className="bg-white border-slate-700 text-black placeholder:text-gray-400" 
                             placeholder="+7 (___) ___-__-__" 
                             autoComplete="tel"
                             {...field} 
@@ -311,7 +311,7 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
                         <FormControl>
                           <Textarea
                             id="address"
-                            className="bg-slate-900 border-slate-700 text-white placeholder:text-gray-400"
+                            className="bg-white border-slate-700 text-black placeholder:text-gray-400"
                             rows={3}
                             placeholder="Толық мекенжайды жазыңыз"
                             autoComplete="street-address"
@@ -335,7 +335,7 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
                         <FormControl>
                           <Textarea
                             id="additionalInfo"
-                            className="bg-slate-900 border-slate-700 text-white placeholder:text-gray-400"
+                            className="bg-white border-slate-700 text-black placeholder:text-gray-400"
                             rows={3}
                             placeholder="Баланың ерекшеліктері, қызығушылықтары туралы жазыңыз"
                             {...field}
@@ -363,7 +363,7 @@ ${data.additionalInfo ? `💬 Қосымша ақпарат: ${data.additionalIn
                           />
                         </FormControl>
                         <div className="space-y-1 leading-none">
-                          <FormLabel htmlFor="consent" className="text-sm text-gray-300 cursor-pointer">
+                          <FormLabel htmlFor="consent" className="text-sm text-black cursor-pointer">
                             Жеке деректерді өңдеуге келісемін және мектептің ережелерімен таныстым *
                           </FormLabel>
                           <FormMessage />

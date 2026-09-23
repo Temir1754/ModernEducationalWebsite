@@ -10,6 +10,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { HelmetProvider } from "react-helmet-async";
 import Layout from "@/components/layout";
 import ChatAssistant from "@/components/chat-assistant";
+import CookieConsent from "@/components/cookie-consent";
 import { AuthProvider } from "@/hooks/use-auth";
 import { Loader2 } from "lucide-react";
 
@@ -60,6 +61,7 @@ function Router() {
         <Switch>
           <Route path="/" component={Home} />
           <Route path="/kruzhki" component={KruzhkiPage} />
+          <Route path="/kruzhki/:id" component={KruzhkiPage} />
           <Route path="/primary-teachers" component={PrimaryTeachersPage} />
           <Route path="/subject-teachers" component={SubjectTeachersPage} />
           <Route path="/curators" component={CuratorsPage} />
@@ -95,6 +97,7 @@ function App() {
                   <Router />
                 </Layout>
                 <ChatAssistant />
+                <CookieConsent />
                 <Toaster />
               </AuthProvider>
             </LanguageProvider>

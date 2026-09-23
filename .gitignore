@@ -22,8 +22,6 @@ dist/
 !client/public/logo.svg
 !client/public/hero-bg.jpg
 !client/public/og-image.png
-!client/public/staff/
-!client/public/staff/*
 
 # Exclude uploads and attached_assets folders as they contain large files
 attached_assets/

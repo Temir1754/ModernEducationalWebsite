@@ -76,7 +76,7 @@ const defaultItems: SchoolCardProps[] = [
   {
     id: "director",
     title: "Білікті директор",
-    description: "Директор — 32 жыл педагогикалық тәжірибесі бар білікті маман",
+    description: "Директор РФМШ және Назарбаев университетінің түлегі",
     features: [
       "Жоғары білім деңгейі",
       "Мектеп басқару тәжірибесі",
@@ -278,7 +278,7 @@ export default function SchoolCards({
   };
 
   return (
-    <section className="py-16 bg-gray-50 dark:bg-[#0f172a]" ref={sectionRef}>
+    <section className="py-16 bg-white dark:bg-[#0f172a]" ref={sectionRef}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
         <div className={`

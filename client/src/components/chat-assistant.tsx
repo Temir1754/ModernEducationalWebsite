@@ -69,7 +69,7 @@ export default function ChatAssistant() {
 
   const handleQuickAction = (action: string) => {
     switch(action) {
-      case "📅 Расписание":
+      case "📅 Кесте":
         setIsOpen(false);
         setLocation("/schedule");
         break;
@@ -89,7 +89,7 @@ export default function ChatAssistant() {
         setIsOpen(false);
         setLocation("/contact");
         break;
-      case "📲 Оставить заявку":
+      case "📲 Өтініш қалдыру":
         addMessage(action, "user");
         setTimeout(() => {
           setShowRequestForm(true);
@@ -136,12 +136,12 @@ export default function ChatAssistant() {
   };
 
   const quickActions = [
-    "📅 Расписание",
+    "📅 Кесте",
     "🍽 Асхана мәзірі",
     "💰 UPay жүйесі",
     "🧑‍🏫 Оқушылар мен ұстаздар",
     "🏫 Байланыс",
-    "📲 Оставить заявку"
+    "📲 Өтініш қалдыру"
   ];
 
   return (
@@ -165,7 +165,7 @@ export default function ChatAssistant() {
 
       {/* Chat Window */}
       {isOpen && (
-        <Card className="fixed bottom-24 right-4 md:right-6 z-[60] w-[calc(100vw-2rem)] md:w-[380px] h-[500px] max-h-[calc(100vh-120px)] bg-gray-50 dark:bg-[#181a20] shadow-2xl dark:shadow-[#00bfff]/10 rounded-2xl flex flex-col animate-in slide-in-from-bottom-5 duration-300 border border-gray-200 dark:border-gray-800" data-testid="chat-window">
+        <Card className="fixed bottom-24 right-4 md:right-6 z-[60] w-[calc(100vw-2rem)] md:w-[380px] h-[500px] max-h-[calc(100vh-120px)] bg-white dark:bg-[#181a20] shadow-2xl dark:shadow-[#00bfff]/10 rounded-2xl flex flex-col animate-in slide-in-from-bottom-5 duration-300 border border-gray-200 dark:border-gray-800" data-testid="chat-window">
           {/* Header */}
           <div className="bg-gradient-to-r from-blue-600 to-purple-600 dark:from-[#00bfff] dark:to-[#a855f7] text-white p-4 rounded-t-2xl flex items-center space-x-3">
             <div className="w-10 h-10 bg-white dark:bg-[#1a1c23] rounded-full flex items-center justify-center">
@@ -173,7 +173,7 @@ export default function ChatAssistant() {
             </div>
             <div className="flex-1">
               <h3 className="font-bold text-lg">Білімді ұрпақ жекеменшік мектебі Көмекші</h3>
-              <p className="text-xs text-blue-100 dark:text-gray-300">Виртуалды ассистент</p>
+              <p className="text-xs text-white/90">Виртуалды көмекші</p>
             </div>
           </div>
 
@@ -215,12 +215,12 @@ export default function ChatAssistant() {
                 />
               </div>
               <div className="space-y-1">
-                <Label htmlFor="chat-request-role" className="text-xs font-semibold text-gray-700 dark:text-gray-300">Класс / Рөл</Label>
+                <Label htmlFor="chat-request-role" className="text-xs font-semibold text-gray-700 dark:text-gray-300">Сынып / Рөл</Label>
                 <Input
                   id="chat-request-role"
                   name="role"
-                  aria-label="Класс / Рөл"
-                  placeholder="Класс / Рөл (оқушы, ата-ана, ұстаз)"
+                  aria-label="Сынып / Рөл"
+                  placeholder="Сынып / Рөл (оқушы, ата-ана, ұстаз)"
                   value={formData.role}
                   onChange={(e) => setFormData({ ...formData, role: e.target.value })}
                   data-testid="input-request-role"

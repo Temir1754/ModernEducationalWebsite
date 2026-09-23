@@ -147,7 +147,7 @@ export default function Header() {
               </button>
               <span className="flex items-center">
                 <Clock className="w-4 h-4 text-primary mr-1" />
-                Дүйсенбі - Жұма: 08:00 - 18:00
+                08:00 - 18:00
               </span>
               <button
                 className="hidden sm:flex items-center text-gray-600 hover:text-primary transition-colors duration-200 hover:bg-gray-50 px-2 py-1 rounded"
@@ -157,7 +157,7 @@ export default function Header() {
                 aria-label="Мектеп мекенжайын картадан көру"
               >
                 <MapPin className="w-4 h-4 text-primary mr-1" />
-                Шымкент қ., Абай ауданы, Самал-1 ш.а., Тұрсынқұл Өтегенов көшесі, 43А ғимараты
+                Шымкент, Өтегенова 43А
               </button>
 
               {/* Prominent Social Media buttons */}
@@ -306,7 +306,67 @@ export default function Header() {
           </div>
         </div>
 
+        {/* Logo + Navigation */}
+        <div className="flex items-center justify-between py-3">
+          <Link href="/" className="flex items-center gap-3" aria-label="Басты бет">
+            <img src="/logo.png" alt="Білімді ұрпақ" className="h-12 w-12 object-contain" />
+            <span className="hidden sm:block font-bold text-primary leading-tight">
+              Білімді ұрпақ
+              <span className="block text-xs font-medium text-gray-500">жекеменшік мектебі</span>
+            </span>
+          </Link>
 
+          {/* Desktop menu */}
+          <nav className="hidden lg:flex items-center gap-1">
+            <Link href="/" className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary">
+              Басты бет
+            </Link>
+            {menuItems.map((menu) => (
+              <DropdownMenu key={menu.title}>
+                <DropdownMenuTrigger className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary outline-none">
+                  {menu.title}
+                  <ChevronDown className="w-4 h-4 ml-1" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  {menu.items.map((item) => (
+                    <DropdownMenuItem key={item.title} asChild>
+                      <Link href={item.href}>{item.title}</Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ))}
+          </nav>
+
+          {/* Mobile menu */}
+          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Мәзір">
+                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="overflow-y-auto">
+              <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="block py-2 font-semibold">
+                Басты бет
+              </Link>
+              {menuItems.map((menu) => (
+                <div key={menu.title} className="mt-4">
+                  <div className="font-semibold text-primary">{menu.title}</div>
+                  {menu.items.map((item) => (
+                    <Link
+                      key={item.title}
+                      href={item.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="block py-1.5 pl-3 text-sm text-gray-700"
+                    >
+                      {item.title}
+                    </Link>
+                  ))}
+                </div>
+              ))}
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
     </header>
   );

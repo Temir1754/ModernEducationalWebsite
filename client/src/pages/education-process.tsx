@@ -35,7 +35,7 @@ export default function EducationProcessPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-[#0f172a]">
+    <div className="min-h-screen bg-white dark:bg-[#0f172a]">
 
 
       {/* Sub-Navigation Menu */}
@@ -109,7 +109,7 @@ export default function EducationProcessPage() {
       <div className="container mx-auto px-4 pt-12 pb-6 sm:pb-8">
         {/* Page Header */}
         <div className="text-center mb-16">
-          <h1 className="text-3xl md:text-5xl font-bold text-center mb-6 text-gray-800 dark:text-gray-100" style={{ fontFamily: "'Poppins', sans-serif" }}>
+          <h1 className="text-3xl md:text-5xl font-bold text-center mb-6 text-gray-800 dark:text-gray-100" style={{ fontFamily: "'Montserrat', sans-serif" }}>
             Оқу <span className="text-blue-500">процесі</span>
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
@@ -265,7 +265,7 @@ export default function EducationProcessPage() {
           {/* Electronic Journal Link */}
           <Card id="kundelik" className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700 scroll-mt-24">
             <CardHeader>
-              <CardTitle className="text-green-800 dark:text-green-300">Bilimclass (Электронды журнал)</CardTitle>
+              <CardTitle className="text-green-800 dark:text-green-300">Күнделік ЭЖ (Электронды журнал)</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center">
@@ -279,10 +279,10 @@ export default function EducationProcessPage() {
                 </div>
                 <Button 
                   className="bg-green-600 dark:bg-green-700 hover:bg-green-700 dark:hover:bg-green-600"
-                  onClick={() => window.open('https://www.bilimclass.kz/login', '_blank')}
+                  onClick={() => window.open('https://portal.kundelik.kz/v2', '_blank')}
                 >
                   <ExternalLink className="w-4 h-4 mr-2" />
-                  Bilimclass өту
+                  Күнделікке өту
                 </Button>
               </div>
             </CardContent>

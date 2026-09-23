@@ -40,6 +40,13 @@ export default function ReviewsSection() {
       setIsModalOpen(false);
       setRating(5);
     },
+    onError: () => {
+      toast({
+        title: "Қате шықты",
+        description: "Пікірді жіберу мүмкін болмады. Қайталап көріңіз.",
+        variant: "destructive",
+      });
+    },
   });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -71,7 +78,7 @@ export default function ReviewsSection() {
   if (isLoading) return null;
 
   return (
-    <section className="py-10 bg-[#0f172a] overflow-hidden" id="reviews">
+    <section className="py-10 bg-white overflow-hidden" id="reviews">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
           <div className="max-w-2xl">
@@ -79,20 +86,20 @@ export default function ReviewsSection() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-4xl md:text-5xl font-bold text-white mb-4"
+              className="text-4xl md:text-5xl font-bold text-black mb-4"
             >
               Біз туралы <span className="text-primary">пікірлер</span>
             </motion.h2>
-            <p className="text-gray-300 text-lg">
+            <p className="text-black text-lg">
               Ата-аналар мен оқушылардың біз туралы ойлары. Біз әр пікірді бағалаймыз.
             </p>
           </div>
           
           <div className="flex gap-4">
-            <Button variant="outline" size="icon" onClick={scrollPrev} className="rounded-full border-slate-600 text-slate-300 hover:bg-slate-800 hover:text-white bg-transparent">
+            <Button variant="outline" size="icon" onClick={scrollPrev} className="rounded-full border-slate-600 text-black hover:bg-gray-100 hover:text-white bg-transparent">
               <ArrowLeft className="h-5 w-5" />
             </Button>
-            <Button variant="outline" size="icon" onClick={scrollNext} className="rounded-full border-slate-600 text-slate-300 hover:bg-slate-800 hover:text-white bg-transparent">
+            <Button variant="outline" size="icon" onClick={scrollNext} className="rounded-full border-slate-600 text-black hover:bg-gray-100 hover:text-white bg-transparent">
               <ArrowRight className="h-5 w-5" />
             </Button>
             
@@ -112,7 +119,7 @@ export default function ReviewsSection() {
                     <Input 
                       name="authorName" 
                       placeholder="Атыңызды жазыңыз" 
-                      className="bg-gray-50 dark:bg-slate-800 border-gray-200 dark:border-slate-700 dark:text-white" 
+                      className="bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 dark:text-white" 
                       required 
                       onInput={(e) => {
                         const val = e.currentTarget.value;
@@ -127,7 +134,7 @@ export default function ReviewsSection() {
                         <Star
                           key={s}
                           className={`h-8 w-8 cursor-pointer transition-all hover:scale-110 ${
-                            s <= rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300 dark:text-gray-600"
+                            s <= rating ? "fill-yellow-400 text-yellow-600" : "text-black dark:text-gray-600"
                           }`}
                           onClick={() => setRating(s)}
                         />
@@ -139,7 +146,7 @@ export default function ReviewsSection() {
                     <Textarea 
                       name="content" 
                       placeholder="Біз туралы ойыңызды бөлісіңіз..." 
-                      className="min-h-[120px] bg-gray-50 dark:bg-slate-800 border-gray-200 dark:border-slate-700 dark:text-white"
+                      className="min-h-[120px] bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 dark:text-white"
                       required 
                       onInput={(e) => {
                         const val = e.currentTarget.value;
@@ -172,12 +179,12 @@ export default function ReviewsSection() {
                     viewport={{ once: true }}
                     className="h-full"
                   >
-                    <Card className="h-full border-none shadow-xl shadow-black/20 bg-slate-800/50 backdrop-blur-sm relative overflow-hidden group hover:shadow-2xl transition-all duration-300">
+                    <Card className="h-full border-none shadow-xl shadow-black/20 bg-white backdrop-blur-sm relative overflow-hidden group hover:shadow-2xl transition-all duration-300">
                       <div className="absolute top-0 left-0 w-1 h-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity" />
                       <CardContent className="p-8">
                         <div className="flex justify-between items-start mb-6">
                           <div className="flex flex-col">
-                            <h3 className="font-bold text-white text-lg leading-tight mb-1">
+                            <h3 className="font-bold text-black text-lg leading-tight mb-1">
                               {review.authorName}
                             </h3>
                             <div className="flex items-center gap-2">
@@ -186,7 +193,7 @@ export default function ReviewsSection() {
                                   <Star
                                     key={i}
                                     className={`h-4 w-4 ${
-                                      i < review.rating ? "fill-yellow-400 text-yellow-400" : "text-gray-200"
+                                      i < review.rating ? "fill-yellow-400 text-yellow-600" : "text-black"
                                     }`}
                                   />
                                 ))}
@@ -196,10 +203,10 @@ export default function ReviewsSection() {
                           </div>
                           <Quote className="h-10 w-10 text-primary/10 rotate-180" />
                         </div>
-                        <p className="text-gray-300 italic leading-relaxed relative z-10">
+                        <p className="text-black italic leading-relaxed relative z-10">
                           "{review.content}"
                         </p>
-                        <div className="mt-6 text-sm text-gray-400">
+                        <div className="mt-6 text-sm text-gray-600">
                           {new Date(review.createdAt!).toLocaleDateString('ru-RU')}
                         </div>
                       </CardContent>
@@ -209,7 +216,7 @@ export default function ReviewsSection() {
               ))
             ) : (
               <div className="w-full text-center py-20 bg-white rounded-3xl border-2 border-dashed border-gray-200">
-                <MessageSquare className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                <MessageSquare className="h-12 w-12 text-black mx-auto mb-4" />
                 <p className="text-gray-500">Әзірге пікірлер жоқ. Алғашқы болып қалдырыңыз!</p>
               </div>
             )}
