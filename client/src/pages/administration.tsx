@@ -8,8 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import EditableText from "@/components/admin/editable-text";
 import ContactCta from "@/components/contact-cta";
+import PageHeader from "@/components/page-header";
+import SEOHead from "@/components/seo-head";
 
 interface Staff {
   name: string;
@@ -187,13 +188,9 @@ export default function AdministrationPage() {
   return (
     <div className="min-h-screen bg-white bg-grid-pattern dark:bg-[#0f172a]">
       <div className="container mx-auto px-4 py-10 sm:py-12">
+        <SEOHead page="administration" />
         <div className="mb-8 text-center">
-          <EditableText
-            contentKey="administration.heading"
-            defaultValue="Әкімшілік"
-            tag="h1"
-            className="text-3xl md:text-4xl font-bold text-center text-[#2A4A46]"
-          />
+          <PageHeader title="Әкімшілік" titleKey="administration.heading" className="" />
           {user && (
             <Button
               className="mt-6 rounded-full bg-blue-600 px-6 text-white hover:bg-blue-700"

@@ -1,47 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://bilimdi-urpaq.kz/</loc>
+    <loc>https://fgs.edu.kz/</loc>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://bilimdi-urpaq.kz/about-school</loc>
+    <loc>https://fgs.edu.kz/about-school</loc>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://bilimdi-urpaq.kz/administration</loc>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://bilimdi-urpaq.kz/teachers</loc>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://bilimdi-urpaq.kz/students</loc>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://bilimdi-urpaq.kz/parents</loc>
+    <loc>https://fgs.edu.kz/administration</loc>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://bilimdi-urpaq.kz/gallery</loc>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://bilimdi-urpaq.kz/school-documents</loc>
+    <loc>https://fgs.edu.kz/primary-teachers</loc>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://bilimdi-urpaq.kz/upbringing-work</loc>
+    <loc>https://fgs.edu.kz/students</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://fgs.edu.kz/kruzhki</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://fgs.edu.kz/education-process</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fgs.edu.kz/upbringing-work</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fgs.edu.kz/canteen</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fgs.edu.kz/gallery</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fgs.edu.kz/events</loc>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://bilimdi-urpaq.kz/contact</loc>
-    <priority>0.9</priority>
+    <loc>https://fgs.edu.kz/schedule</loc>
+    <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://bilimdi-urpaq.kz/state-attestation</loc>
+    <loc>https://fgs.edu.kz/school-documents</loc>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fgs.edu.kz/state-attestation</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fgs.edu.kz/contact</loc>
+    <priority>0.8</priority>
   </url>
 </urlset>

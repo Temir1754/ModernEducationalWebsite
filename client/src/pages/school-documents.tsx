@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import React, { useMemo, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient } from "@/lib/queryClient";
+import PageHeader from "@/components/page-header";
 
 // ─── API helper ──────────────────────────────────────────────────────────────
 
@@ -438,8 +439,7 @@ export default function SchoolDocumentsPage() {
       <SEOHead page="documents" />
       <div className="min-h-screen bg-white">
         <div className="container mx-auto px-4 py-8 max-w-6xl">
-          <h1 className="text-2xl font-bold text-black mb-1">Мемлекеттік аттестация</h1>
-          <p className="text-gray-600 text-sm mb-6">Мектептің барлық маңызды құжаттарымен танысыңыз</p>
+          <PageHeader title="Мемлекеттік аттестация" subtitle="Мектептің барлық маңызды құжаттарымен танысыңыз" className="mb-10 mt-4" />
 
           <div className="flex items-center justify-between flex-wrap gap-3 mb-6">
             <div className="relative flex-1 min-w-[240px] max-w-lg">

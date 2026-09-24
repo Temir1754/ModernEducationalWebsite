@@ -12,6 +12,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { queryClient } from "@/lib/queryClient";
 import type { Media } from "@shared/schema";
 import { motion, AnimatePresence } from "framer-motion";
+import PageHeader from "@/components/page-header";
 
 export default function GalleryPage() {
 
@@ -152,24 +153,13 @@ export default function GalleryPage() {
         {/* Editorial Hero */}
         <div className="w-full px-4 sm:px-8 lg:px-12 pt-14 pb-8 sm:pt-20 sm:pb-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
           <div>
-            <div className="flex items-center gap-3 mb-4">
-              <span className="h-px w-10 bg-black" />
-              <span
-                className="text-xs font-bold uppercase tracking-[0.3em]"
-                style={{ color: "#000000" }}
-              >
-                Фотогалерея
-              </span>
-            </div>
-            <h1
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.05]"
-              style={{ color: "#000000", fontFamily: "'Montserrat', sans-serif" }}
-            >
-              Біздің мектеп өмірі
-            </h1>
-            <p className="mt-5 text-base sm:text-lg max-w-xl" style={{ color: "#000000" }}>
-              Білімді ұрпақ жекеменшік мектебінің өмірінен қызықты сәттер мен іс-шаралар галереясы
-            </p>
+            <PageHeader
+              eyebrow="Фотогалерея"
+              title="Біздің мектеп өмірі"
+              subtitle="Білімді ұрпақ жекеменшік мектебінің өмірінен қызықты сәттер мен іс-шаралар галереясы"
+              align="left"
+              className=""
+            />
           </div>
 
           {/* Admin Upload Button */}

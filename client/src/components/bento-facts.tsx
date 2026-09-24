@@ -58,7 +58,7 @@ export default function BentoFacts() {
           <motion.h2 
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            className="text-3xl md:text-5xl font-black mt-4 text-black leading-tight"
+            className="text-3xl md:text-5xl font-extrabold mt-4 text-black leading-tight"
           >
             Білімді ұрпақ жекеменшік мектебі — бұл <span className="text-black">сапа мен нәтиже</span>
           </motion.h2>

@@ -18,6 +18,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import type { Media, Document } from "@shared/schema";
+import PageHeader from "@/components/page-header";
+import SEOHead from "@/components/seo-head";
 
 function AdminDocActions({ doc, updateMutation, scansDeleteMutation, onEdit }: {
   doc: any;
@@ -1060,15 +1062,8 @@ export default function UpbringingWorkPage() {
     <div className="min-h-screen bg-white dark:bg-[#0f172a]">
       {/* Main Content */}
       <div className="container mx-auto px-4 pt-12 pb-6 sm:pb-8">
-        {/* Page Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-3xl md:text-5xl font-bold text-center mb-6 text-black" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-            Мектеп <span className="text-black">өмірі</span>
-          </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
-            Біздің мектептің күнделікті өміріне көз жүгіртіңіз
-          </p>
-        </div>
+        <SEOHead page="upbringing" />
+        <PageHeader title="Мектеп өмірі" subtitle="Біздің мектептің күнделікті өміріне көз жүгіртіңіз" className="mb-16" />
 
 
         {/* Interactive Statistics */}

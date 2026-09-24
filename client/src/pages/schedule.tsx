@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import PageHeader from "@/components/page-header";
 
 interface ScheduleItem {
   class: string;
@@ -153,11 +154,12 @@ export default function SchedulePage() {
 
   return (
     <>
-      <SEOHead page="home" />
+      <SEOHead page="schedule" />
 
       <div className="min-h-screen bg-white dark:bg-[#0f172a]">
         {/* Grid of class schedules */}
         <div className="container mx-auto px-4 py-8">
+          <PageHeader title="Сабақ кестесі" className="mb-10 mt-4" />
           {user && (
             <div className="mb-6 flex justify-end">
               <Button

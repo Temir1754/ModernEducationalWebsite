@@ -28,9 +28,9 @@ interface Achievement {
 const ITEMS_KEY = "students.achievements.items";
 const PAGE_SIZE = 9;
 
-const SERIF = "font-['Alegreya',serif] [font-variant-numeric:lining-nums]";
-const CREAM = "bg-[#F4EFE7]";
-const BROWN = "text-[#7A5C3E]";
+// Site brand: Montserrat headings, teal / dark teal / orange
+const HEADING = "font-heading";
+const TEAL = "text-[#24806A]";
 
 const categories: { key: Category | "all"; label: string }[] = [
   { key: "all", label: "Барлығы" },
@@ -63,26 +63,26 @@ function CardPhoto({ image, dark = false, className = "" }: { image: string; dar
   return image ? (
     <img src={image} alt="" className={`h-full w-full object-cover ${className}`} />
   ) : (
-    <div className={`flex h-full w-full items-center justify-center ${dark ? "bg-[#2A2622] text-white/20" : "bg-[#E6DED2] text-[#B9A994]"} ${className}`}>
+    <div className={`flex h-full w-full items-center justify-center ${dark ? "bg-[#2A4A46] text-white/25" : "bg-gray-100 text-gray-300"} ${className}`}>
       <ImageIcon className="h-10 w-10" />
     </div>
   );
 }
 
 function CardText({ item, number, dark }: { item: Achievement; number: number; dark: boolean }) {
-  const muted = dark ? "text-white/70" : "text-[#8A8175]";
+  const muted = dark ? "text-white/70" : "text-gray-500";
   return (
     <div className="flex h-full flex-col">
       <div className="min-h-0 flex-1 overflow-hidden">
-        <p className={`${SERIF} text-3xl font-normal leading-none sm:text-4xl ${dark ? "text-white/90" : "text-[#9C8A73]"}`}>{pad(number)}</p>
-        <h3 className={`${SERIF} mt-3 line-clamp-3 text-[17px] font-medium leading-snug ${dark ? "text-white" : "text-[#1F1B16]"}`}>{item.title}</h3>
-        {item.subject && <p className={`mt-1.5 line-clamp-2 text-sm leading-snug ${dark ? "text-white/90" : "text-[#3A342C]"}`}>{item.subject}</p>}
+        <p className={`${HEADING} text-3xl font-extrabold leading-none text-[#F2A63B]`}>{pad(number)}</p>
+        <h3 className={`${HEADING} mt-2.5 line-clamp-3 text-[15px] font-bold leading-snug ${dark ? "text-white" : "text-[#2A4A46]"}`}>{item.title}</h3>
+        {item.subject && <p className={`mt-1.5 line-clamp-2 text-sm leading-snug ${dark ? "text-white/90" : "text-gray-700"}`}>{item.subject}</p>}
         {item.grade && <p className={`mt-1 text-xs ${muted}`}>{item.grade}</p>}
       </div>
-      {item.place && <p className={`${SERIF} mt-2 shrink-0 text-2xl leading-tight ${dark ? "text-white" : BROWN}`}>{item.place}</p>}
+      {item.place && <p className={`${HEADING} mt-2 shrink-0 text-xl font-extrabold leading-tight ${dark ? "text-white" : TEAL}`}>{item.place}</p>}
       <span
         className={`mt-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border transition-colors ${
-          dark ? "border-white/60 text-white group-hover:bg-white group-hover:text-black" : "border-[#3A342C]/50 text-[#3A342C] group-hover:bg-[#3A342C] group-hover:text-white"
+          dark ? "border-white/60 text-white group-hover:bg-white group-hover:text-black" : "border-[#24806A]/50 text-[#24806A] group-hover:bg-[#24806A] group-hover:text-white"
         }`}
       >
         <ArrowRight className="h-4 w-4" />
@@ -195,7 +195,7 @@ export default function StudentsAchievements() {
   const selectClass = "h-10 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-black";
 
   return (
-    <section className={`mb-16 overflow-hidden rounded-[2rem] ${CREAM} p-5 sm:p-8 lg:p-10`}>
+    <section className={`mb-16 overflow-hidden rounded-[2rem] bg-[#F7F7F5] p-5 dark:bg-[#131722] sm:p-8 lg:p-10`}>
       {/* Hero */}
       <div className="relative mb-10 grid overflow-hidden rounded-2xl lg:grid-cols-[1fr_1.15fr]">
         <div className="relative z-10 py-4 lg:py-12 lg:pr-4">
@@ -203,33 +203,34 @@ export default function StudentsAchievements() {
             contentKey="students.achievements.eyebrow"
             defaultValue="Оқушылардың жетістіктері"
             tag="p"
-            className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-[#3A342C]"
+            className="mb-2 text-sm font-bold uppercase tracking-widest text-[#24806A]"
           />
           <EditableText
             contentKey="students.achievements.title"
             defaultValue={"Оқушылардың\nжетістіктері"}
-            tag="h2"
+            tag="h1"
             multiline
-            className={`${SERIF} whitespace-pre-line text-4xl font-normal uppercase leading-[1.05] text-[#1F1B16] sm:text-5xl xl:text-6xl`}
+            className={`${HEADING} whitespace-pre-line text-3xl font-extrabold uppercase leading-tight text-[#2A4A46] sm:text-4xl xl:text-5xl`}
           />
+          <div className="my-6 h-[3px] w-40 bg-gradient-to-r from-[#F2A63B] to-transparent" />
           <EditableText
             contentKey="students.achievements.subtitle"
             defaultValue="Мектеп қабырғасынан тыс жерде"
             tag="p"
-            className={`${SERIF} mt-5 text-2xl italic text-[#5C5247]`}
+            className="text-base font-bold uppercase tracking-wide text-[#24806A]"
           />
           <EditableText
             contentKey="students.achievements.text"
             defaultValue="Оқушыларымыздың білімі, таланты мен еңбегі түрлі олимпиадалар мен байқауларда өз нәтижесін көрсетуде."
             tag="p"
             multiline
-            className="mt-6 max-w-md text-[#3A342C]"
+            className="mt-5 max-w-md text-gray-700 dark:text-gray-300"
           />
         </div>
 
         <div className="relative min-h-[260px] overflow-hidden rounded-2xl sm:min-h-[340px] lg:min-h-0">
-          <PhotoSlot slots={heroSlots} index={0} inputId="students-achievements-hero" className="!absolute inset-0 !bg-[#E6DED2]" />
-          <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-1/3 bg-gradient-to-r from-[#F4EFE7] to-transparent lg:block" />
+          <PhotoSlot slots={heroSlots} index={0} inputId="students-achievements-hero" className="!absolute inset-0 !bg-gray-100" />
+          <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-1/3 bg-gradient-to-r from-[#F7F7F5] to-transparent lg:block" />
           <div className="pointer-events-none absolute right-5 top-5 hidden flex-col items-center text-xs text-white/90 drop-shadow sm:flex">
             <span>01</span>
             <span className="my-1 h-10 w-px bg-white/70" />
@@ -257,7 +258,7 @@ export default function StudentsAchievements() {
                 setShowAll(false);
               }}
               className={`rounded-full px-4 py-1.5 text-sm transition-colors ${
-                filter === key ? "bg-[#7A5C3E] text-white" : "text-[#3A342C] hover:bg-[#E6DED2]"
+                filter === key ? "bg-[#24806A] text-white" : "text-[#2A4A46] hover:bg-[#24806A]/10"
               }`}
             >
               {label}
@@ -268,7 +269,7 @@ export default function StudentsAchievements() {
           {user && (
             <Button
               size="sm"
-              className="rounded-full bg-[#7A5C3E] text-white hover:bg-[#654b32]"
+              className="rounded-full bg-[#24806A] text-white hover:bg-[#1d6b58]"
               onClick={() => setEditing({ index: -1, draft: { ...emptyItem, category: filter === "all" ? "olympiad" : filter } })}
             >
               <Plus className="mr-1 h-4 w-4" />
@@ -276,7 +277,7 @@ export default function StudentsAchievements() {
             </Button>
           )}
           {filtered.length > PAGE_SIZE && (
-            <button type="button" onClick={() => setShowAll((v) => !v)} className="flex items-center gap-2 text-sm text-[#3A342C] hover:text-[#7A5C3E]">
+            <button type="button" onClick={() => setShowAll((v) => !v)} className="flex items-center gap-2 text-sm font-semibold text-[#2A4A46] hover:text-[#24806A]">
               {showAll ? "Жасыру" : "Барлық жетістіктер"}
               <ArrowRight className={`h-4 w-4 transition-transform ${showAll ? "-rotate-90" : ""}`} />
             </button>
@@ -286,7 +287,7 @@ export default function StudentsAchievements() {
 
       {/* Cards */}
       {visible.length === 0 ? (
-        <p className="py-10 text-center text-[#8A8175]">Бұл санатта әзірге жетістік жоқ.</p>
+        <p className="py-10 text-center text-gray-500">Бұл санатта әзірге жетістік жоқ.</p>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map(({ item, index }) => {
@@ -300,17 +301,17 @@ export default function StudentsAchievements() {
                 >
                   {dark ? (
                     <>
-                      <div className="absolute inset-0 bg-[#1B1B1F]">
+                      <div className="absolute inset-0 bg-[#2A4A46]">
                         <CardPhoto image={item.image} dark className="transition-transform duration-500 group-hover:scale-105" />
                       </div>
-                      <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-r from-[#1E3835]/90 via-[#1E3835]/60 to-transparent" />
                       <div className="relative h-full w-3/5 p-5">
                         <CardText item={item} number={index + 1} dark />
                       </div>
                     </>
                   ) : (
                     <div className={`flex h-full ${item.photoSide === "left" ? "flex-row-reverse" : ""}`}>
-                      <div className="w-3/5 bg-[#EEE7DC] p-4 sm:w-[55%] sm:p-5">
+                      <div className="w-3/5 bg-white p-4 sm:w-[55%] sm:p-5">
                         <CardText item={item} number={index + 1} dark={false} />
                       </div>
                       <div className="w-2/5 overflow-hidden sm:w-[45%]">
@@ -336,7 +337,7 @@ export default function StudentsAchievements() {
 
       {/* Card details */}
       <Dialog open={!!viewed} onOpenChange={(open) => !open && setViewing(null)}>
-        <DialogContent className="max-w-2xl overflow-hidden bg-[#F4EFE7] p-0 text-black">
+        <DialogContent className="max-w-2xl overflow-hidden bg-white p-0 text-black">
           {viewed && (
             <div className="grid sm:grid-cols-2">
               <div className="aspect-[4/5] sm:aspect-auto sm:min-h-[360px]">
@@ -344,12 +345,12 @@ export default function StudentsAchievements() {
               </div>
               <div className="p-6 sm:p-8">
                 <DialogHeader className="text-left">
-                  <p className={`${SERIF} text-4xl text-[#9C8A73]`}>{pad((viewing ?? 0) + 1)}</p>
-                  <DialogTitle className={`${SERIF} mt-2 text-2xl font-medium text-[#1F1B16]`}>{viewed.title}</DialogTitle>
-                  <DialogDescription className="text-[#3A342C]">{viewed.subject}</DialogDescription>
+                  <p className={`${HEADING} text-4xl font-extrabold text-[#F2A63B]`}>{pad((viewing ?? 0) + 1)}</p>
+                  <DialogTitle className={`${HEADING} mt-2 text-2xl font-bold text-[#2A4A46]`}>{viewed.title}</DialogTitle>
+                  <DialogDescription className="text-gray-700">{viewed.subject}</DialogDescription>
                 </DialogHeader>
-                {viewed.grade && <p className="mt-3 text-sm text-[#8A8175]">{viewed.grade}</p>}
-                {viewed.place && <p className={`${SERIF} mt-4 text-3xl ${BROWN}`}>{viewed.place}</p>}
+                {viewed.grade && <p className="mt-3 text-sm text-gray-500">{viewed.grade}</p>}
+                {viewed.place && <p className={`${HEADING} mt-4 text-3xl font-extrabold ${TEAL}`}>{viewed.place}</p>}
               </div>
             </div>
           )}
@@ -441,7 +442,7 @@ export default function StudentsAchievements() {
                 </div>
               </div>
 
-              <Button type="submit" disabled={save.isPending || uploading} className="w-full bg-[#7A5C3E] text-white hover:bg-[#654b32]">
+              <Button type="submit" disabled={save.isPending || uploading} className="w-full bg-[#24806A] text-white hover:bg-[#1d6b58]">
                 {save.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Сақтау
               </Button>

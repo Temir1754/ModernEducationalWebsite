@@ -22,6 +22,7 @@ import {
   ChevronDown
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import PageHeader from "@/components/page-header";
 
 const CanteenPage = () => {
   const [selectedWeek, setSelectedWeek] = useState(1);
@@ -436,7 +437,7 @@ const CanteenPage = () => {
 
   return (
     <>
-      <SEOHead page="home" />
+      <SEOHead page="canteen" />
 
       <div className="min-h-screen bg-white dark:bg-[#0f172a]">
         {/* Header with Back Button - Enhanced for mobile */}
@@ -444,15 +445,7 @@ const CanteenPage = () => {
 
         {/* Main Content */}
         <div className="container mx-auto px-4 pt-12 pb-6 sm:pb-8">
-        {/* Page Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-3xl md:text-5xl font-bold text-center mb-6 text-black" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-            Мектеп <span className="text-black">асханасы</span>
-          </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
-            Сапалы және пайдалы тамақтану – балалардың денсаулығының кепілі
-          </p>
-        </div>
+        <PageHeader title="Мектеп асханасы" subtitle="Сапалы және пайдалы тамақтану – балалардың денсаулығының кепілі" className="mb-16" />
 
 
           <div className="grid lg:grid-cols-2 gap-8 mb-6">

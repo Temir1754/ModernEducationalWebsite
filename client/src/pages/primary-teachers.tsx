@@ -5,6 +5,8 @@ import { ArrowLeft, Filter } from "lucide-react";
 import { Link } from "wouter";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useState } from "react";
+import PageHeader from "@/components/page-header";
+import SEOHead from "@/components/seo-head";
 
 // Teacher data structure
 interface Teacher {
@@ -164,6 +166,8 @@ export default function PrimaryTeachersPage() {
 
       {/* Main Content */}
       <div className="container mx-auto px-4 pt-12 pb-6 sm:pt-16 sm:pb-8">
+        <SEOHead page="teachers" />
+        <PageHeader title="Мұғалімдер" subtitle="Біздің педагогикалық ұжым" />
         {/* About Our Team Section */}
         <div className="mb-8">
           <div className="max-w-6xl mx-auto">

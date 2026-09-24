@@ -14,6 +14,8 @@ import { Loader2, Plus, Trash2, Pencil, ChevronUp, Upload } from "lucide-react";
 import type { SiteContent } from "@shared/schema";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import PageHeader from "@/components/page-header";
+import SEOHead from "@/components/seo-head";
 
 interface Club {
   name: string;
@@ -100,7 +102,6 @@ const CLUB_FIELDS: { key: keyof Club; label: string; multiline?: boolean; requir
 
 const TEAL = "text-[#24806A]";
 const HEADING = "text-[#2A4A46]";
-const SERIF = "font-['Alegreya',serif]";
 
 const TRANSLIT: Record<string, string> = {
   а: "a", ә: "a", б: "b", в: "v", г: "g", ғ: "g", д: "d", е: "e", ё: "e", ж: "zh", з: "z", и: "i", й: "i", к: "k", қ: "k",
@@ -523,12 +524,14 @@ export default function KruzhkiPage() {
         </div>
       </div>
 
+      <SEOHead page="kruzhki" />
+
       {/* ---------- No direction picked yet ---------- */}
       {!category && (
         <section className="flex min-h-[50vh] items-center justify-center px-4 py-20">
           {!isContentLoading && clubsData.length === 0 ? (
             <div className="text-center">
-              <h1 className={`mb-6 text-4xl font-extrabold ${SERIF} ${HEADING}`}>Бағыттар әзірге жоқ</h1>
+              <h1 className={`mb-6 text-4xl font-extrabold ${HEADING}`}>Бағыттар әзірге жоқ</h1>
               {isAdmin && (
                 <Button className="rounded-full bg-[#24806A] text-white hover:bg-[#1d6b58]" disabled={saveData.isPending} onClick={addCategory}>
                   <Plus className="mr-1 h-4 w-4" />Бағыт қосу
@@ -548,8 +551,7 @@ export default function KruzhkiPage() {
           <section id="classes" className="relative scroll-mt-28 bg-[#F5F1E6] pb-16 pt-10 lg:pb-24 lg:pt-14">
             <div className="container mx-auto px-4">
               <div className="mb-14 text-center">
-                <p className={`mb-3 text-sm font-medium uppercase tracking-[0.18em] ${TEAL}`}>Біздің үйірмелер</p>
-                <h2 className={`text-4xl font-extrabold md:text-6xl ${SERIF} ${HEADING}`}>Үйірмені таңдаңыз</h2>
+                <PageHeader eyebrow="Біздің үйірмелер" title="Үйірмені таңдаңыз" className="" />
                 {isAdmin && (
                   <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
                     <Button size="sm" className="rounded-full bg-[#24806A] text-white hover:bg-[#1d6b58]" onClick={() => setEditing({ cat: categoryIndex, index: -1, draft: { name: "", description: "", image: "", schedule: "", age: "", teacher: "" } })}>
@@ -569,7 +571,7 @@ export default function KruzhkiPage() {
                     className={`grid items-center gap-4 px-6 py-6 md:grid-cols-[1.5fr_0.7fr_1.2fr] md:gap-8 ${clubIndex % 2 === 0 ? "bg-[#F0E8D5]" : "bg-[#F8F5EC]"}`}
                   >
                     <div>
-                      <h4 className={`mb-1 text-2xl font-bold ${SERIF} ${HEADING}`}>{club.name}</h4>
+                      <h4 className={`mb-1 text-2xl font-bold ${HEADING}`}>{club.name}</h4>
                       {club.description && <p className="max-w-sm text-sm leading-relaxed text-gray-600">{club.description}</p>}
                     </div>
                     <div className="flex items-center gap-3">
@@ -612,7 +614,7 @@ export default function KruzhkiPage() {
               <div className="container relative mx-auto px-4">
                 <div className="mb-14 text-center">
                   <p className={`mb-3 text-sm font-medium uppercase tracking-[0.18em] ${TEAL}`}>Біздің команда</p>
-                  <h2 className={`text-4xl font-extrabold md:text-6xl ${SERIF} ${HEADING}`}>Үйірме жетекшілері</h2>
+                  <h2 className={`text-4xl font-extrabold md:text-6xl ${HEADING}`}>Үйірме жетекшілері</h2>
                   {isAdmin && (
                     <Button size="sm" className="mt-6 rounded-full bg-[#24806A] text-white hover:bg-[#1d6b58]" onClick={() => setTeacherEditing({ cat: categoryIndex, originalName: null, draft: { name: "", role: "", photo: "" } })}>
                       <Plus className="mr-1 h-4 w-4" />Жетекші қосу

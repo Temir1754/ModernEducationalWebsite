@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { ArrowLeft, Award, FileText, Download, Calendar, CheckCircle } from "lucide-react";
 import SEOHead from "@/components/seo-head";
+import PageHeader from "@/components/page-header";
 
 export default function StateAttestationPage() {
   const attestationDocuments = [
@@ -58,6 +59,7 @@ export default function StateAttestationPage() {
 
         {/* Main Content */}
         <div className="container mx-auto px-4 py-8">
+          <PageHeader title="Мемлекеттік аттестаттау" className="mb-10 mt-4" />
 
           {/* Overview */}
           <Card className="mb-8">

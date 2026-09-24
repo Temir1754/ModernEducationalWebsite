@@ -109,7 +109,7 @@ export default function EditableGallery({ contentKey, defaultCaptions }: { conte
               )}
             </div>
             {item.caption && (
-              <figcaption className="mt-2 text-sm font-bold text-[#0B2A5B] dark:text-gray-100 sm:mt-3 sm:text-base">{item.caption}</figcaption>
+              <figcaption className="mt-2 text-sm font-bold text-[#2A4A46] dark:text-gray-100 sm:mt-3 sm:text-base">{item.caption}</figcaption>
             )}
             {user && (
               <div className="absolute right-2 top-2 z-10 flex gap-1.5">

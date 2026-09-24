@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://bilimdi-urpaq.kz/sitemap.xml
+Sitemap: https://fgs.edu.kz/sitemap.xml

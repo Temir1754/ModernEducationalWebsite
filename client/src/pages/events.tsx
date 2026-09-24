@@ -5,6 +5,7 @@ import { Link } from "wouter";
 import SEOHead from "@/components/seo-head";
 import { format } from "date-fns";
 import { kk } from "date-fns/locale";
+import PageHeader from "@/components/page-header";
 
 interface SchoolEvent {
   id: string;
@@ -26,11 +27,12 @@ const EventsPage = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#0f172a]">
-      <SEOHead page="home" customTitle="Іс-шаралар күнтізбесі | Білімді ұрпақ жекеменшік мектебі" />
+      <SEOHead page="events" />
 
       
 
       <div className="container mx-auto px-4 py-12">
+        <PageHeader title="Іс-шаралар күнтізбесі" />
         {isLoading ? (
           <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>

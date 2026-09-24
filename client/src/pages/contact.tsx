@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { useState, useEffect } from "react";
 import { MapPin, Phone, Mail, Clock, MessageCircle, Send, Instagram, Facebook, Building, ArrowLeft, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import PageHeader from "@/components/page-header";
 
 export default function ContactPage() {
   const [activeSection, setActiveSection] = useState<string>("");
@@ -121,15 +122,7 @@ export default function ContactPage() {
 
         {/* Main Content */}
         <div className="container mx-auto px-4 pt-12 pb-6 sm:pb-8">
-        {/* Page Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-3xl md:text-5xl font-bold text-center mb-6 text-black" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-            Бізбен <span className="text-black">байланыс</span>
-          </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
-            Бізбен хабарласып, сұрақтарыңызды қойыңыз. Біз сіздерге көмектесуге әрдайым дайынбыз.
-          </p>
-        </div>
+        <PageHeader title="Бізбен байланыс" subtitle="Бізбен хабарласып, сұрақтарыңызды қойыңыз. Біз сіздерге көмектесуге әрдайым дайынбыз." className="mb-16" />
 
 
           {/* Contact Information Cards */}

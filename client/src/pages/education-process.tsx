@@ -4,6 +4,8 @@ import { Link } from "wouter";
 import { useState, useMemo, useEffect } from "react";
 import { ArrowLeft, BookOpen, ExternalLink, Award, TrendingUp, Users, Clock, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import PageHeader from "@/components/page-header";
+import SEOHead from "@/components/seo-head";
 
 export default function EducationProcessPage() {
   const [activeSection, setActiveSection] = useState<string>("");
@@ -107,15 +109,8 @@ export default function EducationProcessPage() {
 
       {/* Main Content */}
       <div className="container mx-auto px-4 pt-12 pb-6 sm:pb-8">
-        {/* Page Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-3xl md:text-5xl font-bold text-center mb-6 text-gray-800 dark:text-gray-100" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-            Оқу <span className="text-blue-500">процесі</span>
-          </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
-            Білімді ұрпақ жекеменшік мектебіндегі оқу бағдарламалары мен білім беру стандарты
-          </p>
-        </div>
+        <SEOHead page="education" />
+        <PageHeader title="Оқу процесі" subtitle="Білімді ұрпақ жекеменшік мектебіндегі оқу бағдарламалары мен білім беру стандарты" className="mb-16" />
 
         <div className="grid gap-8">
 

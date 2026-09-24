@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import EditableText from "@/components/admin/editable-text";
 import ContactCta from "@/components/contact-cta";
+import SEOHead from "@/components/seo-head";
 
 interface Certificate {
   image: string;
@@ -258,6 +259,7 @@ export default function AboutSchoolPage() {
     <div className="min-h-screen bg-white bg-grid-pattern dark:bg-[#0f172a]">
       <div className="container mx-auto px-4 py-10 sm:py-12">
 
+        <SEOHead page="about" />
         {/* Hero */}
         <div
           className="mb-16 overflow-hidden rounded-[2rem] bg-[#F7F7F5] px-6 py-10 dark:bg-[#131722] sm:px-10 sm:py-14"
@@ -278,7 +280,7 @@ export default function AboutSchoolPage() {
                 contentKey="about.hero.title"
                 defaultValue="Білімді ұрпақ жекеменшік мектебі"
                 tag="h1"
-                className="text-3xl font-bold leading-tight text-[#2A4A46] md:text-4xl"
+                className="font-heading text-3xl font-extrabold leading-tight text-[#2A4A46] dark:text-gray-100 md:text-5xl"
               />
               <div className="my-6 h-[3px] w-40 bg-gradient-to-r from-[#F2A63B] to-transparent" />
               <EditableText
