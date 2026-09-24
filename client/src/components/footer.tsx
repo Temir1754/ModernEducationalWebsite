@@ -1,12 +1,14 @@
 import { Link } from "wouter";
+import { Clock, MapPin, Phone } from "lucide-react";
+import { FaFacebookF, FaInstagram, FaTelegramPlane, FaWhatsapp } from "react-icons/fa";
 
 export default function Footer() {
   const socialLinks = [
     {
       href: "https://www.instagram.com/fgs.schoolkz/",
-      icon: "fab fa-instagram",
+      Icon: FaInstagram,
       label: "Instagram",
-      className: "text-pink-600 hover:text-pink-500 transform hover:scale-110 transition-all duration-200",
+      className: "text-pink-600",
       onClick: (e: React.MouseEvent) => {
         e.preventDefault();
         window.location.href = 'instagram://user?username=fgs.schoolkz';
@@ -17,9 +19,9 @@ export default function Footer() {
     },
     {
       href: "#",
-      icon: "fab fa-telegram",
+      Icon: FaTelegramPlane,
       label: "Telegram",
-      className: "text-blue-600 hover:text-blue-500 transform hover:scale-110 transition-all duration-200",
+      className: "text-sky-500",
       onClick: (e: React.MouseEvent) => {
         e.preventDefault();
         const telegramLink = prompt('Телеграм каналы немесе топ сілтемесін енгізіңіз (мысалы: https://t.me/bilimdi_urpaq):');
@@ -34,9 +36,9 @@ export default function Footer() {
     },
     {
       href: "https://wa.me/77757906363",
-      icon: "fab fa-whatsapp",
+      Icon: FaWhatsapp,
       label: "WhatsApp",
-      className: "text-green-600 hover:text-green-500 transform hover:scale-110 transition-all duration-200",
+      className: "text-green-600",
       onClick: (e: React.MouseEvent) => {
         e.preventDefault();
         window.location.href = 'whatsapp://send?phone=77757906363';
@@ -47,120 +49,125 @@ export default function Footer() {
     },
     {
       href: "https://www.facebook.com/people/Bilimdi-Urpaq-School/pfbid0b3bkVb2Vz1B59RdK3PfLQR7DcKwJ92XaxfMXdB5kK7wv1AwTBBUbtUZ5uj1oAN7ul/",
-      icon: "fab fa-facebook-f",
+      Icon: FaFacebookF,
       label: "Facebook",
-      className: "text-blue-600 hover:text-blue-500 transform hover:scale-110 transition-all duration-200",
+      className: "text-blue-600",
     },
   ];
 
+  const schoolLinks = [
+    { href: "/about-school", label: "Мектеп туралы" },
+    { href: "/administration", label: "Әкімшілік құрамы" },
+    { href: "/gallery", label: "Фотогалерея" },
+    { href: "/events", label: "Іс-шаралар" },
+  ];
+
+  const serviceLinks = [
+    { href: "/education-process", label: "Оқу үдерісі" },
+    { href: "/upbringing-work", label: "Мектеп тынысы" },
+    { href: "/kruzhki", label: "Үйірмелер" },
+    { href: "/canteen", label: "Асхана" },
+  ];
+
+  const linkClass =
+    "inline-block text-slate-600 hover:text-primary hover:translate-x-1 transition-all duration-200";
+  const contactIconClass =
+    "flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary";
+
   return (
-    <footer className="bg-white text-black py-12">
-      <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-4 gap-8">
-          <div>
+    <footer className="bg-white border-t border-slate-200 text-slate-800">
+      <div className="container mx-auto px-4 pt-12 pb-8">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-[1.3fr_1fr_1fr_1.3fr]">
+          <div className="col-span-2 space-y-6 lg:col-span-1">
+            <Link href="/">
+              <img
+                src="/logo-wide.webp"
+                alt="Білімді ұрпақ жекеменшік мектебі"
+                width={220}
+                height={68}
+                className="h-16 w-auto object-contain cursor-pointer"
+              />
+            </Link>
             <div className="flex flex-wrap gap-3">
-              {socialLinks.map((link, index) => (
+              {socialLinks.map(({ href, Icon, label, className, onClick }) => (
                 <a
-                  key={index}
-                  href={link.href}
-                  className={link.className}
-                  onClick={link.onClick}
-                  aria-label={link.label}
+                  key={label}
+                  href={href}
+                  onClick={onClick}
+                  aria-label={label}
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm ring-1 ring-slate-200 hover:-translate-y-0.5 hover:shadow-md transition-all duration-200"
                 >
-                  <i className={`${link.icon} text-xl`}></i>
+                  <Icon className={`h-[18px] w-[18px] ${className}`} />
                 </a>
               ))}
             </div>
           </div>
 
           <div>
-            <ul className="space-y-2 text-black">
-              <li>
-                <Link href="/about-school" className="hover:text-white">
-                  Мектеп туралы
-                </Link>
-              </li>
-              <li>
-                <Link href="/administration" className="hover:text-white">
-                  Әкімшілік құрамы
-                </Link>
-              </li>
-              <li>
-                <Link href="/gallery" className="hover:text-white">
-                  Фотогалерея
-                </Link>
-              </li>
-              <li>
-                <Link href="/events" className="hover:text-white">
-                  Іс-шаралар
-                </Link>
-              </li>
+            <h4 className="text-base font-semibold mb-5">Мектеп</h4>
+            <ul className="space-y-3">
+              {schoolLinks.map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className={linkClass}>
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           <div>
-            <h4 className="text-lg font-semibold mb-4">Қызметтер</h4>
-            <ul className="space-y-2 text-black">
-              <li>
-                <Link href="/education-process" className="hover:text-white">
-                  Оқу үдерісі
-                </Link>
-              </li>
-              <li>
-                <Link href="/upbringing-work" className="hover:text-white">
-                  Мектеп тынысы
-                </Link>
-              </li>
-              <li>
-                <Link href="/gallery" className="hover:text-white">
-                  Галерея
-                </Link>
-              </li>
-              <li>
-                <Link href="/events" className="hover:text-white">
-                  Іс-шаралар
-                </Link>
-              </li>
-              <li>
-                <Link href="/kruzhki" className="hover:text-white">
-                  Үйірмелер
-                </Link>
-              </li>
-              <li>
-                <Link href="/canteen" className="hover:text-white">
-                  Асхана
-                </Link>
-              </li>
+            <h4 className="text-base font-semibold mb-5">Қызметтер</h4>
+            <ul className="space-y-3">
+              {serviceLinks.map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className={linkClass}>
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          <div>
-            <h4 className="text-lg font-semibold mb-4">Байланыс</h4>
-            <div className="space-y-2 text-black">
-              <button
-                onClick={() => window.open('https://go.2gis.com/DoFle', '_blank')}
-                className="flex items-center hover:text-white transition-colors duration-200 text-left"
-              >
-                <i className="fas fa-map-marker-alt mr-2"></i>
-                Өтегенов 43А, Шымкент
-              </button>
-              <button
-                onClick={() => window.location.href = 'tel:+77757906363'}
-                className="flex items-center hover:text-white transition-colors duration-200 text-left"
-              >
-                <i className="fas fa-phone mr-2"></i>
-                +7‒775‒790‒63‒63
-              </button>
-              <p>
-                <i className="fas fa-clock mr-2"></i>
-                Дүйсенбі - жұма: 08:00 - 18:00
-              </p>
-            </div>
+          <div className="col-span-2 lg:col-span-1">
+            <h4 className="text-base font-semibold mb-5">Байланыс</h4>
+            <ul className="space-y-4 text-slate-600">
+              <li>
+                <a
+                  href="https://go.2gis.com/DoFle"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 hover:text-primary transition-colors duration-200"
+                >
+                  <span className={contactIconClass}>
+                    <MapPin className="h-4 w-4" />
+                  </span>
+                  Өтегенов 43А, Шымкент
+                </a>
+              </li>
+              <li>
+                <a
+                  href="tel:+77757906363"
+                  className="flex items-center gap-3 hover:text-primary transition-colors duration-200"
+                >
+                  <span className={contactIconClass}>
+                    <Phone className="h-4 w-4" />
+                  </span>
+                  +7 775 790 63 63
+                </a>
+              </li>
+              <li className="flex items-center gap-3">
+                <span className={contactIconClass}>
+                  <Clock className="h-4 w-4" />
+                </span>
+                Дүйсенбі – жұма: 08:00 – 18:00
+              </li>
+            </ul>
           </div>
         </div>
 
-        <div className="border-t border-gray-700 mt-8 pt-8 text-center text-black">
-          <p>&copy; 2024 Білімді ұрпақ жекеменшік мектебі. Барлық құқықтар сақталған.</p>
+        <div className="mt-12 border-t border-slate-200 pt-6 text-center text-sm text-slate-500">
+          <p>&copy; {new Date().getFullYear()} Білімді ұрпақ жекеменшік мектебі. Барлық құқықтар сақталған.</p>
         </div>
       </div>
     </footer>
