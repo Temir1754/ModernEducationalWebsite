@@ -58,18 +58,6 @@ export default function Footer() {
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-4 gap-8">
           <div>
-            <div className="flex items-center mb-4">
-              <div className="bg-primary text-white rounded-lg p-2 mr-3">
-                <i className="fas fa-graduation-cap text-xl"></i>
-              </div>
-              <div>
-                <h3 className="text-xl font-bold">Білімді ұрпақ жекеменшік мектебі</h3>
-                <p className="text-sm text-black">Болашақ ұрпақ мектебі</p>
-              </div>
-            </div>
-            <p className="text-black mb-4">
-              Балаларыңыздың болашағына инвестиция жасау үшін дұрыс таңдау - Білімді ұрпақ жекеменшік мектебі.
-            </p>
             <div className="flex flex-wrap gap-3">
               {socialLinks.map((link, index) => (
                 <a
