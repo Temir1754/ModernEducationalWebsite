@@ -1,25 +1,43 @@
 import { useState, useEffect } from "react";
-import { Menu, X, Phone, MessageCircle, Send, Facebook, LogIn } from "lucide-react";
+import { Menu, X, Phone, MessageCircle, Send, Facebook, LogIn, UserRound } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useAuth } from "@/hooks/use-auth";
 
-// Admin login entry, highlighted so it stands out from the contact icons.
-function AdminLoginButton({ className }: { className: string }) {
+// Admin entry, highlighted so it stands out from the contact icons:
+// "Кіру" (login) for guests, "Жеке кабинет" (account page) for a logged-in admin.
+// Where space is tight it collapses to a round icon; the tooltip still names it.
+//   desktop: label only from 2xl (1536px), round icon on smaller desktops
+//   mobile:  the account button is always a round icon, "Кіру" keeps its short label
+function AdminLoginButton({ size, placement }: { size: string; placement: "desktop" | "mobile" }) {
+  const { isAdmin } = useAuth();
+  const item = isAdmin
+    ? { href: "/account", testId: "admin-account", icon: UserRound, label: "Жеке кабинет", hint: "Жеке кабинет" }
+    : { href: "/admin", testId: "admin-login", icon: LogIn, label: "Кіру", hint: "Вход для администратора" };
+  const Icon = item.icon;
+
+  const layout =
+    placement === "desktop"
+      ? { box: "aspect-square justify-center 2xl:aspect-auto 2xl:px-4", label: "hidden 2xl:inline" }
+      : isAdmin
+        ? { box: "aspect-square justify-center", label: "sr-only" }
+        : { box: "px-3 sm:px-4", label: "" };
+
   return (
     <Tooltip>
       <TooltipTrigger asChild>
         <Link
-          href="/admin"
-          data-testid="admin-login"
-          aria-label="Вход для администратора"
-          className={`${className} rounded-full inline-flex items-center gap-1.5 px-4 font-bold text-sm text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-md shadow-blue-600/25 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-600/30 hover:from-blue-500 hover:to-indigo-500`}
+          href={item.href}
+          data-testid={item.testId}
+          aria-label={item.label}
+          className={`${size} ${layout.box} shrink-0 rounded-full inline-flex items-center gap-1.5 font-bold text-sm text-white whitespace-nowrap bg-gradient-to-r from-blue-600 to-indigo-600 shadow-md shadow-blue-600/25 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-600/30 hover:from-blue-500 hover:to-indigo-500`}
         >
-          <LogIn className="w-4 h-4" />
-          Кіру
+          <Icon className="w-4 h-4 shrink-0" />
+          <span className={layout.label}>{item.label}</span>
         </Link>
       </TooltipTrigger>
-      <TooltipContent side="bottom">Вход для администратора</TooltipContent>
+      <TooltipContent side="bottom">{item.hint}</TooltipContent>
     </Tooltip>
   );
 }
@@ -147,7 +165,7 @@ const ResponsiveNavbar = () => {
             </Link>
 
             {/* Desktop Navigation Links */}
-            <div className="hidden xl:flex items-center justify-center gap-0.5 min-[1700px]:gap-1 flex-1 px-4 min-[1700px]:px-8">
+            <div className="hidden xl:flex min-w-0 items-center justify-center gap-0.5 flex-1 px-2 2xl:px-4">
               {visibleNavigation.map((item, index) => (
                 <motion.div
                   key={item.href}
@@ -161,7 +179,7 @@ const ResponsiveNavbar = () => {
                   <Link href={item.href}>
                     <span
                       data-testid={`nav-link-${item.label.toLowerCase().replace(/ /g, '-')}`}
-                      className={`group relative px-2.5 min-[1700px]:px-4 py-2 font-bold text-[12px] min-[1700px]:text-[13px] tracking-wide transition-all duration-300 cursor-pointer whitespace-nowrap block rounded-full ${isActiveRoute(item.href)
+                      className={`group relative px-2 min-[1440px]:px-2.5 py-2 font-bold text-[12px] min-[1700px]:text-[13px] tracking-wide transition-all duration-300 cursor-pointer whitespace-nowrap block rounded-full ${isActiveRoute(item.href)
                         ? isScrolled
                           ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 shadow-sm'
                           : 'text-white bg-white/20 backdrop-blur-md shadow-md ring-1 ring-white/30'
@@ -185,8 +203,8 @@ const ResponsiveNavbar = () => {
             </div>
 
             {/* Mobile Burger Menu Button */}
-            <div className="xl:hidden flex items-center gap-2">
-              <AdminLoginButton className="h-10 sm:h-11" />
+            <div className="xl:hidden flex shrink-0 items-center gap-2">
+              <AdminLoginButton size="h-10 sm:h-11" placement="mobile" />
               <motion.button
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -226,7 +244,7 @@ const ResponsiveNavbar = () => {
             </div>
 
             {/* Desktop Contact Icons */}
-            <div className="hidden xl:flex items-center gap-2 min-[1700px]:gap-3">
+            <div className="hidden xl:flex shrink-0 items-center gap-2 min-[1700px]:gap-3">
 
               <motion.a
                 initial={{ scale: 0.8, opacity: 0 }}
@@ -289,7 +307,7 @@ const ResponsiveNavbar = () => {
 
               <span className="mx-1 h-6 w-px bg-gray-200 dark:bg-gray-700" aria-hidden="true" />
 
-              <AdminLoginButton className="h-9 min-[1700px]:h-11" />
+              <AdminLoginButton size="h-9 min-[1700px]:h-11" placement="desktop" />
 
             </div>
           </div>

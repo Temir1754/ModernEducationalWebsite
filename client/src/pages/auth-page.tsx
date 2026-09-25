@@ -43,13 +43,13 @@ export default function AuthPage({ variant = "admin" }: { variant?: keyof typeof
     const text = variants[variant];
     const Icon = text.icon;
 
-    // A logged-in user whose role matches this login page sees their account page instead of being redirected.
-    const showAccount = !!user && user.role === variant;
+    // A logged-in inspector stays on /inspector and sees their account page.
+    // An admin goes straight to the home page to edit content; the account page is at /account.
+    const showAccount = variant === "inspector" && user?.role === "inspector";
 
     useEffect(() => {
-        if (user && !showAccount) {
-            setLocation("/school-documents");
-        }
+        if (!user || showAccount) return;
+        setLocation(user.role === "admin" ? "/" : "/school-documents");
     }, [user, showAccount, setLocation]);
 
     const form = useForm<LoginData>({
@@ -65,7 +65,7 @@ export default function AuthPage({ variant = "admin" }: { variant?: keyof typeof
     }
 
     if (showAccount) {
-        return <AccountPage role={variant} />;
+        return <AccountPage role="inspector" />;
     }
 
     return (

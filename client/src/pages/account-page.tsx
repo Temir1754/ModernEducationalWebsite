@@ -1,7 +1,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { Link } from "wouter";
+import { useEffect } from "react";
+import { Link, useLocation } from "wouter";
 import { z } from "zod";
 import { Loader2, LogOut, Shield, ShieldCheck, FileText, Home } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
@@ -184,4 +185,26 @@ export default function AccountPage({ role }: { role: keyof typeof roleText }) {
             </Card>
         </div>
     );
+}
+
+// /account: admin-only; anyone else (including after logout) is sent to the admin login page.
+export function AdminAccountRoute() {
+    const { isAdmin, isLoading } = useAuth();
+    const [, setLocation] = useLocation();
+
+    useEffect(() => {
+        if (!isLoading && !isAdmin) {
+            setLocation("/admin");
+        }
+    }, [isAdmin, isLoading, setLocation]);
+
+    if (!isAdmin) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+        );
+    }
+
+    return <AccountPage role="admin" />;
 }

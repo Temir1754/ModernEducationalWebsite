@@ -16,6 +16,7 @@ import { Loader2 } from "lucide-react";
 
 // Lazy load pages
 const AuthPage = lazy(() => import("@/pages/auth-page"));
+const AdminAccountRoute = lazy(() => import("@/pages/account-page").then((m) => ({ default: m.AdminAccountRoute })));
 const Home = lazy(() => import("@/pages/home"));
 const KruzhkiPage = lazy(() => import("@/pages/kruzhki"));
 const PrimaryTeachersPage = lazy(() => import("@/pages/primary-teachers"));
@@ -78,6 +79,7 @@ function Router() {
           <Route path="/gallery" component={GalleryPage} />
           <Route path="/events" component={EventsPage} />
           <Route path="/admin">{() => <AuthPage />}</Route>
+          <Route path="/account" component={AdminAccountRoute} />
           <Route path="/inspector">{() => <AuthPage variant="inspector" />}</Route>
           <Route component={NotFound} />
         </Switch>
