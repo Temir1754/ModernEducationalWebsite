@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, Shield, ShieldCheck } from "lucide-react";
 import { z } from "zod";
+import AccountPage from "@/pages/account-page";
 
 const loginSchema = z.object({
     username: z.string().min(1, "Логинді енгізіңіз"),
@@ -42,11 +43,14 @@ export default function AuthPage({ variant = "admin" }: { variant?: keyof typeof
     const text = variants[variant];
     const Icon = text.icon;
 
+    // A logged-in user whose role matches this login page sees their account page instead of being redirected.
+    const showAccount = !!user && user.role === variant;
+
     useEffect(() => {
-        if (user) {
+        if (user && !showAccount) {
             setLocation("/school-documents");
         }
-    }, [user, setLocation]);
+    }, [user, showAccount, setLocation]);
 
     const form = useForm<LoginData>({
         resolver: zodResolver(loginSchema),
@@ -58,6 +62,10 @@ export default function AuthPage({ variant = "admin" }: { variant?: keyof typeof
 
     function onSubmit(data: LoginData) {
         loginMutation.mutate(data);
+    }
+
+    if (showAccount) {
+        return <AccountPage role={variant} />;
     }
 
     return (

@@ -37,3 +37,11 @@ uploads/
 test-auth.ts
 storage.json
 *.log
+# Резервные копии базы
+backups/
+
+# База данных SQLite: у каждого сервера своя, в git не хранится
+sqlite.db
+sqlite.db-journal
+sqlite.db-wal
+sqlite.db-shm

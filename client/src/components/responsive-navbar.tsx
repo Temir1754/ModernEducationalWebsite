@@ -1,7 +1,28 @@
 import { useState, useEffect } from "react";
-import { Menu, X, Phone, MessageCircle, Send, Facebook } from "lucide-react";
+import { Menu, X, Phone, MessageCircle, Send, Facebook, LogIn } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+
+// Admin login entry, highlighted so it stands out from the contact icons.
+function AdminLoginButton({ className }: { className: string }) {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Link
+          href="/admin"
+          data-testid="admin-login"
+          aria-label="Вход для администратора"
+          className={`${className} rounded-full inline-flex items-center gap-1.5 px-4 font-bold text-sm text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-md shadow-blue-600/25 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-600/30 hover:from-blue-500 hover:to-indigo-500`}
+        >
+          <LogIn className="w-4 h-4" />
+          Кіру
+        </Link>
+      </TooltipTrigger>
+      <TooltipContent side="bottom">Вход для администратора</TooltipContent>
+    </Tooltip>
+  );
+}
 
 interface NavItem {
   label: string;
@@ -165,6 +186,7 @@ const ResponsiveNavbar = () => {
 
             {/* Mobile Burger Menu Button */}
             <div className="xl:hidden flex items-center gap-2">
+              <AdminLoginButton className="h-10 sm:h-11" />
               <motion.button
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -264,6 +286,10 @@ const ResponsiveNavbar = () => {
               >
                 <Facebook className="w-5 h-5" />
               </motion.a>
+
+              <span className="mx-1 h-6 w-px bg-gray-200 dark:bg-gray-700" aria-hidden="true" />
+
+              <AdminLoginButton className="h-9 min-[1700px]:h-11" />
 
             </div>
           </div>

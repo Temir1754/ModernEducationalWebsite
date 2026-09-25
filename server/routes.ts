@@ -90,21 +90,24 @@ const requireAdmin = (req: Request, res: Response, next: NextFunction) => {
 };
 
 // Read-only account for state attestation inspectors (role "inspector" never passes requireAdmin).
-// Credentials come from INSPECTOR_USERNAME / INSPECTOR_PASSWORD in .env; without them no account is created.
+// INSPECTOR_USERNAME / INSPECTOR_PASSWORD in .env are only the initial credentials: the account is
+// created once, and afterwards the inspector manages their own login and password (/api/auth/credentials).
 async function ensureInspectorAccount() {
   const username = process.env.INSPECTOR_USERNAME;
   const password = process.env.INSPECTOR_PASSWORD;
   if (!username || !password) return;
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const existing = await storage.getUserByUsername(username);
-    if (!existing) {
-      await storage.createUser({ username, password: hashedPassword, role: "inspector" });
-      console.log(`[Auth] Inspector account "${username}" created`);
-    } else if (existing.role === "inspector" && !(await bcrypt.compare(password, existing.password))) {
-      await db.update(users).set({ password: hashedPassword }).where(eq(users.id, existing.id));
-      console.log(`[Auth] Inspector account "${username}" password updated`);
+    const [existingInspector] = await db.select().from(users).where(eq(users.role, "inspector"));
+    if (existingInspector) return;
+
+    if (await storage.getUserByUsername(username)) {
+      console.warn(`[Auth] Cannot create inspector: username "${username}" is already taken`);
+      return;
     }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await storage.createUser({ username, password: hashedPassword, role: "inspector" });
+    console.log(`[Auth] Inspector account "${username}" created`);
   } catch (error) {
     console.error("[Auth] Failed to ensure inspector account:", error);
   }
@@ -199,6 +202,51 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
 
     res.json({ user: { id: user.id, username: user.username, role: user.role } });
+  });
+
+  // Admin or inspector changes their own login and password; the current password is required.
+  app.put("/api/auth/credentials", async (req, res) => {
+    try {
+      if (!req.session.userId) {
+        return res.status(401).json({ message: "Жүйеге кіріңіз" });
+      }
+      const user = await storage.getUser(req.session.userId);
+      if (!user || (user.role !== "admin" && user.role !== "inspector")) {
+        return res.status(403).json({ message: "Рұқсат жоқ" });
+      }
+
+      const currentPassword = typeof req.body.currentPassword === "string" ? req.body.currentPassword : "";
+      const newUsername = typeof req.body.newUsername === "string" ? req.body.newUsername.trim() : "";
+      const newPassword = typeof req.body.newPassword === "string" ? req.body.newPassword : "";
+
+      if (!(await bcrypt.compare(currentPassword, user.password))) {
+        return res.status(400).json({ message: "Қазіргі құпиясөз қате" });
+      }
+      if (!/^[A-Za-z0-9_.-]{3,50}$/.test(newUsername)) {
+        return res.status(400).json({ message: "Логин 3–50 таңбадан тұруы керек: латын әріптері, сандар, _ . -" });
+      }
+      if (newPassword.length < 8 || newPassword.length > 100) {
+        return res.status(400).json({ message: "Құпиясөз кемінде 8 таңбадан тұруы керек" });
+      }
+
+      if (newUsername !== user.username) {
+        const taken = await storage.getUserByUsername(newUsername);
+        if (taken) {
+          return res.status(400).json({ message: "Бұл логин бос емес" });
+        }
+      }
+
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      await db.update(users)
+        .set({ username: newUsername, password: hashedPassword })
+        .where(eq(users.id, user.id));
+      console.log(`[Auth] Credentials updated (role ${user.role}, user id ${user.id})`);
+
+      res.json({ user: { id: user.id, username: newUsername, role: user.role } });
+    } catch (error) {
+      console.error("Credentials update error:", error);
+      res.status(500).json({ message: "Сақтау сәтсіз аяқталды" });
+    }
   });
 
   app.post("/api/auth/setup", async (req, res) => {
