@@ -58,7 +58,9 @@ export default function Home() {
   const [selectedFeature, setSelectedFeature] = useState<any>(null);
   const [showModal, setShowModal] = useState(false);
   const { t } = useLanguage();
-  const { user } = useAuth();
+  // Edit controls are admin-only; inspectors get a read-only view.
+  const { isAdmin, user: authUser } = useAuth();
+  const user = isAdmin ? authUser : null;
 
   // News Management
   const [isAddNewsOpen, setIsAddNewsOpen] = useState(false);

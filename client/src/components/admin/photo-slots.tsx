@@ -134,7 +134,7 @@ export function PhotoSlot({
   hideControls?: boolean;
 }) {
   const { user: authUser } = useAuth();
-  const user = hideControls ? null : authUser;
+  const user = hideControls || authUser?.role !== "admin" ? null : authUser;
   const photo = slots.photos[index];
   return (
     <div className={`group relative overflow-hidden bg-gray-100 dark:bg-gray-800 ${className}`}>

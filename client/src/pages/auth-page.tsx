@@ -3,24 +3,44 @@ import { useEffect } from "react";
 import { useLocation } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { insertUserSchema } from "@shared/schema";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Shield } from "lucide-react";
+import { Loader2, Shield, ShieldCheck } from "lucide-react";
 import { z } from "zod";
 
 const loginSchema = z.object({
-    username: z.string().min(1, "Username is required"),
-    password: z.string().min(1, "Password is required"),
+    username: z.string().min(1, "Логинді енгізіңіз"),
+    password: z.string().min(1, "Құпиясөзді енгізіңіз"),
 });
 
 type LoginData = z.infer<typeof loginSchema>;
 
-export default function AuthPage() {
+const variants = {
+    admin: {
+        icon: Shield,
+        title: "Admin Login",
+        subtitle: "Welcome back! Please enter your credentials.",
+        username: "Username",
+        password: "Password",
+        submit: "Sign In",
+    },
+    inspector: {
+        icon: ShieldCheck,
+        title: "Тексерушілер үшін кіру",
+        subtitle: "Мемлекеттік аттестаттау материалдарын қарау үшін логин мен құпиясөзді енгізіңіз.",
+        username: "Логин",
+        password: "Құпиясөз",
+        submit: "Кіру",
+    },
+};
+
+export default function AuthPage({ variant = "admin" }: { variant?: keyof typeof variants }) {
     const { user, loginMutation } = useAuth();
     const [, setLocation] = useLocation();
+    const text = variants[variant];
+    const Icon = text.icon;
 
     useEffect(() => {
         if (user) {
@@ -46,16 +66,16 @@ export default function AuthPage() {
             <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/20 blur-[120px] rounded-full animate-pulse" />
             <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/20 blur-[120px] rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
 
-            <Card className="w-full max-w-md relative z-10 border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl animate-fade-in-up">
+            <Card className="w-full max-w-md relative z-10 border-gray-200 bg-white/80 backdrop-blur-xl shadow-2xl animate-fade-in-up">
                 <CardHeader className="space-y-4 pb-2">
                     <div className="mx-auto w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20">
-                        <Shield className="w-8 h-8 text-black" />
+                        <Icon className="w-8 h-8 text-white" />
                     </div>
-                    <CardTitle className="text-3xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
-                        Admin Login
+                    <CardTitle className="text-2xl sm:text-3xl font-bold text-center text-gray-900">
+                        {text.title}
                     </CardTitle>
                     <p className="text-center text-gray-600 text-sm">
-                        Welcome back! Please enter your credentials.
+                        {text.subtitle}
                     </p>
                 </CardHeader>
                 <CardContent className="pt-6">
@@ -66,13 +86,13 @@ export default function AuthPage() {
                                 name="username"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="text-black font-medium">Username</FormLabel>
+                                        <FormLabel className="text-black font-medium">{text.username}</FormLabel>
                                         <FormControl>
                                             <Input
                                                 {...field}
                                                 autoComplete="username"
-                                                className="bg-white/5 border-white/10 text-white placeholder:text-gray-500 focus:border-blue-500/50 focus:ring-blue-500/20 h-11"
-                                                placeholder="Enter username"
+                                                className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 focus:border-blue-500/50 focus:ring-blue-500/20 h-11"
+                                                placeholder={text.username}
                                             />
                                         </FormControl>
                                         <FormMessage className="text-red-600" />
@@ -84,13 +104,13 @@ export default function AuthPage() {
                                 name="password"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="text-black font-medium">Password</FormLabel>
+                                        <FormLabel className="text-black font-medium">{text.password}</FormLabel>
                                         <FormControl>
                                             <Input
                                                 type="password"
                                                 autoComplete="current-password"
                                                 {...field}
-                                                className="bg-white/5 border-white/10 text-white placeholder:text-gray-500 focus:border-blue-500/50 focus:ring-blue-500/20 h-11"
+                                                className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 focus:border-blue-500/50 focus:ring-blue-500/20 h-11"
                                                 placeholder="••••••••"
                                             />
                                         </FormControl>
@@ -106,7 +126,7 @@ export default function AuthPage() {
                                 {loginMutation.isPending ? (
                                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                                 ) : (
-                                    "Sign In"
+                                    text.submit
                                 )}
                             </Button>
                         </form>

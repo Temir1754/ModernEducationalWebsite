@@ -77,7 +77,8 @@ function Router() {
           <Route path="/contact" component={ContactPage} />
           <Route path="/gallery" component={GalleryPage} />
           <Route path="/events" component={EventsPage} />
-          <Route path="/admin" component={AuthPage} />
+          <Route path="/admin">{() => <AuthPage />}</Route>
+          <Route path="/inspector">{() => <AuthPage variant="inspector" />}</Route>
           <Route component={NotFound} />
         </Switch>
       </Suspense>

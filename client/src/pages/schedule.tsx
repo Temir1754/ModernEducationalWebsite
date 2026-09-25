@@ -46,7 +46,9 @@ const defaultScheduleImages: ScheduleItem[] = [
 ];
 
 export default function SchedulePage() {
-  const { user } = useAuth();
+  // Edit controls are admin-only; inspectors get a read-only view.
+  const { isAdmin, user: authUser } = useAuth();
+  const user = isAdmin ? authUser : null;
   const { toast } = useToast();
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [editing, setEditing] = useState<{ index: number; draft: ScheduleItem } | null>(null);

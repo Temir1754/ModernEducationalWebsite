@@ -236,7 +236,7 @@ const roman = (n: number) => ROMAN[n - 1] ?? String(n);
 export default function SchoolDocumentsPage() {
   const { user } = useAuth();
   const { toast } = useToast();
-  const isAdmin = !!user;
+  const isAdmin = user?.role === "admin";
   const [searchTerm, setSearchTerm] = useState("");
   const [textAction, setTextAction] = useState<TextAction | null>(null);
   const [linkAction, setLinkAction] = useState<LinkAction | null>(null);

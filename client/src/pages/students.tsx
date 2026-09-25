@@ -126,7 +126,9 @@ function EventSection({
   extraTextFields = [],
   photoCaptions = [],
 }: EventSectionProps) {
-  const { user } = useAuth();
+  // Edit controls are admin-only; inspectors get a read-only view.
+  const { isAdmin, user: authUser } = useAuth();
+  const user = isAdmin ? authUser : null;
   // Banner slot 0 is the image, slot 1 the display mode ("image" = uploaded picture only, no text overlay)
   const bannerSlots = usePhotoSlots(`${prefix}.banner`, 2);
   const [bannerImage, bannerMode] = bannerSlots.photos;

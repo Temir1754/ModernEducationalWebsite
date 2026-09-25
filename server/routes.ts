@@ -2,6 +2,8 @@ import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import express from "express";
 import { storage } from "./storage";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
 import session from "express-session";
 import bcrypt from "bcrypt";
 import multer from "multer";
@@ -16,7 +18,8 @@ import {
   insertSiteContentSchema,
   insertSectionSchema,
   insertDocumentFolderSchema,
-  insertReviewSchema
+  insertReviewSchema,
+  users
 } from "@shared/schema";
 // import connectPgSimple from "connect-pg-simple";
 import { Pool } from "@neondatabase/serverless";
@@ -86,9 +89,32 @@ const requireAdmin = (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
+// Read-only account for state attestation inspectors (role "inspector" never passes requireAdmin).
+// Credentials come from INSPECTOR_USERNAME / INSPECTOR_PASSWORD in .env; without them no account is created.
+async function ensureInspectorAccount() {
+  const username = process.env.INSPECTOR_USERNAME;
+  const password = process.env.INSPECTOR_PASSWORD;
+  if (!username || !password) return;
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const existing = await storage.getUserByUsername(username);
+    if (!existing) {
+      await storage.createUser({ username, password: hashedPassword, role: "inspector" });
+      console.log(`[Auth] Inspector account "${username}" created`);
+    } else if (existing.role === "inspector" && !(await bcrypt.compare(password, existing.password))) {
+      await db.update(users).set({ password: hashedPassword }).where(eq(users.id, existing.id));
+      console.log(`[Auth] Inspector account "${username}" password updated`);
+    }
+  } catch (error) {
+    console.error("[Auth] Failed to ensure inspector account:", error);
+  }
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Trust reverse proxy (nginx) so secure cookies work over HTTPS
   app.set("trust proxy", 1);
+
+  await ensureInspectorAccount();
 
   app.use(
     session({

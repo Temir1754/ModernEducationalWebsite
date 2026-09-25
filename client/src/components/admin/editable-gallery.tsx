@@ -20,7 +20,9 @@ export interface GalleryItem {
  * Stored as a JSON array under `contentKey`; `defaultCaptions` seed empty slots until the first save.
  */
 export default function EditableGallery({ contentKey, defaultCaptions }: { contentKey: string; defaultCaptions: string[] }) {
-  const { user } = useAuth();
+  // Edit controls are admin-only; inspectors get a read-only view.
+  const { isAdmin, user: authUser } = useAuth();
+  const user = isAdmin ? authUser : null;
   const { toast } = useToast();
   const [editing, setEditing] = useState<{ index: number; draft: GalleryItem } | null>(null);
   const [uploading, setUploading] = useState(false);

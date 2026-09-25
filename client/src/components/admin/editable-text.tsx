@@ -22,7 +22,9 @@ export default function EditableText({
     className = "",
     multiline = false,
 }: EditableTextProps) {
-    const { user } = useAuth();
+    // Edit controls are admin-only; inspectors get a read-only view.
+    const { isAdmin, user: authUser } = useAuth();
+    const user = isAdmin ? authUser : null;
     const [isEditing, setIsEditing] = useState(false);
     const [editValue, setEditValue] = useState(defaultValue);
 

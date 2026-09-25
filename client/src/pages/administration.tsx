@@ -87,7 +87,9 @@ const defaultAdministrators: Staff[] = [
 ];
 
 export default function AdministrationPage() {
-  const { user } = useAuth();
+  // Edit controls are admin-only; inspectors get a read-only view.
+  const { isAdmin, user: authUser } = useAuth();
+  const user = isAdmin ? authUser : null;
   const { toast } = useToast();
   const [editing, setEditing] = useState<{ index: number; draft: Staff } | null>(null);
   const [uploading, setUploading] = useState(false);

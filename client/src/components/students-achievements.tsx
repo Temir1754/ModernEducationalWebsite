@@ -92,7 +92,9 @@ function CardText({ item, number, dark }: { item: Achievement; number: number; d
 }
 
 export default function StudentsAchievements() {
-  const { user } = useAuth();
+  // Edit controls are admin-only; inspectors get a read-only view.
+  const { isAdmin, user: authUser } = useAuth();
+  const user = isAdmin ? authUser : null;
   const { toast } = useToast();
   const heroSlots = usePhotoSlots("students.achievements.hero", 1);
   const [filter, setFilter] = useState<Category | "all">("all");

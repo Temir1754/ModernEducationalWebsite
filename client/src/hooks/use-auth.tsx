@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 
 type AuthContextType = {
     user: User | null;
+    isAdmin: boolean;
     isLoading: boolean;
     error: Error | null;
     loginMutation: any;
@@ -24,6 +25,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     const user = data?.user ?? null;
+    const isAdmin = user?.role === "admin";
 
     const loginMutation = useMutation({
         mutationFn: async (credentials: Pick<InsertUser, "username" | "password">) => {
@@ -79,6 +81,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         <AuthContext.Provider
             value={{
                 user,
+                isAdmin,
                 isLoading,
                 error,
                 loginMutation,

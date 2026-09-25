@@ -16,7 +16,9 @@ import PageHeader from "@/components/page-header";
 
 export default function GalleryPage() {
 
-  const { user } = useAuth();
+  // Edit controls are admin-only; inspectors get a read-only view.
+  const { isAdmin, user: authUser } = useAuth();
+  const user = isAdmin ? authUser : null;
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [uploadFiles, setUploadFiles] = useState<File[]>([]);
   const [editingMediaId, setEditingMediaId] = useState<string | null>(null);
